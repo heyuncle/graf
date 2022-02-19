@@ -69,7 +69,7 @@
        <property name="childrenCollapsible">
         <bool>false</bool>
        </property>
-       <widget class="QWidget" name="fileWidg" native="true">
+       <widget class="QWidget" name="fileWidget" native="true">
         <property name="maximumSize">
          <size>
           <width>200</width>
@@ -126,20 +126,20 @@
           </widget>
          </item>
          <item>
-          <widget class="QGroupBox" name="groupBox_5">
+          <widget class="QGroupBox" name="createGroupBox">
            <property name="title">
             <string>Create</string>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_13">
             <item>
-             <widget class="QPushButton" name="pushButton_8">
+             <widget class="QPushButton" name="newObjButton">
               <property name="text">
                <string>New object</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_9">
+             <widget class="QPushButton" name="newGroupButton">
               <property name="text">
                <string>New group</string>
               </property>
@@ -150,7 +150,7 @@
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="prevWidg" native="true">
+       <widget class="QWidget" name="prevWidget" native="true">
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <item>
           <widget class="QLabel" name="prevLabel">
@@ -183,7 +183,7 @@
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="proWidg" native="true">
+       <widget class="QWidget" name="attributesWidget" native="true">
         <property name="minimumSize">
          <size>
           <width>198</width>
@@ -218,7 +218,7 @@
             </size>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>2</number>
            </property>
            <property name="documentMode">
             <bool>false</bool>
@@ -232,7 +232,7 @@
             </attribute>
             <layout class="QVBoxLayout" name="verticalLayout_4">
              <item>
-              <widget class="QWidget" name="widget_2" native="true">
+              <widget class="QWidget" name="propWidget" native="true">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
@@ -265,7 +265,7 @@
                  <number>6</number>
                 </property>
                 <item row="3" column="0">
-                 <widget class="QLabel" name="label_2">
+                 <widget class="QLabel" name="tValueLabel">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -297,7 +297,7 @@
                  </widget>
                 </item>
                 <item row="6" column="0">
-                 <widget class="QLabel" name="label_4">
+                 <widget class="QLabel" name="maximumLabel">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -310,7 +310,7 @@
                  </widget>
                 </item>
                 <item row="7" column="0">
-                 <widget class="QPlainTextEdit" name="plainTextEdit_2">
+                 <widget class="QPlainTextEdit" name="maximumPlainTextEdit">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -329,7 +329,7 @@
                  </widget>
                 </item>
                 <item row="5" column="0">
-                 <widget class="QPlainTextEdit" name="plainTextEdit">
+                 <widget class="QPlainTextEdit" name="minimumPlainTextEdit">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -348,7 +348,7 @@
                  </widget>
                 </item>
                 <item row="1" column="0">
-                 <widget class="QLabel" name="label">
+                 <widget class="QLabel" name="functionLabel">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -361,7 +361,7 @@
                  </widget>
                 </item>
                 <item row="4" column="0">
-                 <widget class="QLabel" name="label_3">
+                 <widget class="QLabel" name="minimumLabel">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -390,7 +390,7 @@
                  </spacer>
                 </item>
                 <item row="0" column="0">
-                 <widget class="QGroupBox" name="groupBox_6">
+                 <widget class="QGroupBox" name="positionGroupBox">
                   <property name="title">
                    <string>Position</string>
                   </property>
@@ -414,7 +414,7 @@
                        <number>0</number>
                       </property>
                       <item>
-                       <widget class="QLabel" name="label_5">
+                       <widget class="QLabel" name="xPosLabel">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                           <horstretch>0</horstretch>
@@ -427,7 +427,7 @@
                        </widget>
                       </item>
                       <item>
-                       <widget class="QPlainTextEdit" name="plainTextEdit_3">
+                       <widget class="QPlainTextEdit" name="xPosTextEdit">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                           <horstretch>0</horstretch>
@@ -446,7 +446,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QWidget" name="widget_3" native="true">
+                    <widget class="QWidget" name="yPosWidget" native="true">
                      <layout class="QHBoxLayout" name="horizontalLayout_2">
                       <property name="spacing">
                        <number>0</number>
@@ -464,7 +464,7 @@
                        <number>0</number>
                       </property>
                       <item>
-                       <widget class="QLabel" name="label_6">
+                       <widget class="QLabel" name="yPosLabel">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                           <horstretch>0</horstretch>
@@ -477,7 +477,7 @@
                        </widget>
                       </item>
                       <item>
-                       <widget class="QPlainTextEdit" name="plainTextEdit_4">
+                       <widget class="QPlainTextEdit" name="yPosTextEdit">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                           <horstretch>0</horstretch>
@@ -509,7 +509,7 @@
             </attribute>
             <layout class="QVBoxLayout" name="verticalLayout_8">
              <item>
-              <widget class="QGroupBox" name="groupBox_3">
+              <widget class="QGroupBox" name="animInGroupBox">
                <property name="minimumSize">
                 <size>
                  <width>0</width>
@@ -521,7 +521,7 @@
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_9">
                 <item>
-                 <widget class="QComboBox" name="comboBox">
+                 <widget class="QComboBox" name="animInComboBox">
                   <item>
                    <property name="text">
                     <string>(None)</string>
@@ -548,13 +548,13 @@
               </widget>
              </item>
              <item>
-              <widget class="QGroupBox" name="groupBox_4">
+              <widget class="QGroupBox" name="animOutGroupBox">
                <property name="title">
                 <string>Animate Out</string>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_12">
                 <item>
-                 <widget class="QComboBox" name="comboBox_2">
+                 <widget class="QComboBox" name="animOutComboBox">
                   <item>
                    <property name="text">
                     <string>(None)</string>
@@ -576,7 +576,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QScrollArea" name="scrollArea">
+              <widget class="QScrollArea" name="attrScrollArea">
                <property name="widgetResizable">
                 <bool>true</bool>
                </property>
@@ -618,7 +618,7 @@
                  <number>0</number>
                 </property>
                 <item>
-                 <widget class="QGroupBox" name="groupBox">
+                 <widget class="QGroupBox" name="vertAlignGroupBox">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -630,21 +630,21 @@
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_5">
                    <item>
-                    <widget class="QPushButton" name="pushButton_4">
+                    <widget class="QPushButton" name="vertTopPushButton">
                      <property name="text">
                       <string>Top</string>
                      </property>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QPushButton" name="pushButton_2">
+                    <widget class="QPushButton" name="vertCenPushButton">
                      <property name="text">
                       <string>Center</string>
                      </property>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QPushButton" name="pushButton_3">
+                    <widget class="QPushButton" name="vertBotPushButton">
                      <property name="text">
                       <string>Bottom</string>
                      </property>
@@ -654,7 +654,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QGroupBox" name="groupBox_2">
+                 <widget class="QGroupBox" name="horizAlignGroupBox">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -666,21 +666,21 @@
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_6">
                    <item>
-                    <widget class="QPushButton" name="pushButton_5">
+                    <widget class="QPushButton" name="horizTopPushButton">
                      <property name="text">
                       <string>Top</string>
                      </property>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QPushButton" name="pushButton_6">
+                    <widget class="QPushButton" name="horizCenPushButton">
                      <property name="text">
                       <string>Center</string>
                      </property>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QPushButton" name="pushButton_7">
+                    <widget class="QPushButton" name="horizBotPushButton">
                      <property name="text">
                       <string>Bottom</string>
                      </property>
