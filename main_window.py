@@ -34,8 +34,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         
         self.newObjButton.clicked.connect(self.addItem)
         #self.buttonDelete.clicked.connect(self.delItem)
-        #self.objList.itemDoubleClicked.connect(lambda _: self.openProperties("obj"))
-        #self.animList.itemDoubleClicked.connect(lambda _: self.openProperties("anim"))
+        self.treeWidget.itemClicked.connect(self.changeProperties)
         #self.previewRender.clicked.connect(lambda _: self.renderScene(False))
         #self.fqRender.clicked.connect(lambda _: self.renderScene(True))
         #self.categoryBox.currentIndexChanged['int'].connect(self.insertCategory.setCurrentIndex)
@@ -50,6 +49,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         #self.actionDelete.triggered.connect(self.delItem)
         #self.actionMU.triggered.connect(self.move_up)
         #self.actionMD.triggered.connect(self.move_down)
+
+        # Test project
+        newScene = QTreeWidgetItem()
+        newScene.setText(0,self.testDuplicateName("Scene 1"))
+        newScene.setText(1,"Scene")
+        self.treeWidget.addTopLevelItem(newScene)
+        newObject = QTreeWidgetItem()
+        newObject.setText(0,self.testDuplicateName("MyObject"))
+        newObject.setText(1,"Object")
+        newObject.setText(2,"Circle")
+        newScene.addChild(newObject)
+
+    def changeProperties():
+        pass
 
     def testDuplicateName(self, name):
         if name in self.objNames:
@@ -175,23 +188,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.propWindow.show()
 
     def addItem(self):
-        # try:
-        #     if self.insertCategory.currentIndex() < 5:
-        #         name = self.testDuplicateName("MyObject")
-        #         self.objList.addItem(eval("self.add" + str(
-        #             self.insertCategory.currentIndex() - 1) + ".currentText()") + " (" + name + ")")
-        #         self.objSave.append(["", [], name])
-        #         self.objNames.append(name)
-        #     else:
-        #         self.animList.addItem(
-        #             eval("self.add" + str(self.insertCategory.currentIndex() - 1) + ".currentText()"))
-        #         self.animSave.append(None)
-        # except:
-        #     pass
-        a = QTreeWidgetItem()
-        a.setText(0,"bobi")
-        a.setText(1,"chicha")
-        self.treeWidget.addTopLevelItem(a)
+        if self.treeWidget.currentItem().text(1) in ["Group","Scene"]:
+            newItem = QTreeWidgetItem()
+            newItem.setText(0,self.testDuplicateName("MyObject"))
+            newItem.setText(1,"Object")
+            self.treeWidget.currentItem().addChild(newItem)
+        else:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Critical)
+            msg.setText("Error")
+            msg.setInformativeText('More information')
+            msg.setWindowTitle("Error")
+            msg.exec_()
 
     def delItem(self):
         indices = [self.objList.row(i) for i in self.objList.selectedItems()]
