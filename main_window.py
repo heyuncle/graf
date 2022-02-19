@@ -7,7 +7,7 @@ from preferences import Ui_Dialog
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import QObject
+from PyQt5.QtCore import *
 from qt_material import apply_stylesheet, QtStyleTools
 
 
@@ -33,7 +33,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         self.retranslateUi(MainWindow)
         
         self.newObjButton.clicked.connect(self.addItem)
-        self.treeWidget.itemClicked.connect(self.changeProperties)
+        self.treeWidget.itemClicked.connect(self.updatePropPanel)
         self.treeWidget.itemDoubleClicked.connect(self.edit)
         self.objTypeComboBox.currentTextChanged.connect(self.changeObjType)
         self.colorPushButton.clicked.connect(self.changeColor)
@@ -46,21 +46,21 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         self.actionMP.triggered.connect(lambda _: self.renderScene(True)) #TODO fix
 
         # Test project
-        newScene = QTreeWidgetItem()
-        newScene.setText(0,self.testDuplicateName("Scene 1")) # TODO fix testDuplicateName
-        newScene.setText(1,"Scene")
+        newScene = self.treeItem("Scene 1","Scene")
         self.treeWidget.addTopLevelItem(newScene)
-        newObject = QTreeWidgetItem()
-        newObject.setText(0,self.testDuplicateName("MyRectangle"))
-        newObject.setText(1,"Object")
-        newObject.setText(2,"Rectangle")
-        newObject2 = QTreeWidgetItem()
-        newObject2.setText(0,self.testDuplicateName("MyUnderline"))
-        newObject2.setText(1,"Object")
-        newObject2.setText(2,"Underline")
-        newScene.addChild(newObject)
-        newScene.addChild(newObject2)
-        self.changeProperties()
+        newScene.addChild(self.treeItem("MyRectangle","Object","Rectangle"))
+        newScene.addChild(self.treeItem("MyUnderline","Object","Underline"))
+        self.updatePropPanel()
+
+    def treeItem(self, name, type, subtype="", properties=""):
+        item = QTreeWidgetItem()
+        item.setFlags(item.flags() | Qt.ItemIsEditable)
+        item.setText(0,self.testDuplicateName(name)) # TODO fix testDuplicateName
+        item.setText(1,type)
+        item.setText(2,subtype)
+        item.setText(3,properties)
+        return item
+
 
     def edit(self):
         self.treeWidget.editItem(self.treeWidget.currentItem())
@@ -68,12 +68,12 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
     def changeObjType(self):
         for i in self.treeWidget.selectedItems():
             i.setText(2,self.objTypeComboBox.currentText())
-        self.changeProperties()
+        self.updatePropPanel()
 
     def changeColor(self):
         self.colorFrame.setStyleSheet("background-color: " + QtWidgets.QColorDialog.getColor().name())
 
-    def changeProperties(self):
+    def updatePropPanel(self):
         def showSharedProp(sharedProp):
             for i in [self.colorGroupBox,self.positionGroupBox]:
                 i.show() if sharedProp % 2 == 1 else i.hide()
