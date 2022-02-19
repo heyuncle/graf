@@ -1,4 +1,5 @@
 import subprocess, sys, os, shutil
+import xml.etree.ElementTree as et
 
 from window import Ui_MainWindow
 from properties import Ui_Dialog
@@ -7,6 +8,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from qt_material import apply_stylesheet
+
 
 # from error import Ui_Dialog as errorDialog # TODO - what was this for
 
@@ -29,8 +31,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         #self.insertCategory.setCurrentIndex(0)
         self.show()
         self.retranslateUi(MainWindow)
-
-        #self.buttonInsert.clicked.connect(self.addItem)
+        
+        self.newObjButton.clicked.connect(self.addItem)
         #self.buttonDelete.clicked.connect(self.delItem)
         #self.objList.itemDoubleClicked.connect(lambda _: self.openProperties("obj"))
         #self.animList.itemDoubleClicked.connect(lambda _: self.openProperties("anim"))
@@ -173,19 +175,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.propWindow.show()
 
     def addItem(self):
-        try:
-            if self.insertCategory.currentIndex() < 5:
-                name = self.testDuplicateName("MyObject")
-                self.objList.addItem(eval("self.add" + str(
-                    self.insertCategory.currentIndex() - 1) + ".currentText()") + " (" + name + ")")
-                self.objSave.append(["", [], name])
-                self.objNames.append(name)
-            else:
-                self.animList.addItem(
-                    eval("self.add" + str(self.insertCategory.currentIndex() - 1) + ".currentText()"))
-                self.animSave.append(None)
-        except:
-            pass
+        # try:
+        #     if self.insertCategory.currentIndex() < 5:
+        #         name = self.testDuplicateName("MyObject")
+        #         self.objList.addItem(eval("self.add" + str(
+        #             self.insertCategory.currentIndex() - 1) + ".currentText()") + " (" + name + ")")
+        #         self.objSave.append(["", [], name])
+        #         self.objNames.append(name)
+        #     else:
+        #         self.animList.addItem(
+        #             eval("self.add" + str(self.insertCategory.currentIndex() - 1) + ".currentText()"))
+        #         self.animSave.append(None)
+        # except:
+        #     pass
+        a = QTreeWidgetItem()
+        a.setText(0,"bobi")
+        a.setText(1,"chicha")
+        self.treeWidget.addTopLevelItem(a)
 
     def delItem(self):
         indices = [self.objList.row(i) for i in self.objList.selectedItems()]
@@ -304,7 +310,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         subprocess.run("manim manim_preview.py MyScene -ql" if full else "manim manim_export.py MyScene")
         try:
             if full:
-                os.replace("./media/videos/manim_export/1080p60/MyScene.mp4", "./Export.mp4")
+                os.replace("./media/videos/a/1080p60/MyScene.mp4", "./Export.mp4")
             else:
                 os.replace("./media/videos/manim_preview/480p15/MyScene.mp4", "./Preview.mp4")
             shutil.rmtree('media')

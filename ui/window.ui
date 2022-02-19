@@ -640,8 +640,13 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
+<<<<<<< HEAD
                   <width>256</width>
                   <height>475</height>
+=======
+                  <width>80</width>
+                  <height>16</height>
+>>>>>>> 5c05b5056ee5b85cac25311fa75063fd738f2289
                  </rect>
                 </property>
                </widget>
@@ -777,6 +782,7 @@
          <height>300</height>
         </size>
        </property>
+<<<<<<< HEAD
        <layout class="QVBoxLayout" name="verticalLayout_15">
         <item>
          <widget class="QLabel" name="timeLineLabel">
@@ -806,6 +812,21 @@
          </widget>
         </item>
        </layout>
+=======
+       <widget class="QQuickWidget" name="quickWidget">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>300</width>
+          <height>200</height>
+         </rect>
+        </property>
+        <property name="resizeMode">
+         <enum>QQuickWidget::SizeRootObjectToView</enum>
+        </property>
+       </widget>
+>>>>>>> 5c05b5056ee5b85cac25311fa75063fd738f2289
       </widget>
      </widget>
     </item>
