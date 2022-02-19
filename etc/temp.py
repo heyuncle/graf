@@ -1,2 +1,0 @@
-possibleProp={"Coordinate Plane":"NumberPlane","Parametric Function":"ParametricFunction","Circle":"Arc","Regular Polygon":"RegularPolygon","Box":"SurroundingRectangle","Brace":"BraceLabel","LaTeX":"Tex","Show Creation":"ShowCreation","Write Text":"Write","Fade In":"FadeIn","Fade Out":"FadeOut","Grow":"GrowFromCenter","Spark":"Flash","Highlight":"Indicate","Move Along Path":"MoveAlongPath","Transform":"ReplacementTransform"}
-print(dict(zip(possibleProp.values(),possibleProp.keys())))
