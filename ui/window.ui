@@ -328,12 +328,110 @@
                    <property name="geometry">
                     <rect>
                      <x>0</x>
-                     <y>-1562</y>
+                     <y>0</y>
                      <width>239</width>
-                     <height>2691</height>
+                     <height>2694</height>
                     </rect>
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_24">
+                    <item>
+                     <widget class="QGroupBox" name="objTypeGroupBox">
+                      <property name="title">
+                       <string>Object Type</string>
+                      </property>
+                      <layout class="QVBoxLayout" name="verticalLayout_21">
+                       <item>
+                        <widget class="QComboBox" name="objTypeComboBox">
+                         <item>
+                          <property name="text">
+                           <string>(None)</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Text</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>LaTeX</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Number Plane</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Function Graph</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Parametric Function</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Arc</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Arrow</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Polygon</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Regular Polygon</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Rectangle</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Dot</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Line</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Matrix</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Surrounding Rectangle</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Underline</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Brace Label</string>
+                          </property>
+                         </item>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
                     <item>
                      <widget class="QGroupBox" name="positionGroupBox">
                       <property name="title">
@@ -444,98 +542,68 @@
                      </widget>
                     </item>
                     <item>
-                     <widget class="QGroupBox" name="objTypeGroupBox">
+                     <widget class="QGroupBox" name="colorGroupBox">
                       <property name="title">
-                       <string>Object Type</string>
+                       <string>Color</string>
                       </property>
-                      <layout class="QVBoxLayout" name="verticalLayout_21">
+                      <layout class="QVBoxLayout" name="verticalLayout_30">
                        <item>
-                        <widget class="QComboBox" name="objTypeComboBox">
-                         <item>
-                          <property name="text">
-                           <string>(None)</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Text</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>LaTeX</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Number Plane</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Function Graph</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Parametric Function</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Arc</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Arrow</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Polygon</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Regular Polygon</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Rectangle</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Dot</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Line</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Matrix</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Surrounding Rectangle</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Underline</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Brace Label</string>
-                          </property>
-                         </item>
+                        <widget class="QWidget" name="widget_2" native="true">
+                         <layout class="QHBoxLayout" name="horizontalLayout_19">
+                          <item>
+                           <widget class="QFrame" name="colorFrame">
+                            <property name="enabled">
+                             <bool>true</bool>
+                            </property>
+                            <property name="sizePolicy">
+                             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                              <horstretch>0</horstretch>
+                              <verstretch>0</verstretch>
+                             </sizepolicy>
+                            </property>
+                            <property name="minimumSize">
+                             <size>
+                              <width>23</width>
+                              <height>23</height>
+                             </size>
+                            </property>
+                            <property name="maximumSize">
+                             <size>
+                              <width>23</width>
+                              <height>23</height>
+                             </size>
+                            </property>
+                            <property name="styleSheet">
+                             <string notr="true">background-color: rgb(255, 255, 255);</string>
+                            </property>
+                            <property name="frameShape">
+                             <enum>QFrame::StyledPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Raised</enum>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QPushButton" name="colorPushButton">
+                            <property name="sizePolicy">
+                             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                              <horstretch>0</horstretch>
+                              <verstretch>0</verstretch>
+                             </sizepolicy>
+                            </property>
+                            <property name="maximumSize">
+                             <size>
+                              <width>16777215</width>
+                              <height>23</height>
+                             </size>
+                            </property>
+                            <property name="text">
+                             <string>Select...</string>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
                         </widget>
                        </item>
                       </layout>
@@ -1736,38 +1804,6 @@
                       </layout>
                      </widget>
                     </item>
-                    <item>
-                     <widget class="QGroupBox" name="colorGroupBox">
-                      <property name="title">
-                       <string>Color</string>
-                      </property>
-                      <layout class="QVBoxLayout" name="verticalLayout_30">
-                       <item>
-                        <widget class="QWidget" name="hexWidget" native="true">
-                         <layout class="QHBoxLayout" name="horizontalLayout_19">
-                          <item>
-                           <widget class="QLabel" name="hexLabel">
-                            <property name="text">
-                             <string>Hex Code: </string>
-                            </property>
-                           </widget>
-                          </item>
-                          <item>
-                           <widget class="QLineEdit" name="hexLineEdit">
-                            <property name="maxLength">
-                             <number>7</number>
-                            </property>
-                            <property name="placeholderText">
-                             <string>#FFFFFF</string>
-                            </property>
-                           </widget>
-                          </item>
-                         </layout>
-                        </widget>
-                       </item>
-                      </layout>
-                     </widget>
-                    </item>
                    </layout>
                   </widget>
                  </widget>
@@ -1979,7 +2015,7 @@
                   <x>0</x>
                   <y>0</y>
                   <width>256</width>
-                  <height>252</height>
+                  <height>184</height>
                  </rect>
                 </property>
                </widget>
@@ -2284,14 +2320,18 @@
     <addaction name="separator"/>
     <addaction name="menuExport"/>
     <addaction name="separator"/>
+    <addaction name="actionProject_Settings"/>
+    <addaction name="actionPreferences"/>
+    <addaction name="separator"/>
     <addaction name="actionClose"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
      <string>Edit</string>
     </property>
-    <addaction name="actionProject_Settings"/>
-    <addaction name="actionPreferences"/>
+    <addaction name="actionDelete"/>
+    <addaction name="actionUndo"/>
+    <addaction name="actionRedo"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -2377,6 +2417,30 @@
   <action name="actionSave_as">
    <property name="text">
     <string>Save as...</string>
+   </property>
+  </action>
+  <action name="actionDelete">
+   <property name="text">
+    <string>Delete</string>
+   </property>
+   <property name="shortcut">
+    <string>Del</string>
+   </property>
+  </action>
+  <action name="actionUndo">
+   <property name="text">
+    <string>Undo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="text">
+    <string>Redo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
    </property>
   </action>
  </widget>

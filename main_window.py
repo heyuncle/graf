@@ -28,41 +28,74 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # self.setStyleSheet(PyQt5_stylesheets.load_stylesheet_pyqt5(style="style_Dark")) # qrainbowtheme option
         # app.setStyleSheet(qdarktheme.load_stylesheet("dark")) # pyqtdarktheme option
         apply_stylesheet(self, theme='dark_blue.xml')  # qmaterial
-        #self.insertCategory.setCurrentIndex(0)
         self.show()
         self.retranslateUi(MainWindow)
         
         self.newObjButton.clicked.connect(self.addItem)
-        #self.buttonDelete.clicked.connect(self.delItem)
         self.treeWidget.itemClicked.connect(self.changeProperties)
-        #self.previewRender.clicked.connect(lambda _: self.renderScene(False))
-        #self.fqRender.clicked.connect(lambda _: self.renderScene(True))
-        #self.categoryBox.currentIndexChanged['int'].connect(self.insertCategory.setCurrentIndex)
-        #self.objList.currentRowChanged.connect(lambda _: self.animList.setCurrentRow(-1))
-        #self.animList.currentRowChanged.connect(lambda _: self.objList.setCurrentRow(-1))
 
-        #self.actionOpen.triggered.connect(self.open_from_dir)
-        #self.actionSave.triggered.connect(self.save_mmtr)
-        #self.actionSave_As.triggered.connect(self.save_mmtr_as)
-        #self.actionPreview.triggered.connect(lambda _: self.renderScene(False))
-        #self.actionRenderFull.triggered.connect(lambda _: self.renderScene(True))
-        #self.actionDelete.triggered.connect(self.delItem)
-        #self.actionMU.triggered.connect(self.move_up)
-        #self.actionMD.triggered.connect(self.move_down)
+        self.actionOpen.triggered.connect(self.open_from_dir)
+        self.actionSave.triggered.connect(self.save_mmtr)
+        self.actionSave_as.triggered.connect(self.save_mmtr_as)
+        self.actionDelete.triggered.connect(self.delItem)
+        self.colorPushButton.clicked.connect(self.changeColor)
+        self.actionMP.triggered.connect(lambda _: self.renderScene(True))
 
         # Test project
         newScene = QTreeWidgetItem()
-        newScene.setText(0,self.testDuplicateName("Scene 1"))
+        newScene.setText(0,self.testDuplicateName("Scene 1")) # TODO fix testDuplicateName
         newScene.setText(1,"Scene")
         self.treeWidget.addTopLevelItem(newScene)
         newObject = QTreeWidgetItem()
-        newObject.setText(0,self.testDuplicateName("MyObject"))
+        newObject.setText(0,self.testDuplicateName("MyRectangle"))
         newObject.setText(1,"Object")
-        newObject.setText(2,"Circle")
+        newObject.setText(2,"Rectangle")
+        newObject2 = QTreeWidgetItem()
+        newObject2.setText(0,self.testDuplicateName("MyUnderline"))
+        newObject2.setText(1,"Object")
+        newObject2.setText(2,"Underline")
         newScene.addChild(newObject)
+        newScene.addChild(newObject2)
+        self.changeProperties()
 
-    def changeProperties():
+    def changeObjType():
         pass
+
+    def changeColor(self):
+        self.colorFrame.setStyleSheet("background-color: " + QtWidgets.QColorDialog.getColor().name())
+
+    def changeProperties(self):
+        def showSharedProp(sharedProp):
+            for i in [self.colorGroupBox,self.positionGroupBox]:
+                i.show() if sharedProp % 2 == 1 else i.hide()
+                sharedProp >>= 1
+        
+        shared = {"Rectangle":3,"Underline":1}
+        for i in self.scrollAreaWidgetContents_2.findChildren(QtWidgets.QGroupBox):
+            i.hide()
+        
+        if len(self.treeWidget.selectedItems()) == 1:
+            if self.treeWidget.currentItem().text(1)=="Object":
+                self.objTypeComboBox.show()
+                objType = self.treeWidget.currentItem().text(2)
+                showSharedProp(shared[objType])
+                if objType == "Rectangle":
+                    self.rectGroupBox.show()
+                if objType == "Underline":
+                    self.ulGroupBox.show()
+            else:
+                pass # TODO Single-select properties for scene, split for group
+        else:
+            if len(list(dict.fromkeys([i.text(1) for i in self.treeWidget.selectedItems()]))) == 1:
+                if self.treeWidget.currentItem().text(1)=="Object":
+                        combinedProp = 3
+                        for i in self.treeWidget.selectedItems():
+                            combinedProp &= shared[i.text(2)]
+                        showSharedProp(combinedProp)
+                else:
+                    pass # TODO Multi-select properties for scene, split for group
+            else:
+                print("multiple object types selected")
 
     def testDuplicateName(self, name):
         if name in self.objNames:
@@ -174,8 +207,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             except:
                 pass
 
-        def changeColor():
-            self.properties.currentColor.setStyleSheet("background-color: " + QtWidgets.QColorDialog.getColor().name())
+
 
         self.propWindow = QtWidgets.QMainWindow()
         self.properties = Ui_Dialog()
@@ -183,7 +215,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.propWindow.setWindowIcon(QIcon('logo.ico'))
         loadProperties(prop_type)
         self.properties.confirm.clicked.connect(submitProperties)
-        self.properties.colorSelect.clicked.connect(changeColor)
 
         self.propWindow.show()
 
