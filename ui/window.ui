@@ -283,7 +283,7 @@
             </size>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>1</number>
            </property>
            <property name="documentMode">
             <bool>false</bool>
@@ -354,7 +354,7 @@
                    <property name="geometry">
                     <rect>
                      <x>0</x>
-                     <y>-1204</y>
+                     <y>0</y>
                      <width>239</width>
                      <height>2694</height>
                     </rect>
@@ -1927,6 +1927,52 @@
               </widget>
              </item>
              <item>
+              <widget class="QGroupBox" name="groupBox">
+               <property name="title">
+                <string>Grow</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_51">
+                <item>
+                 <widget class="QWidget" name="widget" native="true">
+                  <layout class="QHBoxLayout" name="horizontalLayout_68">
+                   <item>
+                    <widget class="QLabel" name="label">
+                     <property name="text">
+                      <string>Grow origin:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QComboBox" name="comboBox">
+                     <item>
+                      <property name="text">
+                       <string>Center</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Edge</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Origin</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Spin in from nothing</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
               <widget class="Line" name="effectDividerLine">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
@@ -2044,7 +2090,7 @@
                 <property name="geometry">
                  <rect>
                   <x>0</x>
-                  <y>-471</y>
+                  <y>0</y>
                   <width>239</width>
                   <height>1330</height>
                  </rect>
