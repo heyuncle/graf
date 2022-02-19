@@ -294,21 +294,30 @@
                 <property name="verticalSpacing">
                  <number>6</number>
                 </property>
-                <item row="3" column="0">
-                 <widget class="QLabel" name="tValueLabel">
+                <item row="5" column="0">
+                 <widget class="QPlainTextEdit" name="minimumPlainTextEdit">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
-                  <property name="text">
-                   <string>t-values</string>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>22</height>
+                   </size>
+                  </property>
+                  <property name="verticalScrollBarPolicy">
+                   <enum>Qt::ScrollBarAlwaysOff</enum>
+                  </property>
+                  <property name="placeholderText">
+                   <string>0</string>
                   </property>
                  </widget>
                 </item>
                 <item row="2" column="0">
-                 <widget class="QPushButton" name="pushButton">
+                 <widget class="QPushButton" name="fileSelectFunctionButton">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -326,6 +335,19 @@
                   </property>
                  </widget>
                 </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="functionLabel">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="text">
+                   <string>Function</string>
+                  </property>
+                 </widget>
+                </item>
                 <item row="6" column="0">
                  <widget class="QLabel" name="maximumLabel">
                   <property name="sizePolicy">
@@ -336,6 +358,19 @@
                   </property>
                   <property name="text">
                    <string>Maximum</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="0">
+                 <widget class="QLabel" name="minimumLabel">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="text">
+                   <string>Minimum</string>
                   </property>
                  </widget>
                 </item>
@@ -356,29 +391,13 @@
                   <property name="verticalScrollBarPolicy">
                    <enum>Qt::ScrollBarAlwaysOff</enum>
                   </property>
-                 </widget>
-                </item>
-                <item row="5" column="0">
-                 <widget class="QPlainTextEdit" name="minimumPlainTextEdit">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>22</height>
-                   </size>
-                  </property>
-                  <property name="verticalScrollBarPolicy">
-                   <enum>Qt::ScrollBarAlwaysOff</enum>
+                  <property name="placeholderText">
+                   <string>0</string>
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="0">
-                 <widget class="QLabel" name="functionLabel">
+                <item row="3" column="0">
+                 <widget class="QLabel" name="tValueLabel">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -386,20 +405,7 @@
                    </sizepolicy>
                   </property>
                   <property name="text">
-                   <string>Function</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="4" column="0">
-                 <widget class="QLabel" name="minimumLabel">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="text">
-                   <string>Minimum</string>
+                   <string>t-values</string>
                   </property>
                  </widget>
                 </item>
@@ -470,6 +476,12 @@
                           <height>24</height>
                          </size>
                         </property>
+                        <property name="plainText">
+                         <string/>
+                        </property>
+                        <property name="placeholderText">
+                         <string>0</string>
+                        </property>
                        </widget>
                       </item>
                      </layout>
@@ -520,12 +532,25 @@
                           <height>24</height>
                          </size>
                         </property>
+                        <property name="plainText">
+                         <string/>
+                        </property>
+                        <property name="placeholderText">
+                         <string>0</string>
+                        </property>
                        </widget>
                       </item>
                      </layout>
                     </widget>
                    </item>
                   </layout>
+                 </widget>
+                </item>
+                <item row="9" column="0">
+                 <widget class="QPushButton" name="updateProperties">
+                  <property name="text">
+                   <string>Update properties</string>
+                  </property>
                  </widget>
                 </item>
                </layout>
@@ -615,8 +640,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>98</width>
-                  <height>28</height>
+                  <width>256</width>
+                  <height>475</height>
                  </rect>
                 </property>
                </widget>
@@ -749,9 +774,38 @@
        <property name="maximumSize">
         <size>
          <width>16777215</width>
-         <height>200</height>
+         <height>300</height>
         </size>
        </property>
+       <layout class="QVBoxLayout" name="verticalLayout_15">
+        <item>
+         <widget class="QLabel" name="timeLineLabel">
+          <property name="text">
+           <string>Timeline</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="timeStampEditor">
+          <property name="text">
+           <string>Timestamp</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QQuickWidget" name="quickWidget">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="resizeMode">
+           <enum>QQuickWidget::SizeRootObjectToView</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
@@ -886,6 +940,13 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QQuickWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">QtQuickWidgets/QQuickWidget</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
