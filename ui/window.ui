@@ -113,15 +113,42 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>200</width>
+             <width>16777215</width>
              <height>16777215</height>
             </size>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Sunken</enum>
+           </property>
+           <property name="tabKeyNavigation">
+            <bool>true</bool>
+           </property>
+           <property name="dragEnabled">
+            <bool>true</bool>
+           </property>
+           <property name="dragDropMode">
+            <enum>QAbstractItemView::DragDrop</enum>
+           </property>
+           <property name="defaultDropAction">
+            <enum>Qt::MoveAction</enum>
+           </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::ExtendedSelection</enum>
+           </property>
+           <property name="selectionBehavior">
+            <enum>QAbstractItemView::SelectItems</enum>
            </property>
            <property name="iconSize">
             <size>
              <width>0</width>
              <height>0</height>
             </size>
+           </property>
+           <property name="sortingEnabled">
+            <bool>true</bool>
+           </property>
+           <property name="animated">
+            <bool>true</bool>
            </property>
            <column>
             <property name="text">
@@ -134,23 +161,23 @@
             </property>
             <item>
              <property name="text">
+              <string>variable</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
               <string>Group 1</string>
              </property>
-             <item>
-              <property name="text">
-               <string>function</string>
-              </property>
-             </item>
              <item>
               <property name="text">
                <string>graph</string>
               </property>
              </item>
-            </item>
-            <item>
-             <property name="text">
-              <string>variable</string>
-             </property>
+             <item>
+              <property name="text">
+               <string>function</string>
+              </property>
+             </item>
             </item>
            </item>
           </widget>
@@ -172,6 +199,13 @@
              <widget class="QPushButton" name="newGroupButton">
               <property name="text">
                <string>New group</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="newSceneButton">
+              <property name="text">
+               <string>New scene</string>
               </property>
              </widget>
             </item>
@@ -640,13 +674,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-<<<<<<< HEAD
                   <width>256</width>
-                  <height>475</height>
-=======
-                  <width>80</width>
-                  <height>16</height>
->>>>>>> 5c05b5056ee5b85cac25311fa75063fd738f2289
+                  <height>480</height>
                  </rect>
                 </property>
                </widget>
@@ -782,37 +811,6 @@
          <height>300</height>
         </size>
        </property>
-<<<<<<< HEAD
-       <layout class="QVBoxLayout" name="verticalLayout_15">
-        <item>
-         <widget class="QLabel" name="timeLineLabel">
-          <property name="text">
-           <string>Timeline</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="timeStampEditor">
-          <property name="text">
-           <string>Timestamp</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QQuickWidget" name="quickWidget">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="resizeMode">
-           <enum>QQuickWidget::SizeRootObjectToView</enum>
-          </property>
-         </widget>
-        </item>
-       </layout>
-=======
        <widget class="QQuickWidget" name="quickWidget">
         <property name="geometry">
          <rect>
@@ -826,7 +824,6 @@
          <enum>QQuickWidget::SizeRootObjectToView</enum>
         </property>
        </widget>
->>>>>>> 5c05b5056ee5b85cac25311fa75063fd738f2289
       </widget>
      </widget>
     </item>
