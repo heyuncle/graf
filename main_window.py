@@ -1,18 +1,17 @@
 import subprocess, sys, os, shutil
 import xml.etree.ElementTree as et
 
-from window import Ui_MainWindow
 from preferences import Ui_Dialog
 
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, uic
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from qt_material import apply_stylesheet
+from qt_material import apply_stylesheet, QtStyleTools
 
 
 # from error import Ui_Dialog as errorDialog # TODO - what was this for
 
-class MainWindow(QMainWindow, Ui_MainWindow):
+class MainWindow(QMainWindow, QtStyleTools):
     objNames = []
     objSave = []
     animSave = []
@@ -24,16 +23,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.open_mmtr(i)
 
         self.setWindowIcon(QIcon('etc/logo.ico'))
-        self.setupUi(self)
         # self.setStyleSheet(PyQt5_stylesheets.load_stylesheet_pyqt5(style="style_Dark")) # qrainbowtheme option
         # self.setStyleSheet(qdarktheme.load_stylesheet("dark")) # pyqtdarktheme option
-        apply_stylesheet(self, theme='dark_blue.xml')  # qmaterial
+        self.main = uic.loadUi('ui/window.ui', self)
+        self.apply_stylesheet(self.main, theme='dark_blue.xml')  # qmaterial
         self.show()
-        self.retranslateUi(MainWindow)
+        #self.retranslateUi(MainWindow)
         
         self.newObjButton.clicked.connect(self.addItem)
         self.treeWidget.itemClicked.connect(self.changeProperties)
-        self.treeWidget.itemDoubleClicked.connect(self.treeWidget.editItem)
+        self.treeWidget.itemDoubleClicked.connect(self.edit)
         self.surrObjComboBox.currentTextChanged.connect(self.changeObjType)
         self.colorPushButton.clicked.connect(self.changeColor)
 
@@ -60,6 +59,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         newScene.addChild(newObject)
         newScene.addChild(newObject2)
         self.changeProperties()
+
+    def edit(self):
+        self.treeWidget.editItem(self.treeWidget.currentItem())
 
     def changeObjType(self):
         for i in self.treeWidget.selectedItems():
@@ -135,6 +137,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setWindowTitle("Manimator - " + self.file_path.split("/")[-1])
 
     def openPreferences(self):
+        def submitPreferences():
+            #apply_stylesheet()
+            pass
         self.prefWindow = QtWidgets.QDialog()
         self.preferences = Ui_Dialog()
         self.preferences.setupUi(self.prefWindow)

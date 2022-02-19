@@ -169,17 +169,12 @@
        </property>
        <item>
         <property name="text">
-         <string>Theme 1</string>
+         <string>Red</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Theme 2</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>bobi</string>
+         <string>Blue</string>
         </property>
        </item>
       </widget>
