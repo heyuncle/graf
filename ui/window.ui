@@ -91,7 +91,7 @@
           </widget>
          </item>
          <item>
-          <widget class="Line" name="line">
+          <widget class="Line" name="treeDividerLine">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -208,16 +208,42 @@
           <widget class="QOpenGLWidget" name="openGLWidget"/>
          </item>
          <item>
-          <widget class="QLabel" name="timeLabel">
+          <widget class="QWidget" name="playOptionsWidget" native="true">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
-           <property name="text">
-            <string>Timestamp</string>
-           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_44">
+            <item>
+             <widget class="QLabel" name="timeLabel">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Timestamp</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="playPushButton">
+              <property name="text">
+               <string>Play</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pausePushButton">
+              <property name="text">
+               <string>Pause</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </item>
         </layout>
@@ -304,7 +330,7 @@
                  <number>6</number>
                 </property>
                 <item row="1" column="0">
-                 <spacer name="verticalSpacer">
+                 <spacer name="propVerticalSpacer">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
                   </property>
@@ -328,7 +354,7 @@
                    <property name="geometry">
                     <rect>
                      <x>0</x>
-                     <y>0</y>
+                     <y>-1204</y>
                      <width>239</width>
                      <height>2694</height>
                     </rect>
@@ -1901,7 +1927,7 @@
               </widget>
              </item>
              <item>
-              <widget class="Line" name="line_2">
+              <widget class="Line" name="effectDividerLine">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -1954,6 +1980,11 @@
                      </item>
                      <item>
                       <property name="text">
+                       <string>Move along path</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
                        <string>Transform</string>
                       </property>
                      </item>
@@ -1998,7 +2029,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label">
+              <widget class="QLabel" name="effectListLabel">
                <property name="text">
                 <string>Effect List</string>
                </property>
@@ -2013,11 +2044,762 @@
                 <property name="geometry">
                  <rect>
                   <x>0</x>
-                  <y>0</y>
-                  <width>256</width>
-                  <height>184</height>
+                  <y>-471</y>
+                  <width>239</width>
+                  <height>1330</height>
                  </rect>
                 </property>
+                <layout class="QVBoxLayout" name="verticalLayout_41">
+                 <item>
+                  <widget class="QGroupBox" name="indGroupBox">
+                   <property name="title">
+                    <string>Indicate</string>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_46">
+                    <item>
+                     <widget class="QWidget" name="indScaleWidget" native="true">
+                      <layout class="QHBoxLayout" name="horizontalLayout_60">
+                       <item>
+                        <widget class="QLabel" name="indScaleLabel">
+                         <property name="text">
+                          <string>Scale factor:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QDoubleSpinBox" name="indScaleSpinBox">
+                         <property name="decimals">
+                          <number>1</number>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QWidget" name="indColorWidget" native="true">
+                      <layout class="QHBoxLayout" name="horizontalLayout_59">
+                       <item>
+                        <widget class="QLabel" name="indColorLabel">
+                         <property name="text">
+                          <string>Color:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QFrame" name="indColorFrame">
+                         <property name="enabled">
+                          <bool>true</bool>
+                         </property>
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>23</width>
+                           <height>23</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>23</width>
+                           <height>23</height>
+                          </size>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background-color: rgb(255, 255, 255);</string>
+                         </property>
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="indColorPushButton">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="text">
+                          <string>Select...</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QGroupBox" name="moveGroupBox">
+                   <property name="title">
+                    <string>Move</string>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_49">
+                    <item>
+                     <widget class="QWidget" name="moveHorizWidget" native="true">
+                      <layout class="QHBoxLayout" name="horizontalLayout_65">
+                       <item>
+                        <widget class="QLabel" name="moveHorizLabel">
+                         <property name="text">
+                          <string>Horizontal shift:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QDoubleSpinBox" name="moveHorizSpinBox">
+                         <property name="accelerated">
+                          <bool>true</bool>
+                         </property>
+                         <property name="minimum">
+                          <double>-100.000000000000000</double>
+                         </property>
+                         <property name="maximum">
+                          <double>100.000000000000000</double>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QWidget" name="moveVertWidget" native="true">
+                      <layout class="QHBoxLayout" name="horizontalLayout_66">
+                       <item>
+                        <widget class="QLabel" name="moveVertLabel">
+                         <property name="text">
+                          <string>Vertical shift:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QDoubleSpinBox" name="moveVertSpinBox">
+                         <property name="accelerated">
+                          <bool>true</bool>
+                         </property>
+                         <property name="decimals">
+                          <number>2</number>
+                         </property>
+                         <property name="minimum">
+                          <double>-100.000000000000000</double>
+                         </property>
+                         <property name="maximum">
+                          <double>100.000000000000000</double>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QGroupBox" name="movePathGroupBox">
+                   <property name="title">
+                    <string>Move along path</string>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_50">
+                    <item>
+                     <widget class="QWidget" name="movePathTargetWidget" native="true">
+                      <layout class="QHBoxLayout" name="horizontalLayout_67">
+                       <item>
+                        <widget class="QLabel" name="movePathTargetLabel">
+                         <property name="text">
+                          <string>Target:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QComboBox" name="movePathTargetComboBox">
+                         <item>
+                          <property name="text">
+                           <string>(None)</string>
+                          </property>
+                         </item>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QGroupBox" name="transformGroupBox">
+                   <property name="title">
+                    <string>Transform</string>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_48">
+                    <item>
+                     <widget class="QWidget" name="transformTargetWidget" native="true">
+                      <layout class="QHBoxLayout" name="horizontalLayout_64">
+                       <item>
+                        <widget class="QLabel" name="transformTargetLabel">
+                         <property name="text">
+                          <string>Target:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QComboBox" name="transformTargetComboBox">
+                         <item>
+                          <property name="text">
+                           <string>(None)</string>
+                          </property>
+                         </item>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QGroupBox" name="wiggleGroupBox">
+                   <property name="title">
+                    <string>Wiggle</string>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_47">
+                    <item>
+                     <widget class="QWidget" name="wiggleScaleWidget" native="true">
+                      <layout class="QHBoxLayout" name="horizontalLayout_61">
+                       <item>
+                        <widget class="QLabel" name="wiggleScaleLabel">
+                         <property name="text">
+                          <string>Scale factor:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QDoubleSpinBox" name="wiggleScaleSpinBox">
+                         <property name="decimals">
+                          <number>1</number>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QWidget" name="wiggleAngleWidget" native="true">
+                      <layout class="QHBoxLayout" name="horizontalLayout_62">
+                       <item>
+                        <widget class="QLabel" name="wiggleAngleLabel">
+                         <property name="text">
+                          <string>Angle (degrees):</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QSpinBox" name="wiggleAngleSpinBox">
+                         <property name="accelerated">
+                          <bool>true</bool>
+                         </property>
+                         <property name="minimum">
+                          <number>-360</number>
+                         </property>
+                         <property name="maximum">
+                          <number>360</number>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QWidget" name="wiggleNumWidget" native="true">
+                      <layout class="QHBoxLayout" name="horizontalLayout_63">
+                       <item>
+                        <widget class="QLabel" name="wiggleNumLabel">
+                         <property name="text">
+                          <string>Number of wiggles:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QSpinBox" name="wiggleNumSpinBox"/>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QGroupBox" name="flashGroupBox">
+                   <property name="title">
+                    <string>Flash</string>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_42">
+                    <item>
+                     <widget class="QWidget" name="flashLenWidget" native="true">
+                      <layout class="QHBoxLayout" name="horizontalLayout_45">
+                       <item>
+                        <widget class="QLabel" name="flashLenLabel">
+                         <property name="text">
+                          <string>Line length:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QDoubleSpinBox" name="flashLenSpinBox">
+                         <property name="accelerated">
+                          <bool>true</bool>
+                         </property>
+                         <property name="decimals">
+                          <number>1</number>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QWidget" name="flashNumLinesWidget" native="true">
+                      <layout class="QHBoxLayout" name="horizontalLayout_46">
+                       <item>
+                        <widget class="QLabel" name="flashNumLinesLabel">
+                         <property name="text">
+                          <string>Number of lines:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QSpinBox" name="flashNumLinesSpinBox">
+                         <property name="accelerated">
+                          <bool>true</bool>
+                         </property>
+                         <property name="minimum">
+                          <number>1</number>
+                         </property>
+                         <property name="maximum">
+                          <number>100</number>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QWidget" name="flashRadiusWidget" native="true">
+                      <layout class="QHBoxLayout" name="horizontalLayout_47">
+                       <item>
+                        <widget class="QLabel" name="flashRadiusLabel">
+                         <property name="text">
+                          <string>Radius:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QDoubleSpinBox" name="flashRadiusSpinBox"/>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QWidget" name="flashStrokeWidget" native="true">
+                      <layout class="QHBoxLayout" name="horizontalLayout_48">
+                       <item>
+                        <widget class="QLabel" name="flashStrokeLabel">
+                         <property name="text">
+                          <string>Stroke width:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QDoubleSpinBox" name="flashStrokeSpinBox">
+                         <property name="decimals">
+                          <number>1</number>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QWidget" name="flashColorWidget" native="true">
+                      <layout class="QHBoxLayout" name="horizontalLayout_52">
+                       <item>
+                        <widget class="QLabel" name="flashColorLabel">
+                         <property name="text">
+                          <string>Color:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QFrame" name="flashColorFrame">
+                         <property name="enabled">
+                          <bool>true</bool>
+                         </property>
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>23</width>
+                           <height>23</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>23</width>
+                           <height>23</height>
+                          </size>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background-color: rgb(255, 255, 255);</string>
+                         </property>
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="flashColorPushButton">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="text">
+                          <string>Select...</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QGroupBox" name="focusGroupBox">
+                   <property name="title">
+                    <string>Focus</string>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_45">
+                    <item>
+                     <widget class="QWidget" name="focusOpacityWidget" native="true">
+                      <layout class="QHBoxLayout" name="horizontalLayout_58">
+                       <item>
+                        <widget class="QLabel" name="focusOpacityLabel">
+                         <property name="text">
+                          <string>Opacity %:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QSpinBox" name="focusOpacitySpinBox">
+                         <property name="maximum">
+                          <number>100</number>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QWidget" name="focusColorWidget" native="true">
+                      <layout class="QHBoxLayout" name="horizontalLayout_57">
+                       <item>
+                        <widget class="QLabel" name="focusColorLabel">
+                         <property name="text">
+                          <string>Color:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QFrame" name="focusColorFrame">
+                         <property name="enabled">
+                          <bool>true</bool>
+                         </property>
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>23</width>
+                           <height>23</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>23</width>
+                           <height>23</height>
+                          </size>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background-color: rgb(255, 255, 255);</string>
+                         </property>
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="focusColorPushButton">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="text">
+                          <string>Select...</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QGroupBox" name="waveGroupBox">
+                   <property name="title">
+                    <string>Wave</string>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_43">
+                    <item>
+                     <widget class="QWidget" name="waveDirWidget" native="true">
+                      <layout class="QHBoxLayout" name="horizontalLayout_49">
+                       <item>
+                        <widget class="QLabel" name="waveDirLabel">
+                         <property name="text">
+                          <string>Direction:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QComboBox" name="waveDirComboBox">
+                         <item>
+                          <property name="text">
+                           <string>(None)</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Up</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Left</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Right</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Down</string>
+                          </property>
+                         </item>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QWidget" name="waveAmpWidget" native="true">
+                      <layout class="QHBoxLayout" name="horizontalLayout_50">
+                       <item>
+                        <widget class="QLabel" name="waveAmpLabel">
+                         <property name="text">
+                          <string>Amplitude:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QDoubleSpinBox" name="waveAmpSpinBox"/>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QWidget" name="waveRipWidget" native="true">
+                      <layout class="QHBoxLayout" name="horizontalLayout_51">
+                       <item>
+                        <widget class="QLabel" name="waveRipLabel">
+                         <property name="text">
+                          <string>Ripples:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QSpinBox" name="waveRipSpinBox"/>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QGroupBox" name="circumGroupBox">
+                   <property name="title">
+                    <string>Circumscribe</string>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_44">
+                    <item>
+                     <widget class="QWidget" name="circumShapeWidget" native="true">
+                      <layout class="QHBoxLayout" name="horizontalLayout_53">
+                       <item>
+                        <widget class="QLabel" name="circumShapeLabel">
+                         <property name="text">
+                          <string>Shape:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QComboBox" name="circumShapeComboBox">
+                         <item>
+                          <property name="text">
+                           <string>(None)</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Rectangle</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Circle</string>
+                          </property>
+                         </item>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QWidget" name="circumDistWidget" native="true">
+                      <layout class="QHBoxLayout" name="horizontalLayout_56">
+                       <item>
+                        <widget class="QLabel" name="circumDistLabel">
+                         <property name="text">
+                          <string>Distance:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QDoubleSpinBox" name="circumDistSpinBox"/>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QWidget" name="circumColorWidget" native="true">
+                      <layout class="QHBoxLayout" name="horizontalLayout_55">
+                       <item>
+                        <widget class="QLabel" name="circumColorLabel">
+                         <property name="text">
+                          <string>Color:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QFrame" name="circumColorFrame">
+                         <property name="enabled">
+                          <bool>true</bool>
+                         </property>
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>23</width>
+                           <height>23</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>23</width>
+                           <height>23</height>
+                          </size>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background-color: rgb(255, 255, 255);</string>
+                         </property>
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="circumColorPushButton">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="text">
+                          <string>Select...</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QWidget" name="circumFadeWidget" native="true">
+                      <layout class="QHBoxLayout" name="horizontalLayout_54">
+                       <item>
+                        <widget class="QCheckBox" name="circumFadeInCheckBox">
+                         <property name="text">
+                          <string>Fade in</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QCheckBox" name="circumFadeOutCheckBox">
+                         <property name="text">
+                          <string>Fade out</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </widget>
              </item>
@@ -2029,7 +2811,7 @@
             </attribute>
             <layout class="QVBoxLayout" name="verticalLayout_10">
              <item>
-              <widget class="QWidget" name="widget" native="true">
+              <widget class="QWidget" name="alignWidget" native="true">
                <layout class="QVBoxLayout" name="verticalLayout_7">
                 <property name="spacing">
                  <number>6</number>
@@ -2119,16 +2901,16 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QGroupBox" name="groupBox_4">
+                 <widget class="QGroupBox" name="relAlignGroupBox">
                   <property name="title">
                    <string>Relative Alignment</string>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_25">
                    <item>
-                    <widget class="QWidget" name="widget_7" native="true">
+                    <widget class="QWidget" name="relAlignWidget" native="true">
                      <layout class="QHBoxLayout" name="horizontalLayout_11">
                       <item>
-                       <widget class="QLabel" name="label_7">
+                       <widget class="QLabel" name="relAlignLabel">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                           <horstretch>0</horstretch>
@@ -2141,7 +2923,7 @@
                        </widget>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="comboBox_2">
+                       <widget class="QComboBox" name="relAlignComboBox">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                           <horstretch>0</horstretch>
@@ -2162,7 +2944,7 @@
                  </widget>
                 </item>
                 <item>
-                 <spacer name="verticalSpacer_2">
+                 <spacer name="alignVerticalSpacer">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
                   </property>
@@ -2225,51 +3007,92 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_18">
            <item>
-            <widget class="QSlider" name="horizontalSlider_3">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
+            <widget class="QGroupBox" name="objTimeLineGroupBox">
+             <property name="title">
+              <string>objName</string>
              </property>
-             <property name="minimum">
-              <number>0</number>
-             </property>
-             <property name="pageStep">
-              <number>10</number>
-             </property>
-             <property name="tracking">
-              <bool>true</bool>
-             </property>
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="tickPosition">
-              <enum>QSlider::TicksAbove</enum>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QSlider" name="horizontalSlider_4">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="invertedAppearance">
-              <bool>false</bool>
-             </property>
-             <property name="invertedControls">
-              <bool>false</bool>
-             </property>
-             <property name="tickPosition">
-              <enum>QSlider::NoTicks</enum>
-             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_17">
+              <item>
+               <widget class="QWidget" name="widget_4" native="true">
+                <layout class="QHBoxLayout" name="horizontalLayout_42">
+                 <item>
+                  <widget class="QLabel" name="label_2">
+                   <property name="text">
+                    <string>Start time:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="Line" name="line_3">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSlider" name="horizontalSlider">
+                   <property name="maximum">
+                    <number>100</number>
+                   </property>
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="tickPosition">
+                    <enum>QSlider::TicksAbove</enum>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="Line" name="objEffDividerLine">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="effectGroupBox">
+                <property name="title">
+                 <string>effectName</string>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_43">
+                 <item>
+                  <widget class="QLabel" name="effectStartLabel">
+                   <property name="text">
+                    <string>Start time:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="Line" name="effectStartLine">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSlider" name="effectStartSlider">
+                   <property name="maximum">
+                    <number>100</number>
+                   </property>
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
           </layout>
          </widget>
         </item>
         <item>
-         <spacer name="verticalSpacer_3">
+         <spacer name="timeLineVerticalSpacer">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
