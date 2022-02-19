@@ -98,7 +98,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QTreeView" name="treeView">
+          <widget class="QTreeWidget" name="treeWidget">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -123,6 +123,36 @@
              <height>0</height>
             </size>
            </property>
+           <column>
+            <property name="text">
+             <string>Project</string>
+            </property>
+           </column>
+           <item>
+            <property name="text">
+             <string>Scene 1</string>
+            </property>
+            <item>
+             <property name="text">
+              <string>Group 1</string>
+             </property>
+             <item>
+              <property name="text">
+               <string>function</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>graph</string>
+              </property>
+             </item>
+            </item>
+            <item>
+             <property name="text">
+              <string>variable</string>
+             </property>
+            </item>
+           </item>
           </widget>
          </item>
          <item>
@@ -218,7 +248,7 @@
             </size>
            </property>
            <property name="currentIndex">
-            <number>2</number>
+            <number>0</number>
            </property>
            <property name="documentMode">
             <bool>false</bool>
@@ -585,8 +615,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>256</width>
-                  <height>474</height>
+                  <width>98</width>
+                  <height>28</height>
                  </rect>
                 </property>
                </widget>
