@@ -354,7 +354,7 @@
                    <property name="geometry">
                     <rect>
                      <x>0</x>
-                     <y>0</y>
+                     <y>-1506</y>
                      <width>239</width>
                      <height>2991</height>
                     </rect>
@@ -1318,10 +1318,16 @@
                           <item>
                            <widget class="QTableWidget" name="matrixTableWidget">
                             <property name="sizePolicy">
-                             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                               <horstretch>0</horstretch>
                               <verstretch>0</verstretch>
                              </sizepolicy>
+                            </property>
+                            <property name="maximumSize">
+                             <size>
+                              <width>183</width>
+                              <height>16777215</height>
+                             </size>
                             </property>
                             <property name="sizeAdjustPolicy">
                              <enum>QAbstractScrollArea::AdjustToContents</enum>
