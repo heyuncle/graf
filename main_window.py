@@ -83,8 +83,38 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                 self.rectGroupBox.show()
             if objType == "Underline":
                 self.ulGroupBox.show()
+            if objType == "Text":
+                self.textGroupBox.show()
+            if objType == "LaTeX":
+                self.latexGroupBox.show()
+                self.functionGroupBox.show()
+            if objType == "Number Plane":
+                self.numPlaneGroupBox.show()
+            if objType == "Function Graph":
+                self.functionGroupBox.show()
+            if objType == "Parametric Function":
+                self.paramFuncGroupBox.show()
+                self.functionGroupBox.show()
+            if objType == "Arc":
+                self.arcGroupBox.show()
+            if objType == "Arrow":
+                self.arrowGroupBox.show()
+            if objType == "Polygon":
+                self.polyGroupBox.show()
+            if objType == "Regular Polygon":
+                self.regPolyGroupBox.show()
+            if objType == "Dot":
+                self.dotGroupBox.show()
+            if objType == "Line":
+                self.lineGroupBox.show()
+            if objType == "Matrix":
+                self.matrixGroupBox.show()
+            if objType == "Surrounding Rectangle":
+                self.surRectGroupBox.show()
+            if objType == "Brace Label":
+                self.braceGroupBox.show()
 
-        shared = {"Rectangle":3,"Underline":1}
+        shared = {"Rectangle":3,"Underline":1, "Text":3, "LaTeX":3, "Number Plane":3, "Function Graph":3, "Parametric Function":3, "Arc":3, "Arrow":3, "Polygon":3, "Regular Polygon":3, "Dot":3, "Line":3, "Matrix":3, "Surrounding Rectangle":3, "Brace Label":3, }
         for i in self.scrollAreaWidgetContents_2.findChildren(QtWidgets.QGroupBox):
             i.hide()
         
@@ -93,7 +123,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                 self.objTypeGroupBox.show()
                 objType = self.treeWidget.currentItem().text(2)
                 try:
-                    showSharedProp(shared[objType])
+                    # showSharedProp(shared[objType])
                     showUniqueProp(objType)
                 except:
                     print("object not found error")

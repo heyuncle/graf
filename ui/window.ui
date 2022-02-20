@@ -283,7 +283,7 @@
             </size>
            </property>
            <property name="currentIndex">
-            <number>1</number>
+            <number>0</number>
            </property>
            <property name="documentMode">
             <bool>false</bool>
@@ -354,9 +354,9 @@
                    <property name="geometry">
                     <rect>
                      <x>0</x>
-                     <y>0</y>
+                     <y>-2586</y>
                      <width>239</width>
-                     <height>2694</height>
+                     <height>2991</height>
                     </rect>
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_24">
@@ -1821,6 +1821,165 @@
                            <widget class="QCheckBox" name="textBoldCheckBox">
                             <property name="text">
                              <string>Bold</string>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QGroupBox" name="numPlaneGroupBox">
+                      <property name="title">
+                       <string>Number Plane</string>
+                      </property>
+                      <layout class="QVBoxLayout" name="verticalLayout_52">
+                       <item>
+                        <widget class="QWidget" name="numXMinWidget" native="true">
+                         <layout class="QHBoxLayout" name="horizontalLayout_69">
+                          <item>
+                           <widget class="QLabel" name="numXMinLabel">
+                            <property name="text">
+                             <string>x minimum:</string>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QSpinBox" name="numXMinSpinBox">
+                            <property name="accelerated">
+                             <bool>true</bool>
+                            </property>
+                            <property name="minimum">
+                             <number>-100</number>
+                            </property>
+                            <property name="maximum">
+                             <number>100</number>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QWidget" name="numXMaxWidget" native="true">
+                         <layout class="QHBoxLayout" name="horizontalLayout_71">
+                          <item>
+                           <widget class="QLabel" name="numXMaxLabel">
+                            <property name="text">
+                             <string>x maximum:</string>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QSpinBox" name="numXMaxSpinBox">
+                            <property name="accelerated">
+                             <bool>true</bool>
+                            </property>
+                            <property name="minimum">
+                             <number>-100</number>
+                            </property>
+                            <property name="maximum">
+                             <number>100</number>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QWidget" name="numYMinWidget" native="true">
+                         <layout class="QHBoxLayout" name="horizontalLayout_70">
+                          <item>
+                           <widget class="QLabel" name="numYMinLabel">
+                            <property name="text">
+                             <string>y minimum:</string>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QSpinBox" name="numYMinSpinBox">
+                            <property name="accelerated">
+                             <bool>true</bool>
+                            </property>
+                            <property name="minimum">
+                             <number>-100</number>
+                            </property>
+                            <property name="maximum">
+                             <number>100</number>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QWidget" name="numYMaxWidget" native="true">
+                         <layout class="QHBoxLayout" name="horizontalLayout_72">
+                          <item>
+                           <widget class="QLabel" name="numYMaxLabel">
+                            <property name="text">
+                             <string>y maximum:</string>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QSpinBox" name="numYMaxSpinBox">
+                            <property name="accelerated">
+                             <bool>true</bool>
+                            </property>
+                            <property name="minimum">
+                             <number>-100</number>
+                            </property>
+                            <property name="maximum">
+                             <number>100</number>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QWidget" name="numXLengthWidget" native="true">
+                         <layout class="QHBoxLayout" name="horizontalLayout_74">
+                          <item>
+                           <widget class="QLabel" name="numXLengthLabel">
+                            <property name="text">
+                             <string>x length:</string>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QSpinBox" name="numXLengthSpinBox">
+                            <property name="accelerated">
+                             <bool>true</bool>
+                            </property>
+                            <property name="maximum">
+                             <number>100</number>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QWidget" name="numYLengthWidget" native="true">
+                         <layout class="QHBoxLayout" name="horizontalLayout_73">
+                          <item>
+                           <widget class="QLabel" name="numYLengthLabel">
+                            <property name="text">
+                             <string>y length:</string>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QSpinBox" name="numYLengthSpinBox">
+                            <property name="accelerated">
+                             <bool>true</bool>
+                            </property>
+                            <property name="maximum">
+                             <number>100</number>
                             </property>
                            </widget>
                           </item>
