@@ -39,6 +39,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         self.treeWidget.itemDoubleClicked.connect(self.edit)
         self.objTypeComboBox.currentTextChanged.connect(self.changeObjType)
         self.colorPushButton.clicked.connect(self.changeColor)
+        self.updateObjPropButton.clicked.connect(self.saveProp)
 
         self.actionOpen.triggered.connect(self.open_from_dir)
         self.actionSave.triggered.connect(self.save_mmtr)
@@ -54,13 +55,14 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         newScene.addChild(self.treeItem("MyUnderline","Object","Underline"))
         self.updatePropPanel()
 
-    def treeItem(self, name, type, subtype="", properties=""):
+    def treeItem(self, name, type, subtype="", properties="{}"):
         item = QTreeWidgetItem()
         item.setFlags(item.flags() | Qt.ItemIsEditable)
         item.setText(0,self.testDuplicateName(name)) # TODO fix testDuplicateName
         item.setText(1,type)
         item.setText(2,subtype)
         item.setText(3,properties)
+        item.setIcon(0,QIcon("icons/camera-solid.svg" if type=="Scene" else "icons/equation.svg" if type=="Object" else "icons/object-group-solid.svg"))
         return item
 
 
@@ -71,6 +73,31 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         for i in self.treeWidget.selectedItems():
             i.setText(2,self.objTypeComboBox.currentText())
         self.updatePropPanel()
+        self.loadProp("shit") #TODO default properties per obj
+
+    def loadProp(self, prop):
+        pass
+
+    def saveProp(self):
+        for i in self.propScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
+            if i.isVisible():
+                if i.objectName() == "rectGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "height": self.rectHeightSpinBox.value(),
+                            "width": self.rectWidthSpinBox.value(),
+                            "grid_xstep": self.xGridSpinBox.value(),
+                            "grid_ystep": self.yGridSpinBox.value()
+                        }))
+                # elif i.objectName() == "ulGroupBox":
+                #     for j in self.treeWidget.selectedItems():
+                #         j.setText(3,eval(j.text(3)).update({
+                #             "height": self.rectHeightSpinBox.value(),
+                #             "width": self.rectWidthSpinBox.value(),
+                #             "grid_xstep": self.xGridSpinBox.value(),
+                #             "grid_ystep": self.yGridSpinBox.value()
+                #         }))
+
 
     def changeColor(self):
         self.colorFrame.setStyleSheet("background-color: " + QtWidgets.QColorDialog.getColor().name())
@@ -85,7 +112,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                 exec("self."+i+".show()")
             
 
-        for i in self.scrollAreaWidgetContents_2.findChildren(QtWidgets.QGroupBox):
+        for i in self.propScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
             i.hide()
         
         if len(self.treeWidget.selectedItems()) == 1:
@@ -121,12 +148,6 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         return name #TODO fix
 
     def open_mmtr(self, file):
-        # display_names = {'NumberPlane': 'Coordinate Plane', 'ParametricFunction': 'Parametric Function',
-        #                  'Arc': 'Circle', 'RegularPolygon': 'Regular Polygon', 'SurroundingRectangle': 'Box',
-        #                  'BraceLabel': 'Brace', 'Tex': 'LaTeX', 'ShowCreation': 'Show Creation',
-        #                  'Write': 'Write Text', 'FadeIn': 'Fade In', 'FadeOut': 'Fade Out',
-        #                  'GrowFromCenter': 'Grow', 'Flash': 'Spark', 'Indicate': 'Highlight',
-        #                  'MoveAlongPath': 'Move Along Path', 'ReplacementTransform': 'Transform'}
         self.objList.clear()
         self.animList.clear()
         with open(file, "r+") as f:
