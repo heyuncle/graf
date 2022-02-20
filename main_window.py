@@ -20,17 +20,17 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         super(MainWindow, self).__init__(*args, **kwargs)
         for i in sys.argv[1:]:
             self.open_mmtr(i)
-        
+
         with open("objectProperties.csv","r") as f:
             self.objPropCsv = csv.reader(f)
             self.objProp = {i[0]:(i[1],i[4],i[5]) for i in self.objPropCsv} # manim name, shared, groupbox
 
 
-        self.setWindowIcon(QIcon('etc/logo.ico'))
+        self.setWindowIcon(QIcon('icons/logo.ico'))
         self.setupUi(self)
         # self.setStyleSheet(PyQt5_stylesheets.load_stylesheet_pyqt5(style="style_Dark")) # qrainbowtheme option
         # self.setStyleSheet(qdarktheme.load_stylesheet("dark")) # pyqtdarktheme option
-        self.apply_stylesheet(self, theme='dark_blue.xml')  # qmaterial
+        #self.apply_stylesheet(self, theme='dark_blue.xml')  # qmaterial
         self.show()
         self.retranslateUi(MainWindow)
         
@@ -62,7 +62,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         item.setText(1,type)
         item.setText(2,subtype)
         item.setText(3,properties)
-        item.setIcon(0,QIcon("icons/camera-solid.svg" if type=="Scene" else "icons/equation.svg" if type=="Object" else "icons/object-group-solid.svg"))
+        item.setIcon(0,QIcon("icons/camera-solid.ico" if type=="Scene" else "icons/equation.ico" if type=="Object" else "icons/object-group-solid.ico"))
         return item
 
 
@@ -193,7 +193,9 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
 
     def delItem(self):
         for i in self.treeWidget.selectedItems():
-            self.treeWidget.delete
+            try:
+                i.parent().removeChild(i)
+            except: pass
 
 
     def convert_to_manim(self, type):
