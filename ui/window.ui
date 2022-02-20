@@ -363,9 +363,9 @@
                    <property name="geometry">
                     <rect>
                      <x>0</x>
-                     <y>0</y>
+                     <y>-685</y>
                      <width>239</width>
-                     <height>2991</height>
+                     <height>2987</height>
                     </rect>
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_24">
@@ -934,31 +934,22 @@
                         <widget class="QWidget" name="minTWidget" native="true">
                          <layout class="QHBoxLayout" name="horizontalLayout_4">
                           <item>
-                           <widget class="QLabel" name="minLabel">
+                           <widget class="QLabel" name="minTLabel">
                             <property name="text">
                              <string>Minimum: </string>
                             </property>
                            </widget>
                           </item>
                           <item>
-                           <widget class="QPlainTextEdit" name="minPlainTextEdit">
-                            <property name="sizePolicy">
-                             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                              <horstretch>0</horstretch>
-                              <verstretch>0</verstretch>
-                             </sizepolicy>
+                           <widget class="QSpinBox" name="minTSpinBox">
+                            <property name="accelerated">
+                             <bool>true</bool>
                             </property>
-                            <property name="maximumSize">
-                             <size>
-                              <width>16777215</width>
-                              <height>22</height>
-                             </size>
+                            <property name="minimum">
+                             <number>-100</number>
                             </property>
-                            <property name="verticalScrollBarPolicy">
-                             <enum>Qt::ScrollBarAlwaysOff</enum>
-                            </property>
-                            <property name="placeholderText">
-                             <string>0</string>
+                            <property name="maximum">
+                             <number>100</number>
                             </property>
                            </widget>
                           </item>
@@ -969,7 +960,7 @@
                         <widget class="QWidget" name="maxTWidget" native="true">
                          <layout class="QHBoxLayout" name="horizontalLayout_5">
                           <item>
-                           <widget class="QLabel" name="maxLabel">
+                           <widget class="QLabel" name="maxTLabel">
                             <property name="sizePolicy">
                              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                               <horstretch>0</horstretch>
@@ -982,24 +973,15 @@
                            </widget>
                           </item>
                           <item>
-                           <widget class="QPlainTextEdit" name="maxPlainTextEdit">
-                            <property name="sizePolicy">
-                             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                              <horstretch>0</horstretch>
-                              <verstretch>0</verstretch>
-                             </sizepolicy>
+                           <widget class="QSpinBox" name="maxTSpinBox">
+                            <property name="accelerated">
+                             <bool>true</bool>
                             </property>
-                            <property name="maximumSize">
-                             <size>
-                              <width>16777215</width>
-                              <height>22</height>
-                             </size>
+                            <property name="minimum">
+                             <number>-100</number>
                             </property>
-                            <property name="verticalScrollBarPolicy">
-                             <enum>Qt::ScrollBarAlwaysOff</enum>
-                            </property>
-                            <property name="placeholderText">
-                             <string>0</string>
+                            <property name="maximum">
+                             <number>100</number>
                             </property>
                            </widget>
                           </item>
@@ -1234,7 +1216,7 @@
                            </widget>
                           </item>
                           <item>
-                           <widget class="QLineEdit" name="startCorLineEdit">
+                           <widget class="QLineEdit" name="lineEdit">
                             <property name="maxLength">
                              <number>8</number>
                             </property>
@@ -2266,7 +2248,7 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>203</width>
+                  <width>239</width>
                   <height>1330</height>
                  </rect>
                 </property>
