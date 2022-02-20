@@ -1,4 +1,4 @@
-import subprocess, sys, os, shutil
+import subprocess, sys, os, shutil, csv
 import xml.etree.ElementTree as et
 
 from window import Ui_MainWindow
@@ -14,15 +14,17 @@ from qt_material import apply_stylesheet, QtStyleTools
 # from error import Ui_Dialog as errorDialog # TODO - what was this for
 
 class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
-    objNames = []
-    objSave = []
-    animSave = []
     file_path = ''
 
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         for i in sys.argv[1:]:
             self.open_mmtr(i)
+        
+        with open("objectProperties.csv","r") as f:
+            self.objPropCsv = csv.reader(f)
+            self.objProp = {i[0]:(i[1],i[4],i[5]) for i in self.objPropCsv} # manim name, shared, groupbox
+
 
         self.setWindowIcon(QIcon('etc/logo.ico'))
         self.setupUi(self)
@@ -79,42 +81,10 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                 i.show() if sharedProp % 2 == 1 else i.hide()
                 sharedProp >>= 1
         def showUniqueProp(objType):
-            if objType == "Rectangle":
-                self.rectGroupBox.show()
-            elif objType == "Underline":
-                self.ulGroupBox.show()
-            elif objType == "Text":
-                self.textGroupBox.show()
-            elif objType == "LaTeX":
-                self.latexGroupBox.show()
-                self.functionGroupBox.show()
-            elif objType == "Number Plane":
-                self.numPlaneGroupBox.show()
-            elif objType == "Function Graph":
-                self.functionGroupBox.show()
-            elif objType == "Parametric Function":
-                self.paramFuncGroupBox.show()
-                self.functionGroupBox.show()
-            elif objType == "Arc":
-                self.arcGroupBox.show()
-            elif objType == "Arrow":
-                self.arrowGroupBox.show()
-            elif objType == "Polygon":
-                self.polyGroupBox.show()
-            elif objType == "Regular Polygon":
-                self.regPolyGroupBox.show()
-            elif objType == "Dot":
-                self.dotGroupBox.show()
-            elif objType == "Line":
-                self.lineGroupBox.show()
-            elif objType == "Matrix":
-                self.matrixGroupBox.show()
-            elif objType == "Surrounding Rectangle":
-                self.surRectGroupBox.show()
-            elif objType == "Brace Label":
-                self.braceGroupBox.show()
+            for i in self.objProp[objType][2].split():
+                exec("self."+i+".show()")
+            
 
-        shared = {"Rectangle":3,"Underline":1, "Text":3, "LaTeX":3, "Number Plane":3, "Function Graph":3, "Parametric Function":3, "Arc":3, "Arrow":3, "Polygon":3, "Regular Polygon":3, "Dot":3, "Line":3, "Matrix":3, "Surrounding Rectangle":3, "Brace Label":3, }
         for i in self.scrollAreaWidgetContents_2.findChildren(QtWidgets.QGroupBox):
             i.hide()
         
@@ -123,7 +93,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                 self.objTypeGroupBox.show()
                 objType = self.treeWidget.currentItem().text(2)
                 try:
-                    # showSharedProp(shared[objType])
+                    showSharedProp(int(self.objProp[objType][1]))
                     showUniqueProp(objType)
                 except:
                     print("object not found error")
@@ -136,7 +106,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                         combinedProp = 3
                         try:
                             for i in self.treeWidget.selectedItems():
-                                combinedProp &= shared[i.text(2)]
+                                combinedProp &= int(self.objProp[i.text(2)][1])
                             showSharedProp(combinedProp)
                             if len(list(dict.fromkeys([i.text(2) for i in self.treeWidget.selectedItems()]))) == 1: #TODO make cleaner
                                 showUniqueProp(self.treeWidget.currentItem().text(2))
@@ -148,9 +118,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                 print("multiple object types selected")
 
     def testDuplicateName(self, name):
-        if name in self.objNames:
-            return self.testDuplicateName(name + "_")
-        return name
+        return name #TODO fix
 
     def open_mmtr(self, file):
         # display_names = {'NumberPlane': 'Coordinate Plane', 'ParametricFunction': 'Parametric Function',
@@ -193,11 +161,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
 
     def addItem(self):
         if self.treeWidget.currentItem().text(1) in ["Group","Scene"]:
-            newItem = QTreeWidgetItem()
-            newItem.setText(0,self.testDuplicateName("MyObject"))
-            newItem.setText(1,"Object")
-            newItem.setText(2,"Rectangle")
-            self.treeWidget.currentItem().addChild(newItem)
+            self.treeWidget.currentItem().addChild(self.treeItem("MyObject","Object","Rectangle"))
         else:
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Critical)

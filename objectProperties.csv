@@ -1,0 +1,17 @@
+displayName,manimName,position,color,sharedProps,groupBoxes
+Function Graph,FunctionGraph,1,1,3,functionGroupBox
+Parametric Function,ParametricFunction,1,1,3,paramFuncGroupBox functionGroupBox
+Rectangle,Rectangle,1,1,3,rectGroupBox
+Underline,Underline,0,1,1,ulGroupBox
+Text,Text,1,1,3,textGroupBox
+LaTeX,MathTex,1,1,3,latexGroupBox functionGroupBox
+Coordinate Plane,NumberPlane,0,1,1,numPlaneGroupBox
+Arc,Arc,1,1,3,arcGroupBox
+Arrow,Arrow,1,1,3,arrowGroupBox
+Polygon,Polygon,1,1,3,polyGroupBox
+Regular Polygon,RegularPolygon,1,1,3,regPolyGroupBox
+Dot,Dot,1,1,3,dotGroupBox
+Line,Line,1,1,3,lineGroupBox
+Matrix,Matrix,1,1,3,matrixGroupBox
+Surrounding Rectangle,SurroundingRectangle,0,1,1,surRectGroupBox
+Point Label,BraceLabel,0,1,1,braceGroupBox
