@@ -416,11 +416,6 @@
                          </item>
                          <item>
                           <property name="text">
-                           <string>Polygon</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
                            <string>Regular Polygon</string>
                           </property>
                          </item>
