@@ -1234,7 +1234,7 @@
                            </widget>
                           </item>
                           <item>
-                           <widget class="QLineEdit" name="lineEdit">
+                           <widget class="QLineEdit" name="startCorLineEdit">
                             <property name="maxLength">
                              <number>8</number>
                             </property>
