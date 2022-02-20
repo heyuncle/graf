@@ -78,7 +78,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
     def loadProp(self, prop):
         pass
 
-    def saveProp(self):
+    def saveProp(self): # TODO: save object type
         for i in self.propScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
             if i.isVisible():
                 if i.objectName() == "rectGroupBox":
@@ -89,15 +89,87 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                             "grid_xstep": self.xGridSpinBox.value(),
                             "grid_ystep": self.yGridSpinBox.value()
                         }))
-                # elif i.objectName() == "ulGroupBox":
-                #     for j in self.treeWidget.selectedItems():
-                #         j.setText(3,eval(j.text(3)).update({
-                #             "height": self.rectHeightSpinBox.value(),
-                #             "width": self.rectWidthSpinBox.value(),
-                #             "grid_xstep": self.xGridSpinBox.value(),
-                #             "grid_ystep": self.yGridSpinBox.value()
-                #         }))
-
+                elif i.objectName() == "ulGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "object": "",
+                            "buff": self.ulBuffSpinBox.value()
+                        }))
+                elif i.objectName() == "arcGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "radius": "",
+                            "start_angle": self.stAngleSpinBox.value(),
+                            "angle": self.angleSpinBox.value()
+                        }))
+                elif i.objectName() == "arrowGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "stroke_width": self.arStrokeSpinBox.value(),
+                            "buff": self.arBuffSpinBox.value()
+                        }))
+                elif i.objectName() == "braceGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "object": "",
+                            "text": self.bracePlainTextEdit.toPlainText()
+                        }))
+                elif i.objectName() == "colorGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "color": self.colorFrame.styleSheet().split()[-1]
+                        }))
+                elif i.objectName() == "directionGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "start": (self.dirStartComboBox.currentText() if self.dirStartComboBox.currentText() != "(None)" else None),
+                            "end": (self.dirStartComboBox.currentText())
+                        }))
+                elif i.objectName() == "dotGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "point": self.coordLineEdit.text(),
+                            "stroke_width": self.widthSpinBox.value(),
+                            "fill_opacity": self.opacitySpinBox.value()
+                        }))
+                elif i.objectName() == "functionGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "function": None
+                        }))
+                elif i.objectName() == "latexGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "font_size": self.latexSizeSpinBox.value()
+                        }))
+                elif i.objectName() == "lineGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "start": self.startCorLineEdit.text(),
+                            "end": self.endCorLineEdit.text(),
+                            "buff": self.lineThickSpinBox.value()
+                        }))
+                elif i.objectName() == "matrixGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "matrix": self.matrixTableWidget.items()
+                        }))
+                elif i.objectName() == "numPlaneGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "x_min": self.numXMinSpinBox.value(),
+                            "x_max": self.numXMaxSpinBox.value(),
+                            "y_min": self.numYMinSpinBox.value(),
+                            "y_max": self.numYMaxSpinBox.value(),
+                            "x_length": self.numXLengthSpinBox.value(),
+                            "y_length": self.numYLengthSpinBox.value()
+                        }))
+                elif i.objectName() == "positionGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "x_shift": self.xSpinBox.value(),
+                            "y_shift": self.ySpinBox.value()
+                        }))
 
     def changeColor(self):
         self.colorFrame.setStyleSheet("background-color: " + QtWidgets.QColorDialog.getColor().name())
