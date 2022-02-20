@@ -354,7 +354,7 @@
                    <property name="geometry">
                     <rect>
                      <x>0</x>
-                     <y>0</y>
+                     <y>-2586</y>
                      <width>239</width>
                      <height>2991</height>
                     </rect>
@@ -385,7 +385,7 @@
                          </item>
                          <item>
                           <property name="text">
-                           <string>Number Plane</string>
+                           <string>Coordinate Plane</string>
                           </property>
                          </item>
                          <item>
@@ -450,7 +450,7 @@
                          </item>
                          <item>
                           <property name="text">
-                           <string>Brace Label</string>
+                           <string>Point Label</string>
                           </property>
                          </item>
                         </widget>
@@ -1581,7 +1581,7 @@
                     <item>
                      <widget class="QGroupBox" name="braceGroupBox">
                       <property name="title">
-                       <string>Brace Label</string>
+                       <string>Point Label</string>
                       </property>
                       <layout class="QVBoxLayout" name="verticalLayout_38">
                        <item>
@@ -1833,7 +1833,7 @@
                     <item>
                      <widget class="QGroupBox" name="numPlaneGroupBox">
                       <property name="title">
-                       <string>Number Plane</string>
+                       <string>Coordinate Plane</string>
                       </property>
                       <layout class="QVBoxLayout" name="verticalLayout_52">
                        <item>
