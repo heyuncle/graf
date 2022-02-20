@@ -81,37 +81,37 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         def showUniqueProp(objType):
             if objType == "Rectangle":
                 self.rectGroupBox.show()
-            if objType == "Underline":
+            elif objType == "Underline":
                 self.ulGroupBox.show()
-            if objType == "Text":
+            elif objType == "Text":
                 self.textGroupBox.show()
-            if objType == "LaTeX":
+            elif objType == "LaTeX":
                 self.latexGroupBox.show()
                 self.functionGroupBox.show()
-            if objType == "Number Plane":
+            elif objType == "Number Plane":
                 self.numPlaneGroupBox.show()
-            if objType == "Function Graph":
+            elif objType == "Function Graph":
                 self.functionGroupBox.show()
-            if objType == "Parametric Function":
+            elif objType == "Parametric Function":
                 self.paramFuncGroupBox.show()
                 self.functionGroupBox.show()
-            if objType == "Arc":
+            elif objType == "Arc":
                 self.arcGroupBox.show()
-            if objType == "Arrow":
+            elif objType == "Arrow":
                 self.arrowGroupBox.show()
-            if objType == "Polygon":
+            elif objType == "Polygon":
                 self.polyGroupBox.show()
-            if objType == "Regular Polygon":
+            elif objType == "Regular Polygon":
                 self.regPolyGroupBox.show()
-            if objType == "Dot":
+            elif objType == "Dot":
                 self.dotGroupBox.show()
-            if objType == "Line":
+            elif objType == "Line":
                 self.lineGroupBox.show()
-            if objType == "Matrix":
+            elif objType == "Matrix":
                 self.matrixGroupBox.show()
-            if objType == "Surrounding Rectangle":
+            elif objType == "Surrounding Rectangle":
                 self.surRectGroupBox.show()
-            if objType == "Brace Label":
+            elif objType == "Brace Label":
                 self.braceGroupBox.show()
 
         shared = {"Rectangle":3,"Underline":1, "Text":3, "LaTeX":3, "Number Plane":3, "Function Graph":3, "Parametric Function":3, "Arc":3, "Arrow":3, "Polygon":3, "Regular Polygon":3, "Dot":3, "Line":3, "Matrix":3, "Surrounding Rectangle":3, "Brace Label":3, }
