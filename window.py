@@ -272,7 +272,7 @@ class Ui_MainWindow(object):
         self.colorFrame.setSizePolicy(sizePolicy)
         self.colorFrame.setMinimumSize(QtCore.QSize(23, 23))
         self.colorFrame.setMaximumSize(QtCore.QSize(23, 23))
-        self.colorFrame.setStyleSheet("background-color: rgb(255, 255, 255);")
+        self.colorFrame.setStyleSheet("background-color: #ffffff;")
         self.colorFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.colorFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.colorFrame.setObjectName("colorFrame")
