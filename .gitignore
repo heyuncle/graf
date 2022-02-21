@@ -1,3 +1,4 @@
 .qt_for_python
 __pycache__
 .vscode
+private_info.py

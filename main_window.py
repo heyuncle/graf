@@ -3,16 +3,18 @@ import xml.etree.ElementTree as et
 
 from window import Ui_MainWindow
 from preferences import Ui_Dialog
+from tex_from_url import tex_from_url
 
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from qt_material import apply_stylesheet, QtStyleTools
+#from qt_material import apply_stylesheet, QtStyleTools
+import breeze_resources
 
 # from error import Ui_Dialog as errorDialog # TODO - what was this for
 
-class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
+class MainWindow(QMainWindow, Ui_MainWindow):
     file_path = ''
 
     def __init__(self, *args, **kwargs):
@@ -34,7 +36,12 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
 
         # self.setStyleSheet(PyQt5_stylesheets.load_stylesheet_pyqt5(style="style_Dark")) # qrainbowtheme option
         # self.setStyleSheet(qdarktheme.load_stylesheet("dark")) # pyqtdarktheme option
-        self.apply_stylesheet(self, theme='dark_blue.xml')  # qmaterial
+        #self.apply_stylesheet(self, theme='dark_blue.xml')  # qmaterial
+
+        file = QFile(":/dark/stylesheet.qss")
+        file.open(QFile.ReadOnly | QFile.Text)
+        stream = QTextStream(file)
+        self.setStyleSheet(stream.readAll())
         
         self.lastSelection = []
         self.thisSelection = self.treeWidget.selectedItems()
@@ -43,9 +50,8 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         self.retranslateUi(MainWindow)
         
         self.newObjButton.clicked.connect(lambda _: self.addObject(self.treeItem("MyObject","Object","(None)")))
-        #self.treeWidget.itemClicked.connect(lambda _: (self.saveProp(), self.updatePropPanel(), self.loadProp()))
-        self.treeWidget.itemClicked.connect(self.saveAndLoad)
-        self.treeWidget.itemSelectionChanged.connect(self.updateLastSelection)
+        self.treeWidget.itemClicked.connect(lambda _: (self.updatePropPanel(), self.loadProp()))
+        self.treeWidget.itemSelectionChanged.connect(self.saveLast)
         self.treeWidget.itemDoubleClicked.connect(self.edit)
         self.objTypeComboBox.currentTextChanged.connect(self.changeObjType)
         self.colorPushButton.clicked.connect(self.changeColor)
@@ -66,20 +72,15 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         newScene = self.treeItem("Scene 1","Scene")
         self.treeWidget.addTopLevelItem(newScene)
         self.treeWidget.setCurrentItem(newScene)
-        #self.addObject(self.treeItem("MyObject","Object","Rectangle","{'x_shift':0.0,'y_shift':0.0,'height':1.0,'width':1.0,'grid_xstep':1.0,'grid_ystep':1.0}"))
+        self.addObject(self.treeItem("MyObject","Object","Rectangle","{'x_shift':0.0,'y_shift':0.0,'height':1.0,'width':1.0,'grid_xstep':1.0,'grid_ystep':1.0}"))
 
         self.updatePropPanel()
 
-    def saveAndLoad(self):
-        self.saveProp()
-        self.updatePropPanel()
-        self.loadProp()
-
-    def updateLastSelection(self):
+    def saveLast(self):
         self.lastSelection = self.thisSelection
         self.thisSelection = self.treeWidget.selectedItems()
         print(self.lastSelection)
-        if self.thisSelection == []:
+        if not all(i in self.thisSelection for i in self.lastSelection):
             self.saveProp()
 
     def treeItem(self, name, type, subtype="", properties=""):
@@ -91,11 +92,6 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         item.setText(3,properties)
         if type == "Object":
             item.setText(4,str(self.objectID))
-        #icon = QIcon()
-        #item.setIcon(0,QIcon(QPixmap("icons/camera-solid.ico")))
-        # icon = QIcon()
-        # icon.addPixmap(QPixmap("./icons/camera-solid.ico"), QIcon.Normal, QIcon.Off)
-        # item.setIcon(0, icon)
         item.setIcon(0,QIcon("icons/camera-solid.ico" if type=="Scene" else "icons/equation.ico" if type=="Object" else "icons/object-group-solid.ico"))
         return item
 
@@ -171,10 +167,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                     self.widthSpinBox.setValue(prop["stroke_width"])
                     self.opacitySpinBox.setValue(int(100*prop["fill_opacity"]))
                 elif i.objectName() == "functionGroupBox": # TODO: load image back in, maybe save the filepath?
-                    # j.setText(3,str(eval(j.text(3)) | {
-                    #     "function": None
-                    # }))
-                    pass
+                    self.functionLineEdit.setText(prop["function"])
                 elif i.objectName() == "latexGroupBox":
                     self.latexSizeSpinBox.setValue(prop["font_size"])
                 elif i.objectName() == "lineGroupBox":
@@ -279,9 +272,10 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                             "fill_opacity": self.opacitySpinBox.value()/100
                         }))
                 elif i.objectName() == "functionGroupBox":
+                    print(self.functionLineEdit.text())
                     for j in self.lastSelection:
                         j.setText(3,str(eval(j.text(3)) | {
-                            "function": None
+                            "function": self.functionLineEdit.text()
                         }))
                 elif i.objectName() == "latexGroupBox":
                     for j in self.lastSelection:
@@ -388,7 +382,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
             else:
                 pass # TODO Single-select properties for scene, split for group
         else:
-            if len(list(dict.fromkeys([i.text(1) for i in self.treeWidget.selectedItems()]))) == 1:
+            if len(list(set([i.text(1) for i in self.treeWidget.selectedItems()]))) == 1:
                 if self.treeWidget.currentItem().text(1)=="Object":
                         self.objTypeGroupBox.show()
                         combinedProp = 3
@@ -396,7 +390,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                             for i in self.treeWidget.selectedItems():
                                 combinedProp &= int(self.objProp[i.text(2)][1])
                             showSharedProp(combinedProp)
-                            if len(list(dict.fromkeys([i.text(2) for i in self.treeWidget.selectedItems()]))) == 1: #TODO make cleaner
+                            if len(list(set([i.text(2) for i in self.treeWidget.selectedItems()]))) == 1: #TODO make cleaner
                                 showUniqueProp(self.treeWidget.currentItem().text(2))
                         except:
                             print("object not found error")
@@ -459,7 +453,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Critical)
             msg.setText("Error")
-            msg.setInformativeText('More information')
+            msg.setInformativeText('Invalid selection')
             msg.setWindowTitle("Error")
             msg.exec_()
 
@@ -505,7 +499,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                                 if prop == "color":
                                     param_string += prop + "='" + val + "'," #TODO fix color saving
                                 elif i.text(2) == "LaTeX":
-                                    param_string += "r'" + val + "',"
+                                    param_string += "r'" + tex_from_url(val)[3:-3   ] + "',"
                                 elif i.text(2) == "Polygon":
                                     param_string += val + ","
                                 elif i.text(2) == "Point Label":

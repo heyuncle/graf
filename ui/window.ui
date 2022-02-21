@@ -363,9 +363,9 @@
                    <property name="geometry">
                     <rect>
                      <x>0</x>
-                     <y>0</y>
+                     <y>-54</y>
                      <width>239</width>
-                     <height>2993</height>
+                     <height>2990</height>
                     </rect>
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_24">
@@ -652,21 +652,12 @@
                       </property>
                       <layout class="QVBoxLayout" name="verticalLayout_20">
                        <item>
-                        <widget class="QPushButton" name="fileSelectFunctionButton">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
+                        <widget class="QLineEdit" name="functionLineEdit">
+                         <property name="inputMask">
+                          <string/>
                          </property>
-                         <property name="maximumSize">
-                          <size>
-                           <width>16777215</width>
-                           <height>23</height>
-                          </size>
-                         </property>
-                         <property name="text">
-                          <string>Browse...</string>
+                         <property name="placeholderText">
+                          <string>URL</string>
                          </property>
                         </widget>
                        </item>
