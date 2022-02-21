@@ -17,6 +17,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
     file_path = ''
 
     def __init__(self, *args, **kwargs):
+        self.objectID = 0
         super(MainWindow, self).__init__(*args, **kwargs)
         for i in sys.argv[1:]:
             self.open_mmtr(i)
@@ -62,7 +63,8 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         item.setText(1,type)
         item.setText(2,subtype)
         item.setText(3,properties)
-        #item.setIcon(0,QIcon("icons/camera-solid.ico" if type=="Scene" else "icons/equation.ico" if type=="Object" else "icons/object-group-solid.ico"))
+        item.setText(4,str(self.objectID))
+        item.setIcon(0,QIcon("icons/camera-solid.ico" if type=="Scene" else "icons/equation.ico" if type=="Object" else "icons/object-group-solid.ico"))
         return item
 
 
@@ -78,7 +80,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
     def loadProp(self, prop):
         pass
 
-    def saveProp(self): # TODO: save object type
+    def saveProp(self):
         for i in self.propScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
             if i.isVisible():
                 if i.objectName() == "rectGroupBox":
@@ -92,13 +94,13 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                 elif i.objectName() == "ulGroupBox":
                     for j in self.treeWidget.selectedItems():
                         j.setText(3,str(eval(j.text(3)) | {
-                            "object": "",
+                            "object": None,
                             "buff": self.ulBuffSpinBox.value()
                         }))
                 elif i.objectName() == "arcGroupBox":
                     for j in self.treeWidget.selectedItems():
                         j.setText(3,str(eval(j.text(3)) | {
-                            "radius": "",
+                            "radius": self.radiusSpinBox.value(),
                             "start_angle": self.stAngleSpinBox.value(),
                             "angle": self.angleSpinBox.value()
                         }))
@@ -111,7 +113,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                 elif i.objectName() == "braceGroupBox":
                     for j in self.treeWidget.selectedItems():
                         j.setText(3,str(eval(j.text(3)) | {
-                            "object": "",
+                            "object": None,
                             "text": self.bracePlainTextEdit.toPlainText()
                         }))
                 elif i.objectName() == "colorGroupBox":
@@ -169,6 +171,39 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                         j.setText(3,str(eval(j.text(3)) | {
                             "x_shift": self.xSpinBox.value(),
                             "y_shift": self.ySpinBox.value()
+                        }))
+                elif i.objectName() == "paramFuncGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "t_start": self.minTSpinBox.value(),
+                            "t_end": self.maxTSpinBox.value()
+                        }))
+                elif i.objectName() == "regPolyGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "n": self.regPolyVertSpinBox.value()
+                        }))
+                elif i.objectName() == "surRectGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "object": None,
+                            "buff": self.surrBuffSpinBox.value(),
+                            "corner_radius": self.surrRadiusSpinBox.value()
+                        }))
+                elif i.objectName() == "textGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "text": self.textPlainTextEdit.toPlainText(),
+                            "font_size": self.textSizeSpinBox.value(),
+                            "fill_opacity": self.textOpacitySpinBox.value(),
+                            "slant": self.italicCheckBox.isChecked(),
+                            "weight": self.textBoldCheckBox.isChecked(),
+                            "stroke_width": self.textStrokeSpinBox.value()
+                        }))
+                elif i.objectName() == "polyGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "vertices": self.polyVertListWidget.items()
                         }))
 
     def changeColor(self):
@@ -253,6 +288,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
             self.apply_stylesheet(self, "dark_red.xml")
 
     def addItem(self):
+        self.objectID += 1
         if self.treeWidget.currentItem().text(1) in ["Group","Scene"]:
             self.treeWidget.currentItem().addChild(self.treeItem("MyObject","Object","Rectangle"))
         else:
