@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1048</width>
-    <height>777</height>
+    <width>1283</width>
+    <height>880</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -70,6 +70,15 @@
         <bool>false</bool>
        </property>
        <widget class="QWidget" name="fileWidget" native="true">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>300</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
           <widget class="QLabel" name="projHierLabel">
@@ -94,7 +103,7 @@
          <item>
           <widget class="QTreeWidget" name="treeWidget">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -149,30 +158,16 @@
              <string>Project</string>
             </property>
            </column>
-           <column>
-            <property name="text">
-             <string>Type</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>Subtype</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>Properties</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>Object ID</string>
-            </property>
-           </column>
           </widget>
          </item>
          <item>
           <widget class="QGroupBox" name="createGroupBox">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="title">
             <string>Create</string>
            </property>
@@ -2232,7 +2227,7 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>203</width>
+                  <width>239</width>
                   <height>1330</height>
                  </rect>
                 </property>
@@ -3153,13 +3148,6 @@
            </widget>
           </widget>
          </item>
-         <item>
-          <widget class="QPushButton" name="updateObjPropButton">
-           <property name="text">
-            <string>Update object properties</string>
-           </property>
-          </widget>
-         </item>
         </layout>
        </widget>
       </widget>
@@ -3302,7 +3290,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1048</width>
+     <width>1283</width>
      <height>21</height>
     </rect>
    </property>

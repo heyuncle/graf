@@ -36,15 +36,20 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         # self.setStyleSheet(qdarktheme.load_stylesheet("dark")) # pyqtdarktheme option
         self.apply_stylesheet(self, theme='dark_blue.xml')  # qmaterial
         
+        self.lastSelection = []
+        self.thisSelection = self.treeWidget.selectedItems()
+
         self.show()
         self.retranslateUi(MainWindow)
         
         self.newObjButton.clicked.connect(lambda _: self.addObject(self.treeItem("MyObject","Object","(None)")))
-        self.treeWidget.itemClicked.connect(lambda _: (self.saveProp(), self.updatePropPanel(), self.loadProp()))
+        #self.treeWidget.itemClicked.connect(lambda _: (self.saveProp(), self.updatePropPanel(), self.loadProp()))
+        self.treeWidget.itemClicked.connect(self.saveAndLoad)
+        self.treeWidget.itemSelectionChanged.connect(self.updateLastSelection)
         self.treeWidget.itemDoubleClicked.connect(self.edit)
         self.objTypeComboBox.currentTextChanged.connect(self.changeObjType)
         self.colorPushButton.clicked.connect(self.changeColor)
-        self.updateObjPropButton.clicked.connect(self.saveProp)
+        #self.updateObjPropButton.clicked.connect(self.saveProp)
         # self.addRowButton.clicked.connect(self.matrixTableWidget.insertRow(self.matrixTableWidget.rowCount()))
         # self.removeRowButton.clicked.connect(self.matrixTableWidget.removeRow(self.matrixTableWidget.rowCount()))
         # self.addColButton.clicked.connect(self.matrixTableWidget.insertColumn(self.matrixTableWidget.columnCount()))
@@ -62,7 +67,20 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         self.treeWidget.addTopLevelItem(newScene)
         self.treeWidget.setCurrentItem(newScene)
         #self.addObject(self.treeItem("MyObject","Object","Rectangle","{'x_shift':0.0,'y_shift':0.0,'height':1.0,'width':1.0,'grid_xstep':1.0,'grid_ystep':1.0}"))
+
         self.updatePropPanel()
+
+    def saveAndLoad(self):
+        self.saveProp()
+        self.updatePropPanel()
+        self.loadProp()
+
+    def updateLastSelection(self):
+        self.lastSelection = self.thisSelection
+        self.thisSelection = self.treeWidget.selectedItems()
+        print(self.lastSelection)
+        if self.thisSelection == []:
+            self.saveProp()
 
     def treeItem(self, name, type, subtype="", properties=""):
         item = QTreeWidgetItem()
@@ -98,15 +116,13 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
 
     def loadProp(self):
         if self.treeWidget.currentItem().text(3)=="":
+            self.objTypeComboBox.setCurrentText("(None)")
             return
         prop = ast.literal_eval(self.treeWidget.currentItem().text(3))
         for i in self.propScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
             if i.isVisible():
                 if i.objectName() == "objTypeGroupBox":
-                    try:
-                        self.objTypeComboBox.setCurrentText(self.treeWidget.currentItem().text(2))
-                    except:
-                        self.objTypeComboBox.setCurrentText("(None)")
+                    self.objTypeComboBox.setCurrentText(self.treeWidget.currentItem().text(2))
                 if i.objectName() == "rectGroupBox":
                     self.rectHeightSpinBox.setValue(prop["height"])
                     self.rectWidthSpinBox.setValue(prop["width"])
@@ -202,10 +218,12 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                         self.polyVertListWidget.addItem(i)
 
     def saveProp(self):
+        if ("Scene" or "Group") in [i.text(1) for i in self.lastSelection]:
+            return
         for i in self.propScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
             if i.isVisible():
                 if i.objectName() == "rectGroupBox":
-                    for j in self.treeWidget.selectedItems():
+                    for j in self.lastSelection:
                         j.setText(3,str(eval(j.text(3)) | {
                             "height": self.rectHeightSpinBox.value(),
                             "width": self.rectWidthSpinBox.value(),
@@ -213,72 +231,72 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                             "grid_ystep": self.yGridSpinBox.value()
                         }))
                 elif i.objectName() == "ulGroupBox":
-                    for j in self.treeWidget.selectedItems():
+                    for j in self.lastSelection:
                         j.setText(3,str(eval(j.text(3)) | {
                             "object": self.getObjID(self.ulObjComboBox.currentText()),
                             "buff": self.ulBuffSpinBox.value()
                         }))
                 elif i.objectName() == "arcGroupBox":
-                    for j in self.treeWidget.selectedItems():
+                    for j in self.lastSelection:
                         j.setText(3,str(eval(j.text(3)) | {
                             "radius": self.radiusSpinBox.value(),
                             "start_angle": self.stAngleSpinBox.value(),
                             "angle": self.angleSpinBox.value()
                         }))
                 elif i.objectName() == "arrowGroupBox":
-                    for j in self.treeWidget.selectedItems():
+                    for j in self.lastSelection:
                         j.setText(3,str(eval(j.text(3)) | {
                             "stroke_width": self.arStrokeSpinBox.value(),
                             "buff": self.arBuffSpinBox.value()
                         }))
                 elif i.objectName() == "braceGroupBox":
-                    for j in self.treeWidget.selectedItems():
+                    for j in self.lastSelection:
                         j.setText(3,str(eval(j.text(3)) | {
                             "object": self.getObjID(self.braceObjSelectComboBox.currentText()),
                             "text": self.bracePlainTextEdit.toPlainText()
                         }))
                 elif i.objectName() == "colorGroupBox":
-                    for j in self.treeWidget.selectedItems():
+                    for j in self.lastSelection:
                         j.setText(3,str(eval(j.text(3)) | {
                             "color": self.colorFrame.styleSheet().split()[-1]
                         }))
                 elif i.objectName() == "directionGroupBox":
-                    for j in self.treeWidget.selectedItems():
+                    for j in self.lastSelection:
                         j.setText(3,str(eval(j.text(3)) | {
                             "start": (self.dirStartComboBox.currentText() if self.dirStartComboBox.currentText() != "(None)" else None),
                             "end": (self.dirEndComboBox.currentText() if self.dirEndComboBox.currentText() != "(None)" else None)
                         }))
                 elif i.objectName() == "dotGroupBox":
-                    for j in self.treeWidget.selectedItems():
+                    for j in self.lastSelection:
                         j.setText(3,str(eval(j.text(3)) | {
                             "point": self.coordLineEdit.text(),
                             "stroke_width": self.widthSpinBox.value(),
                             "fill_opacity": self.opacitySpinBox.value()/100
                         }))
                 elif i.objectName() == "functionGroupBox":
-                    for j in self.treeWidget.selectedItems():
+                    for j in self.lastSelection:
                         j.setText(3,str(eval(j.text(3)) | {
                             "function": None
                         }))
                 elif i.objectName() == "latexGroupBox":
-                    for j in self.treeWidget.selectedItems():
+                    for j in self.lastSelection:
                         j.setText(3,str(eval(j.text(3)) | {
                             "font_size": self.latexSizeSpinBox.value()
                         }))
                 elif i.objectName() == "lineGroupBox":
-                    for j in self.treeWidget.selectedItems():
+                    for j in self.lastSelection:
                         j.setText(3,str(eval(j.text(3)) | {
                             "start": self.startCorLineEdit.text(),
                             "end": self.endCorLineEdit.text(),
                             "buff": self.lineThickSpinBox.value()
                         }))
                 elif i.objectName() == "matrixGroupBox":
-                    for j in self.treeWidget.selectedItems():
+                    for j in self.lastSelection:
                         j.setText(3,str(eval(j.text(3)) | {
                             "matrix": self.matrixTableWidget.items()
                         }))
                 elif i.objectName() == "numPlaneGroupBox":
-                    for j in self.treeWidget.selectedItems():
+                    for j in self.lastSelection:
                         j.setText(3,str(eval(j.text(3)) | {
                             "x_min": self.numXMinSpinBox.value(),
                             "x_max": self.numXMaxSpinBox.value(),
@@ -288,31 +306,31 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                             "y_length": self.numYLengthSpinBox.value()
                         }))
                 elif i.objectName() == "positionGroupBox":
-                    for j in self.treeWidget.selectedItems():
+                    for j in self.lastSelection:
                         j.setText(3,str(eval(j.text(3)) | {
                             "x_shift": self.xSpinBox.value(),
                             "y_shift": self.ySpinBox.value()
                         }))
                 elif i.objectName() == "paramFuncGroupBox":
-                    for j in self.treeWidget.selectedItems():
+                    for j in self.lastSelection:
                         j.setText(3,str(eval(j.text(3)) | {
                             "t_start": self.minTSpinBox.value(),
                             "t_end": self.maxTSpinBox.value()
                         }))
                 elif i.objectName() == "regPolyGroupBox":
-                    for j in self.treeWidget.selectedItems():
+                    for j in self.lastSelection:
                         j.setText(3,str(eval(j.text(3)) | {
                             "n": self.regPolyVertSpinBox.value()
                         }))
                 elif i.objectName() == "surRectGroupBox":
-                    for j in self.treeWidget.selectedItems():
+                    for j in self.lastSelection:
                         j.setText(3,str(eval(j.text(3)) | {
                             "object": self.getObjID(self.surrObjComboBox.currentText()),
                             "buff": self.surrBuffSpinBox.value(),
                             "corner_radius": self.surrRadiusSpinBox.value()
                         }))
                 elif i.objectName() == "textGroupBox":
-                    for j in self.treeWidget.selectedItems():
+                    for j in self.lastSelection:
                         j.setText(3,str(eval(j.text(3)) | {
                             "text": self.textPlainTextEdit.toPlainText(),
                             "font_size": self.textSizeSpinBox.value(),
@@ -322,7 +340,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                             "stroke_width": self.textStrokeSpinBox.value()
                         }))
                 elif i.objectName() == "polyGroupBox":
-                    for j in self.treeWidget.selectedItems():
+                    for j in self.lastSelection:
                         j.setText(3,str(eval(j.text(3)) | {
                             "vertices": self.polyVertListWidget.items()
                         }))
@@ -349,7 +367,6 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         def showUniqueProp(objType):
             for i in self.objProp[objType][2].split():
                 exec("self."+i+".show()")
-            
 
         for i in self.propScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
             i.hide()
@@ -455,6 +472,8 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
             children = [self.treeWidget.currentItem().child(i) for i in range(self.treeWidget.currentItem().childCount())]
             for i in children:
                 param_string = ""
+                if i.text(2) == "(None)":
+                    pass
                 if i.text(2) == "Parametric Function":
                     param_string += "function=lambda t: np.array((" + i[1]["xt"] \
                         .replace("^", "**") \
@@ -465,46 +484,46 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                                         .replace("sin", "np.sin") + ",0)),"
                 else:
                     showList.append(i.text(0))
-                    for j in eval(i.text(3)).items():
-                        if j[0] in ["x_shift", "y_shift", "color"]: # color temporary
+                    objDict = eval(i.text(3))
+                    for prop,val in objDict.items():
+                        if prop in ["x_shift", "y_shift"]:
                             pass
-                        # elif j[0] == "show": #TODO show at start property
-                        #     if j[1] == True:
+                        # elif prop == "show": #TODO show at start property
+                        #     if val == True:
                         #         showList.append(i.text(0))
                         else:
                             try:
-                                float(j[1])
-                                param_string += j[0] + "=" + str(j[1]) + ","
+                                float(val)
+                                param_string += prop + "=" + str(val) + ","
                             except:
                                 # If number is not float or int (can't be converted to float)
-                                # if j[0] == "color":
-                                #     param_string += j[0] + "='" + j[1] + "'," #TODO fix color saving
-                                if i.text(2) == "LaTex":
-                                    param_string += "r'" + j[1] + "',"
+                                if prop == "color":
+                                    param_string += prop + "='" + val + "'," #TODO fix color saving
+                                elif i.text(2) == "LaTeX":
+                                    param_string += "r'" + val + "',"
                                 elif i.text(2) == "Polygon":
-                                    param_string += j[1] + ","
+                                    param_string += val + ","
                                 elif i.text(2) == "Point Label":
-                                    if j[0] == "text":
-                                        param_string += "text=r'" + j[1] + "',"
+                                    if prop == "text":
+                                        param_string += "text=r'" + val + "',"
                                     else:
-                                        param_string += j[0] + "=" + j[1] + ","
+                                        param_string += prop + "=" + val + ","
                                 elif i.text(2) == "Text":
-                                    param_string += j[0] + "=r'" + j[1] + "',"
+                                    param_string += prop + "=r'" + val + "',"
                                 elif i.text(2) == "Function Graph":
-                                    param_string += "lambda x: " + j[1] \
+                                    param_string += "lambda x: " + val \
                                         .replace("^", "**") \
                                         .replace("cos", "np.cos") \
                                         .replace("sin", "np.sin") + ","
                                 else:
-                                    param_string += j[0] + "=" + j[1] + ","
-                    objLine = "        " + i.text(0) + "=" + i.text(2) + "(" + param_string[:-1] + ")" #TODO ensure name has no spaces
+                                    param_string += prop + "=" + val + ","
+                    objLine = "        " + i.text(0) + "=" + self.objProp[i.text(2)][0] + "(" + param_string[:-1] + ")" #TODO ensure name has no spaces
                     try:
-                        objLine += ".shift(RIGHT*" + str(i[1]["x_shift"]) + "+UP*" + str(i[1]["y_shift"]) + ")"
+                        objLine += ".shift(RIGHT*" + str(objDict["x_shift"]) + "+UP*" + str(objDict["y_shift"]) + ")"
                     except:
                         pass
                     f.write(objLine + "\n")
             f.write("        self.add(" + ",".join([i for i in showList[::-1]]) + ")\n")
-            # f.write("        self.wait()\n") # NOTE previously commented
             # for i in self.animSave:
             #     param_string = ""
             #     if i[0] == "Move":
@@ -523,11 +542,12 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         # if not self.save_mmtr():
         #    return None
         self.file_path = QtWidgets.QFileDialog.getSaveFileName(filter="Video (*.mp4)")[0]
+        if self.file_path == "": return
         os.chdir("/".join(self.file_path.split("/")[:-1]))
         self.convert_to_manim()
         subprocess.run("manim manim.py MyScene")
         try:
-            os.replace("./media/videos/manim_export/1080p60/MyScene.mp4", "./"+self.file_path.split("/")[-1])
+            os.replace("./media/videos/manim/1080p60/MyScene.mp4", "./"+self.file_path.split("/")[-1])
             shutil.rmtree('media')
             shutil.rmtree('__pycache__')
         except:
