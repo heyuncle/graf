@@ -17,6 +17,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
     file_path = ''
 
     def __init__(self, *args, **kwargs):
+        self.objectID = 0
         super(MainWindow, self).__init__(*args, **kwargs)
         for i in sys.argv[1:]:
             self.open_mmtr(i)
@@ -62,6 +63,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         item.setText(1,type)
         item.setText(2,subtype)
         item.setText(3,properties)
+        item.setText(4,str(self.objectID))
         item.setIcon(0,QIcon("icons/camera-solid.ico" if type=="Scene" else "icons/equation.ico" if type=="Object" else "icons/object-group-solid.ico"))
         return item
 
@@ -78,7 +80,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
     def loadProp(self, prop):
         pass
 
-    def saveProp(self): # TODO: save object type
+    def saveProp(self):
         for i in self.propScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
             if i.isVisible():
                 if i.objectName() == "rectGroupBox":
@@ -286,6 +288,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
             self.apply_stylesheet(self, "dark_red.xml")
 
     def addItem(self):
+        self.objectID += 1
         if self.treeWidget.currentItem().text(1) in ["Group","Scene"]:
             self.treeWidget.currentItem().addChild(self.treeItem("MyObject","Object","Rectangle"))
         else:
