@@ -368,7 +368,7 @@
                    <property name="geometry">
                     <rect>
                      <x>0</x>
-                     <y>0</y>
+                     <y>-1290</y>
                      <width>239</width>
                      <height>2993</height>
                     </rect>
@@ -788,11 +788,7 @@
                            </widget>
                           </item>
                           <item>
-                           <widget class="QSpinBox" name="radiusSpinBox">
-                            <property name="maximum">
-                             <number>100</number>
-                            </property>
-                           </widget>
+                           <widget class="QDoubleSpinBox" name="radiusSpinBox"/>
                           </item>
                          </layout>
                         </widget>
@@ -808,17 +804,7 @@
                            </widget>
                           </item>
                           <item>
-                           <widget class="QSpinBox" name="stAngleSpinBox">
-                            <property name="accelerated">
-                             <bool>true</bool>
-                            </property>
-                            <property name="minimum">
-                             <number>-360</number>
-                            </property>
-                            <property name="maximum">
-                             <number>360</number>
-                            </property>
-                           </widget>
+                           <widget class="QDoubleSpinBox" name="stAngleSpinBox"/>
                           </item>
                          </layout>
                         </widget>
@@ -834,14 +820,7 @@
                            </widget>
                           </item>
                           <item>
-                           <widget class="QSpinBox" name="angleSpinBox">
-                            <property name="minimum">
-                             <number>-360</number>
-                            </property>
-                            <property name="maximum">
-                             <number>360</number>
-                            </property>
-                           </widget>
+                           <widget class="QDoubleSpinBox" name="angleSpinBox"/>
                           </item>
                          </layout>
                         </widget>
@@ -946,15 +925,12 @@
                            </widget>
                           </item>
                           <item>
-                           <widget class="QSpinBox" name="minTSpinBox">
-                            <property name="accelerated">
-                             <bool>true</bool>
-                            </property>
+                           <widget class="QDoubleSpinBox" name="minTSpinBox">
                             <property name="minimum">
-                             <number>-100</number>
+                             <double>-100.000000000000000</double>
                             </property>
                             <property name="maximum">
-                             <number>100</number>
+                             <double>100.000000000000000</double>
                             </property>
                            </widget>
                           </item>
@@ -978,15 +954,12 @@
                            </widget>
                           </item>
                           <item>
-                           <widget class="QSpinBox" name="maxTSpinBox">
-                            <property name="accelerated">
-                             <bool>true</bool>
-                            </property>
+                           <widget class="QDoubleSpinBox" name="maxTSpinBox">
                             <property name="minimum">
-                             <number>-100</number>
+                             <double>-100.000000000000000</double>
                             </property>
                             <property name="maximum">
-                             <number>100</number>
+                             <double>100.000000000000000</double>
                             </property>
                            </widget>
                           </item>
@@ -1221,7 +1194,7 @@
                            </widget>
                           </item>
                           <item>
-                           <widget class="QLineEdit" name="lineEdit">
+                           <widget class="QLineEdit" name="startCorLineEdit">
                             <property name="maxLength">
                              <number>8</number>
                             </property>
@@ -1509,14 +1482,7 @@
                            </widget>
                           </item>
                           <item>
-                           <widget class="QSpinBox" name="surrRadiusSpinBox">
-                            <property name="accelerated">
-                             <bool>true</bool>
-                            </property>
-                            <property name="maximum">
-                             <number>100</number>
-                            </property>
-                           </widget>
+                           <widget class="QDoubleSpinBox" name="surrRadiusSpinBox"/>
                           </item>
                          </layout>
                         </widget>
@@ -3387,7 +3353,11 @@
    <addaction name="menuEdit"/>
    <addaction name="menuView"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+  </widget>
   <action name="actionReset_layout">
    <property name="text">
     <string>Reset layout</string>

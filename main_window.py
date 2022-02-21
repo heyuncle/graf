@@ -67,7 +67,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
     def treeItem(self, name, type, subtype="", properties=""):
         item = QTreeWidgetItem()
         item.setFlags(item.flags() | Qt.ItemIsEditable)
-        item.setText(0,self.testDuplicateName(name)) # TODO fix testDuplicateName
+        item.setText(0,self.testDuplicateName(name, False))
         item.setText(1,type)
         item.setText(2,subtype)
         item.setText(3,properties)
@@ -76,10 +76,10 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         item.setIcon(0,QIcon("icons/camera-solid.ico" if type=="Scene" else "icons/equation.ico" if type=="Object" else "icons/object-group-solid.ico"))
         return item
 
-
     def edit(self):
-        self.treeWidget.editItem(self.treeWidget.currentItem())
-        print(self.testDuplicateName("MyObject"))
+        item = self.treeWidget.currentItem()
+        self.treeWidget.editItem(item)
+        item.setText(0,self.testDuplicateName(item.text(0), True)) # TODO somehow wait until editing finished before doing this
 
     def changeObjType(self):
         newType = self.objTypeComboBox.currentText()
@@ -87,8 +87,8 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         for i in self.treeWidget.selectedItems():
             i.setText(2,newType)
             i.setText(3,default)
-            self.updatePropPanel()
-            self.loadProp()
+        self.updatePropPanel()
+        self.loadProp()
 
     def getObjID(self, name):
         if (name != "(None)"):
@@ -104,7 +104,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
             if i.isVisible():
                 if i.objectName() == "objTypeGroupBox":
                     try:
-                        self.objTypeComboBox.setCurrentText(prop.text(2))
+                        self.objTypeComboBox.setCurrentText(self.treeWidget.currentItem().text(2))
                     except:
                         self.objTypeComboBox.setCurrentText("(None)")
                 if i.objectName() == "rectGroupBox":
@@ -148,7 +148,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                 elif i.objectName() == "dotGroupBox":
                     self.coordLineEdit.setText(prop["point"])
                     self.widthSpinBox.setValue(prop["stroke_width"])
-                    self.opacitySpinBox.setValue(prop["fill_opacity"])
+                    self.opacitySpinBox.setValue(int(100*prop["fill_opacity"]))
                 elif i.objectName() == "functionGroupBox": # TODO: load image back in, maybe save the filepath?
                     # j.setText(3,str(eval(j.text(3)) | {
                     #     "function": None
@@ -253,7 +253,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                         j.setText(3,str(eval(j.text(3)) | {
                             "point": self.coordLineEdit.text(),
                             "stroke_width": self.widthSpinBox.value(),
-                            "fill_opacity": self.opacitySpinBox.value()
+                            "fill_opacity": self.opacitySpinBox.value()/100
                         }))
                 elif i.objectName() == "functionGroupBox":
                     for j in self.treeWidget.selectedItems():
@@ -383,14 +383,14 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
             else:
                 print("multiple object types selected")
 
-    def testDuplicateName(self, name):
+    def testDuplicateName(self, name, exists):
         allNames = [i.text(0) for i in self.treeWidget.findItems("Object", Qt.MatchFixedString | Qt.MatchRecursive, 1)] + [i.text(0) for i in self.treeWidget.findItems("Group", Qt.MatchFixedString | Qt.MatchRecursive, 1)] + [i.text(0) for i in self.treeWidget.findItems("Scene", Qt.MatchFixedString | Qt.MatchRecursive, 1)]
-        if (name in allNames):
+        if (name in allNames and exists):
             allNames.remove(name) # search includes the object currently, remove 1 of it to test for duplicates
         if (name in allNames):
             tempName = name + " (1)"
             while (tempName in allNames):
-                tempName = name + " (" + str(int(tempName[-2]) + 1) + ")"
+                tempName = name + " (" + str(int(tempName[-2]) + 1) + ")" # TODO this is super clean but it breaks past 10
             print(tempName)
             return tempName
         else:
