@@ -92,13 +92,13 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                 elif i.objectName() == "ulGroupBox":
                     for j in self.treeWidget.selectedItems():
                         j.setText(3,str(eval(j.text(3)) | {
-                            "object": "",
+                            "object": None,
                             "buff": self.ulBuffSpinBox.value()
                         }))
                 elif i.objectName() == "arcGroupBox":
                     for j in self.treeWidget.selectedItems():
                         j.setText(3,str(eval(j.text(3)) | {
-                            "radius": "",
+                            "radius": self.radiusSpinBox.value(),
                             "start_angle": self.stAngleSpinBox.value(),
                             "angle": self.angleSpinBox.value()
                         }))
@@ -111,7 +111,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                 elif i.objectName() == "braceGroupBox":
                     for j in self.treeWidget.selectedItems():
                         j.setText(3,str(eval(j.text(3)) | {
-                            "object": "",
+                            "object": None,
                             "text": self.bracePlainTextEdit.toPlainText()
                         }))
                 elif i.objectName() == "colorGroupBox":
@@ -169,6 +169,39 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                         j.setText(3,str(eval(j.text(3)) | {
                             "x_shift": self.xSpinBox.value(),
                             "y_shift": self.ySpinBox.value()
+                        }))
+                elif i.objectName() == "paramFuncGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "t_start": self.minTSpinBox.value(),
+                            "t_end": self.maxTSpinBox.value()
+                        }))
+                elif i.objectName() == "regPolyGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "n": self.regPolyVertSpinBox.value()
+                        }))
+                elif i.objectName() == "surRectGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "object": None,
+                            "buff": self.surrBuffSpinBox.value(),
+                            "corner_radius": self.surrRadiusSpinBox.value()
+                        }))
+                elif i.objectName() == "textGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "text": self.textPlainTextEdit.toPlainText(),
+                            "font_size": self.textSizeSpinBox.value(),
+                            "fill_opacity": self.textOpacitySpinBox.value(),
+                            "slant": self.italicCheckBox.isChecked(),
+                            "weight": self.textBoldCheckBox.isChecked(),
+                            "stroke_width": self.textStrokeSpinBox.value()
+                        }))
+                elif i.objectName() == "polyGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "vertices": self.polyVertListWidget.items()
                         }))
 
     def changeColor(self):
