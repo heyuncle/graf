@@ -91,7 +91,12 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
     def loadProp(self, prop):
         for i in self.propScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
             if i.isVisible():
-                if i.objectName() == "rectGroupBox":
+                if i.objectName() == "objTypeGroupBox":
+                    try:
+                        self.objTypeComboBox.setCurrentText(prop.text(2))
+                    except:
+                        self.objTypeComboBox.setCurrentText("(None)")
+                elif i.objectName() == "rectGroupBox":
                     for j in self.treeWidget.selectedItems():
                         j = ast.literal_eval(j) # convert string to dict
                         self.rectHeightSpinBox.setValue(float(j["height"]))
