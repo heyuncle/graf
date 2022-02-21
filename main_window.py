@@ -102,6 +102,11 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         prop = ast.literal_eval(self.treeWidget.currentItem().text(3))
         for i in self.propScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
             if i.isVisible():
+                if i.objectName() == "objTypeGroupBox":
+                    try:
+                        self.objTypeComboBox.setCurrentText(prop.text(2))
+                    except:
+                        self.objTypeComboBox.setCurrentText("(None)")
                 if i.objectName() == "rectGroupBox":
                     self.rectHeightSpinBox.setValue(prop["height"])
                     self.rectWidthSpinBox.setValue(prop["width"])
