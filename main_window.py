@@ -77,6 +77,10 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         self.updatePropPanel()
         self.loadProp("shit") #TODO default properties per obj
 
+    def getObjID(self, name):
+        if (name != "(None)"):
+            return int(self.treeWidget.findItems(name, Qt.MatchFixedString | Qt.MatchRecursive, 0)[0].text(4))
+
     def loadProp(self, prop):
         pass
 
@@ -94,7 +98,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                 elif i.objectName() == "ulGroupBox":
                     for j in self.treeWidget.selectedItems():
                         j.setText(3,str(eval(j.text(3)) | {
-                            "object": None,
+                            "object": self.getObjID(self.ulObjComboBox.currentText()),
                             "buff": self.ulBuffSpinBox.value()
                         }))
                 elif i.objectName() == "arcGroupBox":
@@ -113,7 +117,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                 elif i.objectName() == "braceGroupBox":
                     for j in self.treeWidget.selectedItems():
                         j.setText(3,str(eval(j.text(3)) | {
-                            "object": None,
+                            "object": self.getObjID(self.braceObjSelectComboBox.currentText()),
                             "text": self.bracePlainTextEdit.toPlainText()
                         }))
                 elif i.objectName() == "colorGroupBox":
@@ -186,7 +190,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                 elif i.objectName() == "surRectGroupBox":
                     for j in self.treeWidget.selectedItems():
                         j.setText(3,str(eval(j.text(3)) | {
-                            "object": None,
+                            "object": self.getObjID(self.surrObjComboBox.currentText()),
                             "buff": self.surrBuffSpinBox.value(),
                             "corner_radius": self.surrRadiusSpinBox.value()
                         }))
@@ -209,7 +213,18 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
     def changeColor(self):
         self.colorFrame.setStyleSheet("background-color: " + QtWidgets.QColorDialog.getColor().name())
 
+    def setObjComboBoxes(self):
+        objList = self.treeWidget.findItems("Object", Qt.MatchFixedString | Qt.MatchRecursive, 1)
+        selectedObjList = self.treeWidget.selectedItems()
+        objList = [objVal.text(0) for objVal in objList if objVal not in selectedObjList]
+        boxes = [self.ulObjComboBox, self.surrObjComboBox, self.relAlignComboBox, self.circumShapeComboBox, self.braceObjSelectComboBox, self.transformTargetComboBox, self.movePathTargetComboBox]
+        objList.insert(0, "(None)")
+        for j in boxes:
+            j.clear()
+            j.addItems(objList)
+
     def updatePropPanel(self):
+        self.setObjComboBoxes()
         def showSharedProp(sharedProp):
             for i in [self.colorGroupBox,self.positionGroupBox]:
                 i.show() if sharedProp % 2 == 1 else i.hide()
@@ -288,8 +303,8 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
             self.apply_stylesheet(self, "dark_red.xml")
 
     def addItem(self):
-        self.objectID += 1
         if self.treeWidget.currentItem().text(1) in ["Group","Scene"]:
+            self.objectID += 1
             self.treeWidget.currentItem().addChild(self.treeItem("MyObject","Object","Rectangle"))
         else:
             msg = QMessageBox()
