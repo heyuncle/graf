@@ -368,9 +368,9 @@
                    <property name="geometry">
                     <rect>
                      <x>0</x>
-                     <y>-2333</y>
+                     <y>-2588</y>
                      <width>239</width>
-                     <height>2987</height>
+                     <height>2993</height>
                     </rect>
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_24">
@@ -1991,6 +1991,19 @@
                        </item>
                       </layout>
                      </widget>
+                    </item>
+                    <item>
+                     <spacer name="verticalSpacer">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
                     </item>
                    </layout>
                   </widget>
