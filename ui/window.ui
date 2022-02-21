@@ -143,8 +143,8 @@
            </property>
            <property name="iconSize">
             <size>
-             <width>0</width>
-             <height>0</height>
+             <width>15</width>
+             <height>15</height>
             </size>
            </property>
            <property name="sortingEnabled">
@@ -363,7 +363,7 @@
                    <property name="geometry">
                     <rect>
                      <x>0</x>
-                     <y>-1290</y>
+                     <y>0</y>
                      <width>239</width>
                      <height>2993</height>
                     </rect>

@@ -91,6 +91,11 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         item.setText(3,properties)
         if type == "Object":
             item.setText(4,str(self.objectID))
+        #icon = QIcon()
+        #item.setIcon(0,QIcon(QPixmap("icons/camera-solid.ico")))
+        # icon = QIcon()
+        # icon.addPixmap(QPixmap("./icons/camera-solid.ico"), QIcon.Normal, QIcon.Off)
+        # item.setIcon(0, icon)
         item.setIcon(0,QIcon("icons/camera-solid.ico" if type=="Scene" else "icons/equation.ico" if type=="Object" else "icons/object-group-solid.ico"))
         return item
 
@@ -432,7 +437,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                     self.animList.addItem(i[0])
         self.objNames = [i[2] for i in self.objSave]
         self.file_path = file.replace("\\", "/")
-        self.setWindowTitle("Manimator - " + self.file_path.split("/")[-1])
+        self.setWindowTitle("manimator 2.0 - " + self.file_path.split("/")[-1])
 
     def openPreferences(self):
         def submitPreferences():
@@ -554,18 +559,14 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
            pass
 
     def save_mmtr_as(self):
-        if None in self.objSave or len(self.objSave) == 0:  # Partially useless right now
-            return None
         try:
             self.file_path = QtWidgets.QFileDialog.getSaveFileName(filter="Manimator (*.mmtr)")[0]
             self.save_mmtr()
         except:
-            return False
-        self.setWindowTitle("Manimator - " + self.file_path.split("/")[-1])
+            return
+        self.setWindowTitle("manimator 2.0 - " + self.file_path.split("/")[-1])
 
     def save_mmtr(self):
-        if None in self.objSave or len(self.objSave) == 0:  # Partially useless right now
-            return False
         if self.file_path == '':
             return self.save_mmtr_as()
         else:
