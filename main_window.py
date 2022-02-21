@@ -544,7 +544,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if self.file_path == "": return
         os.chdir("/".join(self.file_path.split("/")[:-1]))
         self.convert_to_manim()
-        subprocess.run("manim manim.py MyScene")
+        subprocess.run("manim manim.py MyScene", shell=True)
         try:
             os.replace("./media/videos/manim/1080p60/MyScene.mp4", "./"+self.file_path.split("/")[-1])
             shutil.rmtree('media')
