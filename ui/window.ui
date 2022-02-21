@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string notr="true">mainimator (release 2.0)</string>
+   <string notr="true">manimator (release 2.0)</string>
   </property>
   <property name="tabShape">
    <enum>QTabWidget::Rounded</enum>
@@ -368,7 +368,7 @@
                    <property name="geometry">
                     <rect>
                      <x>0</x>
-                     <y>-2588</y>
+                     <y>0</y>
                      <width>239</width>
                      <height>2993</height>
                     </rect>
@@ -2266,7 +2266,7 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>239</width>
+                  <width>203</width>
                   <height>1330</height>
                  </rect>
                 </property>

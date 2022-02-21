@@ -35,7 +35,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         self.show()
         self.retranslateUi(MainWindow)
         
-        self.newObjButton.clicked.connect(lambda _: self.addItem(self.treeItem("MyObject","Object","(None)")))
+        self.newObjButton.clicked.connect(lambda _: self.addObject(self.treeItem("MyObject","Object","(None)")))
         self.treeWidget.itemClicked.connect(self.updatePropPanel)
         self.treeWidget.itemDoubleClicked.connect(self.edit)
         self.objTypeComboBox.currentTextChanged.connect(self.changeObjType)
@@ -70,6 +70,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
 
     def edit(self):
         self.treeWidget.editItem(self.treeWidget.currentItem())
+        print(self.testDuplicateName("MyObject"))
 
     def changeObjType(self):
         for i in self.treeWidget.selectedItems():
@@ -267,7 +268,17 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                 print("multiple object types selected")
 
     def testDuplicateName(self, name):
-        return name #TODO fix
+        allNames = [i.text(0) for i in self.treeWidget.findItems("Object", Qt.MatchFixedString | Qt.MatchRecursive, 1)] + [i.text(0) for i in self.treeWidget.findItems("Group", Qt.MatchFixedString | Qt.MatchRecursive, 1)] + [i.text(0) for i in self.treeWidget.findItems("Scene", Qt.MatchFixedString | Qt.MatchRecursive, 1)]
+        if (name in allNames):
+            allNames.remove(name) # search includes the object currently, remove 1 of it to test for duplicates
+        if (name in allNames):
+            tempName = name + " (1)"
+            while (tempName in allNames):
+                tempName = name + " (" + str(int(tempName[-2]) + 1) + ")"
+            print(tempName)
+            return tempName
+        else:
+            return name #TODO fix
 
     def open_mmtr(self, file):
         self.objList.clear()
@@ -398,7 +409,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         self.file_path = QtWidgets.QFileDialog.getSaveFileName(filter="Video (*.mp4)")[0]
         os.chdir("/".join(self.file_path.split("/")[:-1]))
         self.convert_to_manim()
-        subprocess.run("manim manim_export.py MyScene")
+        subprocess.run("manim manim.py MyScene")
         try:
             os.replace("./media/videos/manim_export/1080p60/MyScene.mp4", "./"+self.file_path.split("/")[-1])
             shutil.rmtree('media')
