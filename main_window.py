@@ -1,4 +1,4 @@
-import subprocess, sys, os, shutil, csv
+import subprocess, sys, os, shutil, csv, ast
 import xml.etree.ElementTree as et
 
 from window import Ui_MainWindow
@@ -41,6 +41,10 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         self.objTypeComboBox.currentTextChanged.connect(self.changeObjType)
         self.colorPushButton.clicked.connect(self.changeColor)
         self.updateObjPropButton.clicked.connect(self.saveProp)
+        # self.addRowButton.clicked.connect(self.matrixTableWidget.insertRow(self.matrixTableWidget.rowCount()))
+        # self.removeRowButton.clicked.connect(self.matrixTableWidget.removeRow(self.matrixTableWidget.rowCount()))
+        # self.addColButton.clicked.connect(self.matrixTableWidget.insertColumn(self.matrixTableWidget.columnCount()))
+        # self.remColButton.clicked.connect(self.matrixTableWidget.removeColumn(self.matrixTableWidget.columnCount()))
 
         self.actionOpen.triggered.connect(self.open_from_dir)
         self.actionSave.triggered.connect(self.save_mmtr)
@@ -81,9 +85,148 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
     def getObjID(self, name):
         if (name != "(None)"):
             return int(self.treeWidget.findItems(name, Qt.MatchFixedString | Qt.MatchRecursive, 0)[0].text(4))
+        else:
+            return None
 
     def loadProp(self, prop):
-        pass
+        for i in self.propScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
+            if i.isVisible():
+                if i.objectName() == "rectGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j = ast.literal_eval(j) # convert string to dict
+                        self.rectHeightSpinBox.setValue(float(j["height"]))
+                        self.rectWidthSpinBox.setValue(j["width"])
+                        self.xGridSpinBox.setValue(j["grid_xstep"])
+                        self.yGridSpinBox.setValue(j["grid_ystep"])
+                elif i.objectName() == "ulGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j = ast.literal_eval(j)
+                        try: # put in try loop incase object is deleted between saving and loading
+                            self.ulObjComboBox.setCurrentText(self.treeWidget.findItems(str(j["object"]), Qt.MatchFixedString | Qt.MatchRecursive, 4)[0].text(0))
+                        except:
+                            self.ulObjComboBox.setCurrentText("(None)")
+                        self.ulBuffSpinBox.setValue(j["buff"])
+                elif i.objectName() == "arcGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j = ast.literal_eval(j)
+                        self.radiusSpinBox.setValue(j["radius"])
+                        self.stAngleSpinBox.setValue(j["start_angle"])
+                        self.angleSpinBox.setValue(j["angle"])
+                elif i.objectName() == "arrowGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j = ast.literal_eval(j)
+                        self.arStrokeSpinBox.setValue(j["stroke_width"])
+                        self.arBuffSpinBox.setValue(j["buff"])
+                elif i.objectName() == "braceGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j = ast.literal_eval(j)
+                        try:
+                            self.braceObjSelectComboBox.setCurrentText(self.treeWidget.findItems(str(j["object"]), Qt.MatchFixedString | Qt.MatchRecursive, 4)[0].text(0))
+                        except:
+                            self.braceObjSelectComboBox.setCurrentText("(None)")
+                        self.bracePlainTextEdit.setPlainText(j["text"])
+                elif i.objectName() == "colorGroupBox":
+                    for j in self.treeWidget.selectedItems(): # TODO: load color in
+                        j = ast.literal_eval(j)
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "color": self.colorFrame.styleSheet().split()[-1]
+                        }))
+                elif i.objectName() == "directionGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j = ast.literal_eval(j)
+                        try:
+                            self.dirStartComboBox.setCurrentText(j["start"])
+                        except:
+                            self.dirStartComboBox.setCurrentText("(None)")
+                        try:
+                            self.dirEndComboBox.setCurrentText(j["start"])
+                        except:
+                            self.dirEndComboBox.setCurrentText("(None)")
+                elif i.objectName() == "dotGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j = ast.literal_eval(j)
+                        self.coordLineEdit.setText(j["point"])
+                        self.widthSpinBox.setValue(j["stroke_width"])
+                        self.opacitySpinBox.setValue(j["fill_opacity"])
+                elif i.objectName() == "functionGroupBox":
+                    for j in self.treeWidget.selectedItems(): # TODO: load image back in, maybe save the filepath?
+                        j = ast.literal_eval(j)
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "function": None
+                        }))
+                elif i.objectName() == "latexGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j = ast.literal_eval(j)
+                        self.latexSizeSpinBox.setValue(j["font_size"])
+                elif i.objectName() == "lineGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j = ast.literal_eval(j)
+                        self.startCorLineEdit.setText(j["start"])
+                        self.endCorLineEdit.setText(j["end"])
+                        self.lineThickSpinBox.setValue(j["buff"])
+                elif i.objectName() == "matrixGroupBox": # TODO: figure out what is going on with this
+                    for j in self.treeWidget.selectedItems():
+                        j = ast.literal_eval(j)
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "matrix": self.matrixTableWidget.items()
+                        }))
+                        for i in range(0, len(j["matrix"])):
+                            for k in range(0, len(j["matrix"][i])):
+                                self.matrixTableWidget.setItem(i, k, j["matrix"][i][k])
+                elif i.objectName() == "numPlaneGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j = ast.literal_eval(j)
+                        self.numXMinSpinBox.setValue(j["x_min"])
+                        self.numXMaxSpinBox.setValue(j["x_max"])
+                        self.numYMinSpinBox.setValue(j["y_min"])
+                        self.numYMaxSpinBox.setValue(j["y_max"])
+                        self.numXLengthSpinBox.setValue(j["x_length"])
+                        self.numYLengthSpinBox.setValue(j["y_length"])
+                elif i.objectName() == "positionGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j = ast.literal_eval(j)
+                        self.xSpinBox.setValue(j["x_shift"])
+                        self.ySpinBox.setValue(j["y_shift"])
+                elif i.objectName() == "paramFuncGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j = ast.literal_eval(j)
+                        self.minTSpinBox.setValue(j["t_start"])
+                        self.maxTSpinBox.setValue(j["t_end"])
+                elif i.objectName() == "regPolyGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j = ast.literal_eval(j)
+                        self.regPolyVertSpinBox.setValue(j["n"])
+                elif i.objectName() == "surRectGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j = ast.literal_eval(j)
+                        try:
+                            self.surrObjComboBox.setCurrentText(self.treeWidget.findItems(str(j["object"]), Qt.MatchFixedString | Qt.MatchRecursive, 4)[0].text(0))
+                        except:
+                            self.surrObjComboBox.setCurrentText("(None)")
+                        self.surrBuffSpinBox.setValue(j["buff"])
+                        self.surrRadiusSpinBox.setValue(j["corner_radius"])
+                elif i.objectName() == "textGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j = ast.literal_eval(j)
+                        j.setText(3,str(eval(j.text(3)) | {
+                            "text": self.textPlainTextEdit.toPlainText(),
+                            "font_size": self.textSizeSpinBox.value(),
+                            "fill_opacity": self.textOpacitySpinBox.value(),
+                            "slant": self.italicCheckBox.isChecked(),
+                            "weight": self.textBoldCheckBox.isChecked(),
+                            "stroke_width": self.textStrokeSpinBox.value()
+                        }))
+                        self.textPlainTextEdit.setPlainText(j["text"])
+                        self.textSizeSpinBox.setValue(j["font_size"])
+                        self.textOpacitySpinBox.setValue(j["fill_opacity"])
+                        self.italicCheckBox.setChecked(j["slant"])
+                        self.textBoldCheckBox.setChecked(j["weight"])
+                        self.textStrokeSpinBox.setValue(j["stroke_width"])
+                elif i.objectName() == "polyGroupBox":
+                    for j in self.treeWidget.selectedItems():
+                        j = ast.literal_eval(j)
+                        for i in j["vertices"]:
+                            self.polyVertListWidget.addItem(i)
 
     def saveProp(self):
         for i in self.propScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
@@ -130,7 +273,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                     for j in self.treeWidget.selectedItems():
                         j.setText(3,str(eval(j.text(3)) | {
                             "start": (self.dirStartComboBox.currentText() if self.dirStartComboBox.currentText() != "(None)" else None),
-                            "end": (self.dirStartComboBox.currentText())
+                            "end": (self.dirEndComboBox.currentText() if self.dirEndComboBox.currentText() != "(None)" else None)
                         }))
                 elif i.objectName() == "dotGroupBox":
                     for j in self.treeWidget.selectedItems():
