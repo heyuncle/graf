@@ -30,7 +30,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         self.setupUi(self)
         # self.setStyleSheet(PyQt5_stylesheets.load_stylesheet_pyqt5(style="style_Dark")) # qrainbowtheme option
         # self.setStyleSheet(qdarktheme.load_stylesheet("dark")) # pyqtdarktheme option
-        #self.apply_stylesheet(self, theme='dark_blue.xml')  # qmaterial
+        self.apply_stylesheet(self, theme='dark_blue.xml')  # qmaterial
         self.show()
         self.retranslateUi(MainWindow)
         
@@ -45,7 +45,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         self.actionSave.triggered.connect(self.save_mmtr)
         self.actionSave_as.triggered.connect(self.save_mmtr_as)
         self.actionPreferences.triggered.connect(self.openPreferences)
-        self.actionDelete.triggered.connect(self.delItem) #TODO fix
+        self.actionDelete.triggered.connect(self.delItem)
         self.actionMP.triggered.connect(lambda _: self.renderScene(True)) #TODO fix
 
         # Test project
@@ -62,7 +62,7 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         item.setText(1,type)
         item.setText(2,subtype)
         item.setText(3,properties)
-        item.setIcon(0,QIcon("icons/camera-solid.ico" if type=="Scene" else "icons/equation.ico" if type=="Object" else "icons/object-group-solid.ico"))
+        #item.setIcon(0,QIcon("icons/camera-solid.ico" if type=="Scene" else "icons/equation.ico" if type=="Object" else "icons/object-group-solid.ico"))
         return item
 
 
@@ -274,9 +274,10 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
         with open("manim_" + type + ".py", "w+") as f:
             f.write("from manim import *\nclass MyScene(Scene):\n    def construct(self):\n")
             showList = []
-            for i in self.objSave:
+            children = [self.treeWidget.currentItem().child(i) for i in range(self.treeWidget.currentItem().childCount())]
+            for i in children:
                 param_string = ""
-                if i[0] == "ParametricFunction":
+                if i.text(2) == "Parametric Function":
                     param_string += "function=lambda t: np.array((" + i[1]["xt"] \
                         .replace("^", "**") \
                         .replace("cos", "np.cos") \
@@ -284,79 +285,76 @@ class MainWindow(QMainWindow, Ui_MainWindow, QtStyleTools):
                                         .replace("^", "**") \
                                         .replace("cos", "np.cos") \
                                         .replace("sin", "np.sin") + ",0)),"
-                if i[0] == "":
-                    pass
                 else:
-                    for j in i[1].items():
-                        if j[0] in ["x", "y", "xt",
-                                    "yt"]:  # How to deal with normal params of parametric without doing this?
+                    for j in eval(i.text(3)).items():
+                        if j[0] in ["x_shift", "y_shift"]:
                             pass
-                        elif j[0] == "show":
+                        elif j[0] == "show": #TODO show at start property
                             if j[1] == True:
-                                showList.append(i[2])
+                                showList.append(i.text(0))
                         else:
                             try:
                                 float(j[1])
                                 param_string += j[0] + "=" + str(j[1]) + ","
                             except:
                                 # If number is not float or int (can't be converted to float)
-                                if j[0] == "color":
-                                    param_string += j[0] + "='" + j[1] + "',"
-                                elif i[0] == "Tex":
+                                # if j[0] == "color":
+                                #     param_string += j[0] + "='" + j[1] + "'," #TODO fix color saving
+                                if i.text(2) == "Tex":
                                     param_string += "r'" + j[1] + "',"
-                                elif i[0] == "Polygon":
+                                elif i.text(2) == "Polygon":
                                     param_string += j[1] + ","
-                                elif i[0] == "BraceLabel":
+                                elif i.text(2) == "Point Label":
                                     if j[0] == "text":
                                         param_string += "text=r'" + j[1] + "',"
                                     else:
                                         param_string += j[0] + "=" + j[1] + ","
-                                elif i[0] == "Text":
+                                elif i.text(2) == "Text":
                                     param_string += j[0] + "=r'" + j[1] + "',"
-                                elif i[0] == "FunctionGraph":
+                                elif i.text(2) == "Function Graph":
                                     param_string += "lambda x: " + j[1] \
                                         .replace("^", "**") \
                                         .replace("cos", "np.cos") \
                                         .replace("sin", "np.sin") + ","
                                 else:
                                     param_string += j[0] + "=" + j[1] + ","
-                    objLine = "        " + i[2] + "=" + i[0] + "(" + param_string[:-1] + ")"
+                    objLine = "        " + i.text(0) + "=" + i.text(2) + "(" + param_string[:-1] + ")" #TODO ensure name has no spaces
                     try:
                         objLine += ".shift(RIGHT*" + str(i[1]["x"]) + "+UP*" + str(i[1]["y"]) + ")"
                     except:
                         pass
                     f.write(objLine + "\n")
             f.write("        self.add(" + ",".join([i for i in showList[::-1]]) + ")\n")
-            # f.write("        self.wait()\n")
-            for i in self.animSave:
-                param_string = ""
-                if i[0] == "Move":
-                    f.write(
-                        "        self.play(" + i[1]["mobject"] +
-                        ".shift,RIGHT*" + str(i[1]["x"]) +
-                        "+UP*" + str(i[1]["y"]) + ")\n")
-                else:
-                    for j in i[1].items():
-                        param_string += j[0] + "=" + str(j[1]) + ","
-                    f.write("        self.play(" + i[0] + "(" + param_string[:-1] + "))\n")
+            # f.write("        self.wait()\n") # NOTE previously commented
+            # for i in self.animSave:
+            #     param_string = ""
+            #     if i[0] == "Move":
+            #         f.write(
+            #             "        self.play(" + i[1]["mobject"] +
+            #             ".shift,RIGHT*" + str(i[1]["x"]) +
+            #             "+UP*" + str(i[1]["y"]) + ")\n")
+            #     else:
+            #         for j in i[1].items():
+            #             param_string += j[0] + "=" + str(j[1]) + ","
+            #         f.write("        self.play(" + i[0] + "(" + param_string[:-1] + "))\n")
             f.write("        self.wait()")
             f.close()
 
     def renderScene(self, full):
-        if not self.save_mmtr():
-            return None
-        os.chdir("/".join(self.file_path.split("/")[:-1]))
+        # if not self.save_mmtr():
+        #     return None
+        # os.chdir("/".join(self.file_path.split("/")[:-1]))
         self.convert_to_manim("export" if full else "preview")
-        subprocess.run("manim manim_preview.py MyScene -ql" if full else "manim manim_export.py MyScene")
-        try:
-            if full:
-                os.replace("./media/videos/a/1080p60/MyScene.mp4", "./Export.mp4")
-            else:
-                os.replace("./media/videos/manim_preview/480p15/MyScene.mp4", "./Preview.mp4")
-            shutil.rmtree('media')
-            shutil.rmtree('__pycache__')
-        except:
-            pass
+        # subprocess.run("manim manim_preview.py MyScene -ql" if full else "manim manim_export.py MyScene")
+        # try:
+        #     if full:
+        #         os.replace("./media/videos/a/1080p60/MyScene.mp4", "./Export.mp4")
+        #     else:
+        #         os.replace("./media/videos/manim_preview/480p15/MyScene.mp4", "./Preview.mp4")
+        #     shutil.rmtree('media')
+        #     shutil.rmtree('__pycache__')
+        # except:
+        #     pass
 
     def save_mmtr_as(self):
         if None in self.objSave or len(self.objSave) == 0:  # Partially useless right now
