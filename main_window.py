@@ -215,6 +215,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 elif i.objectName() == "polyGroupBox":
                     for i in prop["vertices"]:
                         self.polyVertListWidget.addItem(i)
+        for i in self.animScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
+            if i.isVisible():
+                if i.objectName() == "animInGroupBox":
+                    self.animInComboBox.setCurrentText(prop["animIn"])
+                elif i.objectName() == "animOutGroupBox":
+                    self.animOutComboBox.currentText(prop["animOut"])
+                elif i.objectName() == "growGroupBox":
+                    self.growOriginComboBox.currentText(prop["growConfig"])
 
     def saveProp(self):
         if ("Scene" or "Group") in [i.text(1) for i in self.lastSelection]:
@@ -340,6 +348,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     for j in self.lastSelection:
                         j.setText(3,str(eval(j.text(3)) | {
                             "vertices": self.polyVertListWidget.items()
+                        }))
+        for i in self.animScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
+            if i.isVisible():
+                if i.objectName() == "animInGroupBox":
+                    for j in self.lastSelection:
+                        j.setText(3, str(eval(j.text(3)) | {
+                            "animIn": self.animInComboBox.currentText()
+                        }))
+                elif i.objectName() == "animOutGroupBox":
+                    for j in self.lastSelection:
+                        j.setText(3, str(eval(j.text(3)) | {
+                            "animOut": self.animOutComboBox.currentText()
+                        }))
+                elif i.objectName() == "growGroupBox":
+                    for j in self.lastSelection:
+                        j.setText(3, str(eval(j.text(3)) | {
+                            "growConfig": self.growOriginComboBox.currentText()
                         }))
 
     def changeColor(self):

@@ -292,7 +292,7 @@
             </size>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>1</number>
            </property>
            <property name="documentMode">
             <bool>false</bool>
@@ -364,8 +364,8 @@
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>346</width>
-                     <height>3729</height>
+                     <width>273</width>
+                     <height>3238</height>
                     </rect>
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_24">
@@ -2046,23 +2046,23 @@
               </widget>
              </item>
              <item>
-              <widget class="QGroupBox" name="groupBox">
+              <widget class="QGroupBox" name="growGroupBox">
                <property name="title">
                 <string>Grow</string>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_51">
                 <item>
-                 <widget class="QWidget" name="widget" native="true">
+                 <widget class="QWidget" name="growWidget" native="true">
                   <layout class="QHBoxLayout" name="horizontalLayout_68">
                    <item>
-                    <widget class="QLabel" name="label">
+                    <widget class="QLabel" name="growOriginLabel">
                      <property name="text">
                       <string>Grow origin:</string>
                      </property>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QComboBox" name="comboBox">
+                    <widget class="QComboBox" name="growOriginComboBox">
                      <item>
                       <property name="text">
                        <string>Center</string>
@@ -2210,8 +2210,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>263</width>
-                  <height>1665</height>
+                  <width>235</width>
+                  <height>1416</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_41">
@@ -3274,7 +3274,7 @@
      <x>0</x>
      <y>0</y>
      <width>1259</width>
-     <height>37</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
