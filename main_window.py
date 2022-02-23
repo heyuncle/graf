@@ -10,7 +10,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 #from qt_material import apply_stylesheet, QtStyleTools
-import breeze_resources
+import qdarkstyle
 
 # from error import Ui_Dialog as errorDialog # TODO - what was this for
 
@@ -36,12 +36,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # self.setStyleSheet(PyQt5_stylesheets.load_stylesheet_pyqt5(style="style_Dark")) # qrainbowtheme option
         # self.setStyleSheet(qdarktheme.load_stylesheet("dark")) # pyqtdarktheme option
-        #self.apply_stylesheet(self, theme='dark_blue.xml')  # qmaterial
-
-        file = QFile(":/dark/stylesheet.qss")
-        file.open(QFile.ReadOnly | QFile.Text)
-        stream = QTextStream(file)
-        self.setStyleSheet(stream.readAll())
+        # apply_stylesheet(self, theme='dark_blue.xml')  # qmaterial
+        self.setStyleSheet(qdarkstyle.load_stylesheet())
         
         self.lastSelection = []
         self.thisSelection = self.treeWidget.selectedItems()
