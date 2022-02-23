@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1283</width>
-    <height>880</height>
+    <width>1259</width>
+    <height>868</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -363,9 +363,9 @@
                    <property name="geometry">
                     <rect>
                      <x>0</x>
-                     <y>-54</y>
-                     <width>239</width>
-                     <height>2990</height>
+                     <y>0</y>
+                     <width>346</width>
+                     <height>3729</height>
                     </rect>
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_24">
@@ -648,16 +648,54 @@
                     <item>
                      <widget class="QGroupBox" name="functionGroupBox">
                       <property name="title">
-                       <string>LaTeX Image</string>
+                       <string>LaTeX Editor</string>
                       </property>
                       <layout class="QVBoxLayout" name="verticalLayout_20">
                        <item>
-                        <widget class="QLineEdit" name="functionLineEdit">
-                         <property name="inputMask">
-                          <string/>
-                         </property>
+                        <widget class="QWidget" name="urlWidget" native="true">
+                         <layout class="QHBoxLayout" name="horizontalLayout_75">
+                          <item>
+                           <widget class="QLineEdit" name="urlLineEdit">
+                            <property name="sizePolicy">
+                             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                              <horstretch>0</horstretch>
+                              <verstretch>0</verstretch>
+                             </sizepolicy>
+                            </property>
+                            <property name="minimumSize">
+                             <size>
+                              <width>0</width>
+                              <height>0</height>
+                             </size>
+                            </property>
+                            <property name="inputMask">
+                             <string/>
+                            </property>
+                            <property name="placeholderText">
+                             <string>Image URL</string>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QPushButton" name="urlPushButton">
+                            <property name="sizePolicy">
+                             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                              <horstretch>0</horstretch>
+                              <verstretch>0</verstretch>
+                             </sizepolicy>
+                            </property>
+                            <property name="text">
+                             <string>Convert to LaTeX</string>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPlainTextEdit" name="latexTextEdit">
                          <property name="placeholderText">
-                          <string>URL</string>
+                          <string>LaTeX Code</string>
                          </property>
                         </widget>
                        </item>
@@ -1895,52 +1933,6 @@
                          </layout>
                         </widget>
                        </item>
-                       <item>
-                        <widget class="QWidget" name="numXLengthWidget" native="true">
-                         <layout class="QHBoxLayout" name="horizontalLayout_74">
-                          <item>
-                           <widget class="QLabel" name="numXLengthLabel">
-                            <property name="text">
-                             <string>x length:</string>
-                            </property>
-                           </widget>
-                          </item>
-                          <item>
-                           <widget class="QSpinBox" name="numXLengthSpinBox">
-                            <property name="accelerated">
-                             <bool>true</bool>
-                            </property>
-                            <property name="maximum">
-                             <number>100</number>
-                            </property>
-                           </widget>
-                          </item>
-                         </layout>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QWidget" name="numYLengthWidget" native="true">
-                         <layout class="QHBoxLayout" name="horizontalLayout_73">
-                          <item>
-                           <widget class="QLabel" name="numYLengthLabel">
-                            <property name="text">
-                             <string>y length:</string>
-                            </property>
-                           </widget>
-                          </item>
-                          <item>
-                           <widget class="QSpinBox" name="numYLengthSpinBox">
-                            <property name="accelerated">
-                             <bool>true</bool>
-                            </property>
-                            <property name="maximum">
-                             <number>100</number>
-                            </property>
-                           </widget>
-                          </item>
-                         </layout>
-                        </widget>
-                       </item>
                       </layout>
                      </widget>
                     </item>
@@ -2218,8 +2210,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>239</width>
-                  <height>1330</height>
+                  <width>263</width>
+                  <height>1665</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_41">
@@ -3281,8 +3273,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1283</width>
-     <height>21</height>
+     <width>1259</width>
+     <height>37</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

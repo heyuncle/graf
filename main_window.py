@@ -9,6 +9,9 @@ from PyQt5 import QtWidgets
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+from latex2sympy2 import latex2sympy
+from sympy.utilities.lambdify import lambdastr
+from sympy import symbols
 #from qt_material import apply_stylesheet, QtStyleTools
 import qdarkstyle
 
@@ -51,6 +54,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.treeWidget.itemDoubleClicked.connect(self.edit)
         self.objTypeComboBox.currentTextChanged.connect(self.changeObjType)
         self.colorPushButton.clicked.connect(self.changeColor)
+        self.urlPushButton.clicked.connect(self.loadToLaTeX)
         #self.updateObjPropButton.clicked.connect(self.saveProp)
         # self.addRowButton.clicked.connect(self.matrixTableWidget.insertRow(self.matrixTableWidget.rowCount()))
         # self.removeRowButton.clicked.connect(self.matrixTableWidget.removeRow(self.matrixTableWidget.rowCount()))
@@ -71,6 +75,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.addObject(self.treeItem("MyObject","Object","Rectangle","{'x_shift':0.0,'y_shift':0.0,'height':1.0,'width':1.0,'grid_xstep':1.0,'grid_ystep':1.0}"))
 
         self.updatePropPanel()
+
+    def loadToLaTeX(self):
+        self.latexTextEdit.setPlainText(tex_from_url(self.urlLineEdit.text())[3:-3])
 
     def saveLast(self):
         self.lastSelection = self.thisSelection
@@ -162,8 +169,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.coordLineEdit.setText(prop["point"])
                     self.widthSpinBox.setValue(prop["stroke_width"])
                     self.opacitySpinBox.setValue(int(100*prop["fill_opacity"]))
-                elif i.objectName() == "functionGroupBox": # TODO: load image back in, maybe save the filepath?
-                    self.functionLineEdit.setText(prop["function"])
+                elif i.objectName() == "functionGroupBox":
+                    self.latexTextEdit.setPlainText(prop["function"])
                 elif i.objectName() == "latexGroupBox":
                     self.latexSizeSpinBox.setValue(prop["font_size"])
                 elif i.objectName() == "lineGroupBox":
@@ -183,8 +190,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.numXMaxSpinBox.setValue(prop["x_max"])
                     self.numYMinSpinBox.setValue(prop["y_min"])
                     self.numYMaxSpinBox.setValue(prop["y_max"])
-                    self.numXLengthSpinBox.setValue(prop["x_length"])
-                    self.numYLengthSpinBox.setValue(prop["y_length"])
                 elif i.objectName() == "positionGroupBox":
                     self.xSpinBox.setValue(prop["x_shift"])
                     self.ySpinBox.setValue(prop["y_shift"])
@@ -268,10 +273,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                             "fill_opacity": self.opacitySpinBox.value()/100
                         }))
                 elif i.objectName() == "functionGroupBox":
-                    print(self.functionLineEdit.text())
                     for j in self.lastSelection:
                         j.setText(3,str(eval(j.text(3)) | {
-                            "function": self.functionLineEdit.text()
+                            "function": self.latexTextEdit.toPlainText()
                         }))
                 elif i.objectName() == "latexGroupBox":
                     for j in self.lastSelection:
@@ -296,9 +300,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                             "x_min": self.numXMinSpinBox.value(),
                             "x_max": self.numXMaxSpinBox.value(),
                             "y_min": self.numYMinSpinBox.value(),
-                            "y_max": self.numYMaxSpinBox.value(),
-                            "x_length": self.numXLengthSpinBox.value(),
-                            "y_length": self.numYLengthSpinBox.value()
+                            "y_max": self.numYMaxSpinBox.value()
                         }))
                 elif i.objectName() == "positionGroupBox":
                     for j in self.lastSelection:
@@ -442,7 +444,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.apply_stylesheet(self, "dark_red.xml")
 
     def addObject(self, object):
-        if self.treeWidget.currentItem().text(1) in ["Group","Scene"]:
+        if self.treeWidget.currentItem().text(1) in ["Group","Scene"]: #aiden was here
             self.objectID += 1
             self.treeWidget.currentItem().addChild(object)
         else:
@@ -462,24 +464,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def convert_to_manim(self):
         with open("manim.py", "w+") as f:
-            f.write("from manim import *\nclass MyScene(Scene):\n    def construct(self):\n")
+            f.write("import math\nfrom manim import *\nclass MyScene(Scene):\n    def construct(self):\n")
             showList = []
             children = [self.treeWidget.currentItem().child(i) for i in range(self.treeWidget.currentItem().childCount())]
             for i in children:
                 param_string = ""
+                objDict = eval(i.text(3))
                 if i.text(2) == "(None)":
                     pass
-                if i.text(2) == "Parametric Function":
-                    param_string += "function=lambda t: np.array((" + i[1]["xt"] \
-                        .replace("^", "**") \
-                        .replace("cos", "np.cos") \
-                        .replace("sin", "np.sin") + "," + i[1]["yt"] \
-                                        .replace("^", "**") \
-                                        .replace("cos", "np.cos") \
-                                        .replace("sin", "np.sin") + ",0)),"
+                showList.append(i.text(0))
+                if i.text(2) == "Coordinate Plane":
+                    f.write("        "+i.text(0)+"=NumberPlane(x_range=("+str(objDict["x_min"])+","+str(objDict["x_max"])+"),y_range=("+str(objDict["y_min"])+","+str(objDict["y_max"])+"),color='"+objDict["color"]+"')\n")
                 else:
                     showList.append(i.text(0))
-                    objDict = eval(i.text(3))
                     for prop,val in objDict.items():
                         if prop in ["x_shift", "y_shift"]:
                             pass
@@ -495,7 +492,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                 if prop == "color":
                                     param_string += prop + "='" + val + "'," #TODO fix color saving
                                 elif i.text(2) == "LaTeX":
-                                    param_string += "r'" + tex_from_url(val)[3:-3   ] + "',"
+                                    param_string += "r'" + val + "',"
                                 elif i.text(2) == "Polygon":
                                     param_string += val + ","
                                 elif i.text(2) == "Point Label":
@@ -506,10 +503,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                 elif i.text(2) == "Text":
                                     param_string += prop + "=r'" + val + "',"
                                 elif i.text(2) == "Function Graph":
-                                    param_string += "lambda x: " + val \
-                                        .replace("^", "**") \
-                                        .replace("cos", "np.cos") \
-                                        .replace("sin", "np.sin") + ","
+                                    param_string += lambdastr(symbols('x'), latex2sympy(val)) + ","
                                 else:
                                     param_string += prop + "=" + val + ","
                     objLine = "        " + i.text(0) + "=" + self.objProp[i.text(2)][0] + "(" + param_string[:-1] + ")" #TODO ensure name has no spaces
