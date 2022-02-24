@@ -72,7 +72,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         newScene = self.treeItem("Scene 1","Scene")
         self.treeWidget.addTopLevelItem(newScene)
         self.treeWidget.setCurrentItem(newScene)
-        self.addObject(self.treeItem("MyObject","Object","Rectangle","{'x_shift':0.0,'y_shift':0.0,'height':1.0,'width':1.0,'grid_xstep':1.0,'grid_ystep':1.0}"))
 
         self.updatePropPanel()
 
@@ -82,7 +81,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def saveLast(self):
         self.lastSelection = self.thisSelection
         self.thisSelection = self.treeWidget.selectedItems()
-        print(self.lastSelection)
+        print("last: " + str(self.lastSelection))
         if not all(i in self.thisSelection for i in self.lastSelection):
             self.saveProp()
 
@@ -105,7 +104,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def changeObjType(self):
         newType = self.objTypeComboBox.currentText()
-        default = self.objProp[newType][3] if newType != "(None)" else ""
+        default = self.objProp[newType][3] if newType != "(None)" else "{}"
         for i in self.treeWidget.selectedItems():
             i.setText(2,newType)
             i.setText(3,default)
@@ -223,10 +222,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for i in self.animScrollAreaContentss.findChildren(QtWidgets.QGroupBox):
             if i.isVisible():
                 if i.objectName() == "animInGroupBox":
-                    print(prop)
                     self.animInComboBox.setCurrentText(prop["animIn"])
                 elif i.objectName() == "animOutGroupBox":
-                    self.animOutComboBox.currentText(prop["animOut"])
+                    self.animOutComboBox.setCurrentText(prop["animOut"])
                 elif i.objectName() == "growGroupBox":
                     self.growOriginComboBox.currentText(prop["growConfig"])
         self.tabWidget.setCurrentIndex(currentTab) # switch to last tab
