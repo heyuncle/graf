@@ -217,7 +217,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         self.polyVertListWidget.addItem(i)
                 elif i.objectName() == "durationGroupBox":
                     self.durationSpinBox.setValue(prop["duration"])
-        for i in self.animScrollAreaContents.findChildren(QtWidgets.QGroupBox):
+        for i in self.animScrollAreaContentss.findChildren(QtWidgets.QGroupBox):
             if i.isVisible():
                 if i.objectName() == "animInGroupBox":
                     print(prop)
@@ -448,9 +448,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if (name in allNames and exists):
             allNames.remove(name) # search includes the object currently, remove 1 of it to test for duplicates
         if (name in allNames):
-            tempName = name + " (1)"
+            i = 1
             while (tempName in allNames):
-                tempName = name + " (" + str(int(tempName[-2]) + 1) + ")" # TODO this is super clean but it breaks past 10
+                tempName = name + " (" + i + ")" # TODO this is super clean but it breaks past 10
+                i += 1
             print(tempName)
             return tempName
         else:
