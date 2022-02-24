@@ -49,6 +49,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.retranslateUi(MainWindow)
         
         self.newObjButton.clicked.connect(lambda _: self.addObject(self.treeItem("MyObject","Object","(None)")))
+        self.newGroupButton.clicked.connect(lambda _: self.addObject(self.treeItem(self.testDuplicateName("New Group"), "Group")))
+        self.newSceneButton.clicked.connect(lambda _: self.addObject(self.treeItem(self.testDuplicateName("Scene " + (1 + len(self.treeWidget.findItems("Scene", Qt.MatchFixedString | Qt.MatchRecursive, 1)))), "Scene")))
         self.treeWidget.itemClicked.connect(lambda _: (self.updatePropPanel(), self.loadProp()))
         self.treeWidget.itemSelectionChanged.connect(self.saveLast)
         self.treeWidget.itemDoubleClicked.connect(self.edit)
@@ -615,3 +617,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.open_mmtr(QtWidgets.QFileDialog.getOpenFileName(filter="Manimator (*.mmtr)")[0])
         except:
             pass
+
+    def get_scroll_length(self): # we may need to run this on self.MainWindow.resizeEvent()
+        pass
+        # pseudocode
+        # sceneLength = # get duration of scene
+        # defaultEffectLength = 1.0 / sceneLength #DEFAULT_ANIMATION_RUN_TIME is 1.0s 
+        objList = self.treeWidget.findItems("Object", Qt.MatchFixedString | Qt.MatchRecursive, 1)
+        # for i in range(0, len(objList)) # get all objects, get their lengths
+            # objList[i] = (objList[i] / sceneLength)*self.fullVideoPreviewSlider.frameGeometry().width() # get length of each object's scrollbar
