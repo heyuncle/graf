@@ -119,10 +119,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return None
 
     def loadProp(self):
+        currentTab = self.tabWidget.currentIndex()
         if self.treeWidget.currentItem().text(3)=="":
             self.objTypeComboBox.setCurrentText("(None)")
             return
         prop = ast.literal_eval(self.treeWidget.currentItem().text(3))
+        self.tabWidget.setCurrentIndex(0) # switch to properties tab
         for i in self.propScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
             if i.isVisible():
                 if i.objectName() == "objTypeGroupBox":
@@ -217,6 +219,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         self.polyVertListWidget.addItem(i)
                 elif i.objectName() == "durationGroupBox":
                     self.durationSpinBox.setValue(prop["duration"])
+        self.tabWidget.setCurrentIndex(1) # switch to animation tab
         for i in self.animScrollAreaContentss.findChildren(QtWidgets.QGroupBox):
             if i.isVisible():
                 if i.objectName() == "animInGroupBox":
@@ -226,10 +229,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.animOutComboBox.currentText(prop["animOut"])
                 elif i.objectName() == "growGroupBox":
                     self.growOriginComboBox.currentText(prop["growConfig"])
+        self.tabWidget.setCurrentIndex(currentTab) # switch to last tab
 
     def saveProp(self):
+        currentTab = self.tabWidget.currentIndex()
         if ("Scene" or "Group") in [i.text(1) for i in self.lastSelection]:
             return
+        self.tabWidget.setCurrentIndex(0) # switch to properties tab
         for i in self.propScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
             if i.isVisible():
                 if i.objectName() == "rectGroupBox":
@@ -357,6 +363,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         j.setText(3, str(eval(j.text(3)) | {
                             "duration": self.durationSpinBox.value()
                         }))
+        self.tabWidget.setCurrentIndex(1) # switch to animation tab
         for i in self.animScrollAreaContents.findChildren(QtWidgets.QGroupBox):
             if i.isVisible():
                 if i.objectName() == "animInGroupBox":
@@ -374,6 +381,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         j.setText(3, str(eval(j.text(3)) | {
                             "growConfig": self.growOriginComboBox.currentText()
                         }))
+        self.tabWidget.setCurrentIndex(currentTab) # switch back to last tab
 
     def changeColor(self):
         self.colorFrame.setStyleSheet("background-color: " + QtWidgets.QColorDialog.getColor().name())
