@@ -364,6 +364,26 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         def showUniqueProp(objType):
             for i in self.objProp[objType][2].split():
                 exec("self."+i+".show()")
+        def combineObjProp(objects):
+            self.objTypeGroupBox.show()
+            combinedProp = 3
+            try:
+                for i in objects:
+                    combinedProp &= int(self.objProp[i.text(2)][1])
+                showSharedProp(combinedProp)
+                if len(list(set([i.text(2) for i in objects]))) == 1: #TODO make cleaner
+                    showUniqueProp(self.treeWidget.currentItem().text(2))
+            except:
+                print("object not found error")
+        def recursiveSelection(sel):
+            new_sel = []
+            for i in sel:
+                if i.text(1)=="Object":
+                    new_sel.append(i)
+                elif i.text(1)=="Group":
+                    new_sel += recursiveSelection([i.child(j) for j in range(i.childCount())])
+            return new_sel
+
 
         for i in self.propScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
             i.hide()
@@ -377,21 +397,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     showUniqueProp(objType)
                 except:
                     print("object not found error")
+            elif self.treeWidget.currentItem().text(1)=="Group":
+                combineObjProp(recursiveSelection(self.treeWidget.selectedItems()))
             else:
                 pass # TODO Single-select properties for scene, split for group
         else:
             if len(list(set([i.text(1) for i in self.treeWidget.selectedItems()]))) == 1:
                 if self.treeWidget.currentItem().text(1)=="Object":
-                        self.objTypeGroupBox.show()
-                        combinedProp = 3
-                        try:
-                            for i in self.treeWidget.selectedItems():
-                                combinedProp &= int(self.objProp[i.text(2)][1])
-                            showSharedProp(combinedProp)
-                            if len(list(set([i.text(2) for i in self.treeWidget.selectedItems()]))) == 1: #TODO make cleaner
-                                showUniqueProp(self.treeWidget.currentItem().text(2))
-                        except:
-                            print("object not found error")
+                    combineObjProp(recursiveSelection(self.treeWidget.selectedItems()))
                 else:
                     pass # TODO Multi-select properties for scene, split for group
             else:
