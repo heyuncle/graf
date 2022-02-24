@@ -344,7 +344,7 @@
             </size>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>1</number>
            </property>
            <property name="documentMode">
             <bool>false</bool>
@@ -415,8 +415,8 @@
                    <property name="geometry">
                     <rect>
                      <x>0</x>
-                     <y>-2808</y>
-                     <width>392</width>
+                     <y>0</y>
+                     <width>435</width>
                      <height>3320</height>
                     </rect>
                    </property>
@@ -2048,7 +2048,7 @@
             </attribute>
             <layout class="QVBoxLayout" name="verticalLayout_8">
              <item>
-              <widget class="QScrollArea" name="scrollArea_2">
+              <widget class="QScrollArea" name="animScrollAreaWidget">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
@@ -2062,8 +2062,8 @@
                 <property name="geometry">
                  <rect>
                   <x>0</x>
-                  <y>-1377</y>
-                  <width>392</width>
+                  <y>0</y>
+                  <width>435</width>
                   <height>1868</height>
                  </rect>
                 </property>
@@ -3321,17 +3321,17 @@
          </widget>
         </item>
         <item>
-         <widget class="QScrollArea" name="scrollArea_3">
+         <widget class="QScrollArea" name="timeLineScrollArea">
           <property name="widgetResizable">
            <bool>true</bool>
           </property>
-          <widget class="QWidget" name="timeLineScrollArea">
+          <widget class="QWidget" name="timeLineWidget">
            <property name="geometry">
             <rect>
              <x>0</x>
              <y>0</y>
              <width>1175</width>
-             <height>108</height>
+             <height>165</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_17">
@@ -3345,23 +3345,35 @@
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_42">
                <item>
-                <widget class="QLabel" name="mainObjLabel">
+                <widget class="QWidget" name="objTitleWidget" native="true">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
-                 <property name="text">
-                  <string>TextLabel</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="Line" name="mainObjLine">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
+                 <layout class="QHBoxLayout" name="horizontalLayout_76">
+                  <item>
+                   <widget class="QLabel" name="mainObjLabel">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="text">
+                     <string>TextLabel</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="Line" name="mainObjLine">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </widget>
                </item>
                <item>
