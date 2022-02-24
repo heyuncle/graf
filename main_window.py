@@ -217,9 +217,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         self.polyVertListWidget.addItem(i)
                 elif i.objectName() == "durationGroupBox":
                     self.durationSpinBox.setValue(prop["duration"])
-        for i in self.animScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
+        for i in self.animScrollAreaContentss.findChildren(QtWidgets.QGroupBox):
             if i.isVisible():
                 if i.objectName() == "animInGroupBox":
+                    print(prop)
                     self.animInComboBox.setCurrentText(prop["animIn"])
                 elif i.objectName() == "animOutGroupBox":
                     self.animOutComboBox.currentText(prop["animOut"])
@@ -356,7 +357,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         j.setText(3, str(eval(j.text(3)) | {
                             "duration": self.durationSpinBox.value()
                         }))
-        for i in self.animScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
+        for i in self.animScrollAreaContents.findChildren(QtWidgets.QGroupBox):
             if i.isVisible():
                 if i.objectName() == "animInGroupBox":
                     for j in self.lastSelection:
