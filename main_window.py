@@ -215,6 +215,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 elif i.objectName() == "polyGroupBox":
                     for i in prop["vertices"]:
                         self.polyVertListWidget.addItem(i)
+                elif i.objectName() == "durationGroupBox":
+                    self.durationSpinBox.setValue(prop["duration"])
         for i in self.animScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
             if i.isVisible():
                 if i.objectName() == "animInGroupBox":
@@ -348,6 +350,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     for j in self.lastSelection:
                         j.setText(3,str(eval(j.text(3)) | {
                             "vertices": self.polyVertListWidget.items()
+                        }))
+                elif i.objectName() == "durationGroupBox":
+                    for j in self.lastSelection:
+                        j.setText(3, str(eval(j.text(3)) | {
+                            "duration": self.durationSpinBox.value()
                         }))
         for i in self.animScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
             if i.isVisible():

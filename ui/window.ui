@@ -292,7 +292,7 @@
             </size>
            </property>
            <property name="currentIndex">
-            <number>1</number>
+            <number>0</number>
            </property>
            <property name="documentMode">
             <bool>false</bool>
@@ -363,9 +363,9 @@
                    <property name="geometry">
                     <rect>
                      <x>0</x>
-                     <y>0</y>
+                     <y>-2808</y>
                      <width>273</width>
-                     <height>3238</height>
+                     <height>3320</height>
                     </rect>
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_24">
@@ -1927,6 +1927,38 @@
                             </property>
                             <property name="maximum">
                              <number>100</number>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QGroupBox" name="durationGroupBox">
+                      <property name="title">
+                       <string>Duration</string>
+                      </property>
+                      <layout class="QVBoxLayout" name="verticalLayout_53">
+                       <item>
+                        <widget class="QWidget" name="durationWidget" native="true">
+                         <layout class="QHBoxLayout" name="horizontalLayout_73">
+                          <item>
+                           <widget class="QLabel" name="durationLabel">
+                            <property name="text">
+                             <string>Object duration:</string>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QDoubleSpinBox" name="durationSpinBox">
+                            <property name="accelerated">
+                             <bool>true</bool>
+                            </property>
+                            <property name="maximum">
+                             <double>100.000000000000000</double>
                             </property>
                            </widget>
                           </item>
