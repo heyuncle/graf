@@ -54,6 +54,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.treeWidget.itemClicked.connect(lambda _: (self.updatePropPanel(), self.loadProp()))
         self.treeWidget.itemSelectionChanged.connect(self.saveLast)
         self.treeWidget.itemDoubleClicked.connect(self.edit)
+        self.effectAddButton.clicked.connect(self.add_effect)
+        self.animInComboBox.currentTextChanged.connect(self.toggle_grow)
+        try:
+            self.treeWidget.currentItemChanged.connect(self.testDuplicateName(self.thisSelection[0].text(0), True))
+        except:
+            print("failed")
+        self.animList = ["Indicate", "Wiggle", "Move", "Move along path", "Transform", "Wave", "Flash", "Focus", "Circumscribe"]
         self.objTypeComboBox.currentTextChanged.connect(self.changeObjType)
         self.colorPushButton.clicked.connect(self.changeColor)
         self.urlPushButton.clicked.connect(self.loadToLaTeX)
@@ -87,13 +94,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if not all(i in self.thisSelection for i in self.lastSelection):
             self.saveProp()
 
-    def treeItem(self, name, type, subtype="", properties="{'duration':0.0}"):
+    def treeItem(self, name, type, subtype="", properties="{'duration':0.0}", animations="[]"):
         item = QTreeWidgetItem()
         item.setFlags(item.flags() | Qt.ItemIsEditable)
         item.setText(0,self.testDuplicateName(name, False))
         item.setText(1,type)
         item.setText(2,subtype)
         item.setText(3,properties)
+        item.setText(5,animations)
         if type == "Object":
             item.setText(4,str(self.objectID))
         item.setIcon(0,QIcon("icons/camera-solid-light.ico" if type=="Scene" else "icons/equation-light.ico" if type=="Object" else "icons/object-group-solid-light.ico"))
@@ -230,6 +238,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 elif i.objectName() == "growGroupBox":
                     self.growOriginComboBox.currentText(prop["growConfig"])
         self.tabWidget.setCurrentIndex(currentTab) # switch to last tab
+
+    def toggle_grow(self):
+        if (self.animInComboBox.currentValue() == "Grow"):
+            self.growGroupBox.show()
+        else:
+            self.growGroupBox.hide()
 
     def saveProp(self):
         currentTab = self.tabWidget.currentIndex()
@@ -511,11 +525,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             msg.exec_()
 
     def delItem(self):
-        for i in self.treeWidget.selectedItems():
-            try:
-                i.parent().removeChild(i)
-            except: pass
-
+        if (self.listWidget.selectedItems()) == 0: # if animations are not being edited
+            for i in self.treeWidget.selectedItems():
+                try:
+                    i.parent().removeChild(i)
+                except: pass
+        else:
+            for i in self.listWidget.selectedItems():
+                try:
+                    self.listWidget.takeItem(self.listWidget.row(i))
+                    self.thisSelection.setText(5, str(eval(self.thisSelection.text(5).pop(self.listWidget.row(i)))))
+                except: pass
 
     def convert_to_manim(self):
         with open("manim.py", "w+") as f:
@@ -618,11 +638,140 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         except:
             pass
 
+    def load_effect(self):
+        if len(self.listWidget.selectedItems()) == 1:
+            anim = eval(self.thisSelection.text(5))[(self.listWidget.row(self.listWidget.selectedItems()[0]) - 1)]
+            if (self.listWidget.selectedItems()[0].text() == "Indicate"):
+                self.indScaleSpinBox.setValue(anim["scale_factor"])
+                try:
+                    self.indColorFrame.setStyleSheet("background-color: "+anim["color"])
+                except KeyError:
+                    self.indColorFrame.setStyleSheet("background-color: #ffffff")
+                self.thisSelection.setText(5, str(anim))
+            elif (self.listWidget.selectedItems()[0].text() == "Wiggle"):
+                self.wiggleScaleSpinBox.setValue(anim["scale_factor"])
+                self.wiggleAngleSpinBox.setValue(anim["angle"])
+                self.wiggleNumSpinBox.setValue(anim["n"])
+            elif (self.listWidget.selectedItems()[0].text() == "Move"):
+                self.moveHorizSpinBox.setValue(anim["hor_shift"])
+                self.moveVertSpinBox.setValue(anim["ver_shift"])
+            elif (self.listWidget.selectedItems()[0].text() == "Move along path"):
+                try:
+                    self.movePathTargetComboBox.setCurrentText(self.treeWidget.findItems(str(anim["target"]), Qt.MatchFixedString | Qt.MatchRecursive, 4)[0].text(0))
+                except:
+                    self.movePathTargetComboBox.setCurrentText("(None)")
+            elif (self.listWidget.selectedItems()[0].text() == "Transform"):
+                try:
+                    self.transformTargetComboBox.setCurrentText(self.treeWidget.findItems(str(anim["target"]), Qt.MatchFixedString | Qt.MatchRecursive, 4)[0].text(0))
+                except:
+                    self.transformTargetComboBox.setCurrentText("(None)")
+            elif (self.listWidget.selectedItems()[0].text() == "Wave"):
+                self.waveDirComboBox.setCurrentText(anim["direction"])
+                self.waveAmpSpinBox.setValue(anim["amplitude"])
+                self.waveRipSpinBox.setValue(anim["ripples"])
+            elif (self.listWidget.selectedItems()[0].text() == "Flash"):
+                self.flashLenSpinBox.setValue(anim["line_length"])
+                self.flashNumLinesSpinBox.setValue(anim["n"])
+                self.flashRadiusSpinBox.setValue(anim["radius"])
+                self.flashStrokeSpinBox.setValue(anim["stroke_width"])
+                try:
+                    self.flashColorFrame.setStyleSheet("background-color: "+anim["color"])
+                except KeyError:
+                    self.flashColorFrame.setStyleSheet("background-color: #ffffff")
+            elif (self.listWidget.selectedItems()[0].text() == "Focus"):
+                self.focusOpacitySpinBox.setValue(anim["opacity"])
+                try:
+                    self.focusColorFrame.setStyleSheet("background-color: "+anim["color"])
+                except KeyError:
+                    self.focusColorFrame.setStyleSheet("background-color: #ffffff")
+            elif (self.listWidget.selectedItems()[0].text() == "Circumscribe"):
+                self.circumShapeComboBox.setCurrentText(anim["shape"])
+                self.circumDistSpinBox.setValue(anim["distance"])
+                self.circumFadeInCheckBox.setChecked(anim["fade_in"])
+                self.circumFadeOutCheckBox.setChecked(anim["fade_out"])
+                try:
+                    self.circumColorFrame.setStyleSheet("background-color: "+anim["color"])
+                except KeyError:
+                    self.circumColorFrame.setStyleSheet("background-color: #ffffff")
+
+    def save_effect(self): # "Indicate" "Wiggle" "Move" "Move along path" "Transform" "Wave" "Flash" "Focus" "Circumscribe"
+        if len(self.listWidget.selectedItems()) == 1:
+            anim = eval(self.thisSelection.text(5))
+            if (self.listWidget.selectedItems()[0].text() == "Indicate"):
+                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]) - 1)] = {
+                    "scale_factor" : self.indScaleSpinBox.value(),
+                    "color" : self.indColorFrame.styleSheet().split()[-1]
+                }
+                self.thisSelection.setText(5, str(anim))
+            elif (self.listWidget.selectedItems()[0].text() == "Wiggle"):
+                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]) - 1)] = {
+                    "scale_factor" : self.wiggleScaleSpinBox.value(),
+                    "angle" : self.wiggleAngleSpinBox.value(),
+                    "n" : self.wiggleNumSpinBox.value()
+                }
+                self.thisSelection.setText(5, str(anim))
+            elif (self.listWidget.selectedItems()[0].text() == "Move"):
+                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]) - 1)] = {
+                    "hor_shift" : self.moveHorizSpinBox.value(),
+                    "ver_shift" : self.moveVertSpinBox.value()
+                }
+                self.thisSelection.setText(5, str(anim))
+            elif (self.listWidget.selectedItems()[0].text() == "Move along path"):
+                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]) - 1)] = {
+                    "target" : self.getObjID(self.movePathTargetComboBox.currentText())
+                }
+                self.thisSelection.setText(5, str(anim))
+            elif (self.listWidget.selectedItems()[0].text() == "Transform"):
+                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]) - 1)] = {
+                    "target" : self.getObjID(self.transformTargetComboBox.currentText())
+                }
+                self.thisSelection.setText(5, str(anim))
+            elif (self.listWidget.selectedItems()[0].text() == "Wave"):
+                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]) - 1)] = {
+                    "direction" : self.waveDirComboBox.currentText(),
+                    "amplitude" : self.waveAmpSpinBox.value(),
+                    "ripples" : self.waveRipSpinBox.value()
+                }
+                self.thisSelection.setText(5, str(anim))
+            elif (self.listWidget.selectedItems()[0].text() == "Flash"):
+                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]) - 1)] = {
+                    "line_length" : self.flashLenSpinBox.value(),
+                    "n" : self.flashNumLinesSpinBox.value(),
+                    "radius" : self.flashRadiusSpinBox.value(),
+                    "stroke_width" : self.flashStrokeSpinBox.value(),
+                    "color" : self.flashColorFrame.styleSheet().split()[-1]
+                }
+                self.thisSelection.setText(5, str(anim))
+            elif (self.listWidget.selectedItems()[0].text() == "Focus"):
+                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]) - 1)] = {
+                    "opacity" : self.focusOpacitySpinBox.value(),
+                    "color" : self.focusColorFrame.styleSheet().split()[-1]
+                }
+                self.thisSelection.setText(5, str(anim))
+            elif (self.listWidget.selectedItems()[0].text() == "Circumscribe"):
+                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]) - 1)] = {
+                    "shape" : self.circumShapeComboBox.currentText(),
+                    "distance" : self.circumDistSpinBox.value(),
+                    "color" : self.circumColorFrame.styleSheet().split()[-1],
+                    "fade_in" : self.circumFadeInCheckBox.isChecked(),
+                    "fade_out" : self.circumFadeOutCheckBox.isChecked()
+                }
+                self.thisSelection.setText(5, str(anim))
+
+    def add_effect(self):
+        if (self.effectComboBox.currentText() == "(None)"):
+            pass
+        else:
+            self.listWidget.addItem(self.effectComboBox.currentText())
+            self.thisSelection.setText(5, str(eval(self.thisSelection.text(5)).append({})))
+
     def get_scroll_length(self): # we may need to run this on self.MainWindow.resizeEvent()
         pass
         # pseudocode
         # sceneLength = # get duration of scene
         # defaultEffectLength = 1.0 / sceneLength #DEFAULT_ANIMATION_RUN_TIME is 1.0s 
         objList = self.treeWidget.findItems("Object", Qt.MatchFixedString | Qt.MatchRecursive, 1)
-        # for i in range(0, len(objList)) # get all objects, get their lengths
-            # objList[i] = (objList[i] / sceneLength)*self.fullVideoPreviewSlider.frameGeometry().width() # get length of each object's scrollbar
+        for i in range(0, len(objList)): # get all objects, get their lengths
+            objList[i] = (objList[i] / sceneLength)*self.fullVideoPreviewSlider.frameGeometry().width() # get length of each object's scrollbar
+        self.fullVideoPreviewSlider.setMaximum(4*sceneLength) # smoother movement
+

@@ -344,7 +344,7 @@
             </size>
            </property>
            <property name="currentIndex">
-            <number>1</number>
+            <number>0</number>
            </property>
            <property name="documentMode">
             <bool>false</bool>
@@ -415,7 +415,7 @@
                    <property name="geometry">
                     <rect>
                      <x>0</x>
-                     <y>0</y>
+                     <y>-2930</y>
                      <width>435</width>
                      <height>3320</height>
                     </rect>
@@ -2005,12 +2005,12 @@
                            </widget>
                           </item>
                           <item>
-                           <widget class="QDoubleSpinBox" name="durationSpinBox">
+                           <widget class="QSpinBox" name="durationSpinBox">
                             <property name="accelerated">
                              <bool>true</bool>
                             </property>
                             <property name="maximum">
-                             <double>100.000000000000000</double>
+                             <number>100</number>
                             </property>
                            </widget>
                           </item>
@@ -3358,7 +3358,7 @@
              <x>0</x>
              <y>0</y>
              <width>1175</width>
-             <height>146</height>
+             <height>174</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_17">
