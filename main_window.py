@@ -48,10 +48,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.show()
         self.retranslateUi(MainWindow)
         
-        self.newObjButton.clicked.connect(lambda _: self.addObject(self.treeItem("MyObject","Object","(None)")))
+        self.newObjButton.clicked.connect(lambda _: self.addObject(self.treeItem(self.testDuplicateName("MyObject", False),"Object","(None)")))
+        self.newGroupButton.clicked.connect(lambda _: self.addObject(self.treeItem(self.testDuplicateName("New Group", False), "Group")))
+        self.newSceneButton.clicked.connect(lambda _: self.addObject(self.treeItem(self.testDuplicateName("Scene " + (1 + len(self.treeWidget.findItems("Scene", Qt.MatchFixedString | Qt.MatchRecursive, 1))), False), "Scene")))
         self.treeWidget.itemClicked.connect(lambda _: (self.updatePropPanel(), self.loadProp()))
         self.treeWidget.itemSelectionChanged.connect(self.saveLast)
         self.treeWidget.itemDoubleClicked.connect(self.edit)
+        self.treeWidget.currentItemChanged.connect(self.testDuplicateName(self.thisSelection.text(0), True))
         self.objTypeComboBox.currentTextChanged.connect(self.changeObjType)
         self.colorPushButton.clicked.connect(self.changeColor)
         self.urlPushButton.clicked.connect(self.loadToLaTeX)
@@ -72,7 +75,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         newScene = self.treeItem("Scene 1","Scene")
         self.treeWidget.addTopLevelItem(newScene)
         self.treeWidget.setCurrentItem(newScene)
-        self.addObject(self.treeItem("MyObject","Object","Rectangle","{'x_shift':0.0,'y_shift':0.0,'height':1.0,'width':1.0,'grid_xstep':1.0,'grid_ystep':1.0}"))
 
         self.updatePropPanel()
 
@@ -82,7 +84,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def saveLast(self):
         self.lastSelection = self.thisSelection
         self.thisSelection = self.treeWidget.selectedItems()
-        print(self.lastSelection)
+        print("last: " + str(self.lastSelection))
         if not all(i in self.thisSelection for i in self.lastSelection):
             self.saveProp()
 
@@ -105,7 +107,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def changeObjType(self):
         newType = self.objTypeComboBox.currentText()
-        default = self.objProp[newType][3] if newType != "(None)" else ""
+        default = self.objProp[newType][3] if newType != "(None)" else "{}"
         for i in self.treeWidget.selectedItems():
             i.setText(2,newType)
             i.setText(3,default)
@@ -119,10 +121,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return None
 
     def loadProp(self):
+        currentTab = self.tabWidget.currentIndex()
         if self.treeWidget.currentItem().text(3)=="":
             self.objTypeComboBox.setCurrentText("(None)")
             return
         prop = ast.literal_eval(self.treeWidget.currentItem().text(3))
+        self.tabWidget.setCurrentIndex(0) # switch to properties tab
         for i in self.propScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
             if i.isVisible():
                 if i.objectName() == "objTypeGroupBox":
@@ -217,18 +221,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         self.polyVertListWidget.addItem(i)
                 elif i.objectName() == "durationGroupBox":
                     self.durationSpinBox.setValue(prop["duration"])
-        for i in self.animScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
+        self.tabWidget.setCurrentIndex(1) # switch to animation tab
+        for i in self.animScrollAreaContentss.findChildren(QtWidgets.QGroupBox):
             if i.isVisible():
                 if i.objectName() == "animInGroupBox":
                     self.animInComboBox.setCurrentText(prop["animIn"])
                 elif i.objectName() == "animOutGroupBox":
-                    self.animOutComboBox.currentText(prop["animOut"])
+                    self.animOutComboBox.setCurrentText(prop["animOut"])
                 elif i.objectName() == "growGroupBox":
                     self.growOriginComboBox.currentText(prop["growConfig"])
+        self.tabWidget.setCurrentIndex(currentTab) # switch to last tab
 
     def saveProp(self):
+        currentTab = self.tabWidget.currentIndex()
         if ("Scene" or "Group") in [i.text(1) for i in self.lastSelection]:
             return
+        self.tabWidget.setCurrentIndex(0) # switch to properties tab
         for i in self.propScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
             if i.isVisible():
                 if i.objectName() == "rectGroupBox":
@@ -356,7 +364,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         j.setText(3, str(eval(j.text(3)) | {
                             "duration": self.durationSpinBox.value()
                         }))
-        for i in self.animScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
+        self.tabWidget.setCurrentIndex(1) # switch to animation tab
+        for i in self.animScrollAreaContents.findChildren(QtWidgets.QGroupBox):
             if i.isVisible():
                 if i.objectName() == "animInGroupBox":
                     for j in self.lastSelection:
@@ -373,6 +382,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         j.setText(3, str(eval(j.text(3)) | {
                             "growConfig": self.growOriginComboBox.currentText()
                         }))
+        self.tabWidget.setCurrentIndex(currentTab) # switch back to last tab
 
     def changeColor(self):
         self.colorFrame.setStyleSheet("background-color: " + QtWidgets.QColorDialog.getColor().name())
@@ -447,9 +457,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if (name in allNames and exists):
             allNames.remove(name) # search includes the object currently, remove 1 of it to test for duplicates
         if (name in allNames):
-            tempName = name + " (1)"
+            i = 1
             while (tempName in allNames):
-                tempName = name + " (" + str(int(tempName[-2]) + 1) + ")" # TODO this is super clean but it breaks past 10
+                tempName = name + " (" + i + ")" # TODO this is super clean but it breaks past 10
+                i += 1
             print(tempName)
             return tempName
         else:
@@ -607,3 +618,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.open_mmtr(QtWidgets.QFileDialog.getOpenFileName(filter="Manimator (*.mmtr)")[0])
         except:
             pass
+
+    def get_scroll_length(self): # we may need to run this on self.MainWindow.resizeEvent()
+        pass
+        # pseudocode
+        # sceneLength = # get duration of scene
+        # defaultEffectLength = 1.0 / sceneLength #DEFAULT_ANIMATION_RUN_TIME is 1.0s 
+        objList = self.treeWidget.findItems("Object", Qt.MatchFixedString | Qt.MatchRecursive, 1)
+        # for i in range(0, len(objList)) # get all objects, get their lengths
+            # objList[i] = (objList[i] / sceneLength)*self.fullVideoPreviewSlider.frameGeometry().width() # get length of each object's scrollbar
