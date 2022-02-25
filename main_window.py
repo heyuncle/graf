@@ -2,14 +2,13 @@ import subprocess, sys, os, shutil, csv, ast
 import xml.etree.ElementTree as et
 
 from window import Ui_MainWindow
+from preferences import Ui_Dialog
 from tex_from_url import tex_from_url
 
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from PyQt5.QtMultimedia import *
-from PyQt5.QtMultimediaWidgets import *
 from latex2sympy2 import latex2sympy
 from sympy.utilities.lambdify import lambdastr
 from sympy import symbols
@@ -31,6 +30,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.objPropCsv = csv.reader(f)
             self.objProp = {i[0]:(i[1],i[4],i[5],i[6]) for i in self.objPropCsv} # manim name, shared, groupbox
 
+        self.setWindowIcon(QIcon('icons/logo.ico'))
         self.setupUi(self)
 
         #self.setAttribute(Qt.WA_TranslucentBackground)
@@ -44,17 +44,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         
         self.lastSelection = []
         self.thisSelection = self.treeWidget.selectedItems()
-
-        #video player
-        self.vertical_box_layout = QVBoxLayout()
-        self.central_widget = QWidget(self)
-        self.video_frame = QVideoWidget()
-
-        self.playlist = QMediaPlaylist()
-        self.video_player = QMediaPlayer(flags=QMediaPlayer.VideoSurface)
-
-        self.create_user_interface()
-        self.video_player_setup()
 
         self.show()
         self.retranslateUi(MainWindow)
@@ -84,8 +73,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionOpen.triggered.connect(self.open_from_dir)
         self.actionSave.triggered.connect(self.save_mmtr)
         self.actionSave_as.triggered.connect(self.save_mmtr_as)
+        self.actionPreferences.triggered.connect(self.openPreferences)
         self.actionDelete.triggered.connect(self.delItem)
         self.actionMP.triggered.connect(self.renderScene) #TODO add other file types
+
+
+        self.effectWidget.hide()
+        self.mainObjWidget.hide()
+        self.timeLineLayout = QtWidgets.QVBoxLayout(self)
 
         # Test project
         newScene = self.treeItem("Scene 1","Scene")
@@ -114,7 +109,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         item.setText(5,animations)
         if type == "Object":
             item.setText(4,str(self.objectID))
-        item.setIcon(0,QIcon("icons/camera-solid-light.svg" if type=="Scene" else "icons/mobject-light.svg" if type=="Object" else "icons/object-group-solid-light.svg"))
+        item.setIcon(0,QIcon("icons/camera-solid-light.ico" if type=="Scene" else "icons/equation-light.ico" if type=="Object" else "icons/object-group-solid-light.ico"))
         return item
 
     def edit(self):
@@ -466,8 +461,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 except:
                     print("object not found error")
             elif self.treeWidget.currentItem().text(1)=="Group":
-                if self.treeWidget.currentItem().childCount() == 0:
-                    return
                 combineObjProp(recursiveSelection(self.treeWidget.selectedItems()))
             else:
                 self.durationGroupBox.show()
@@ -522,6 +515,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.treeWidget.addTopLevelItem(object)
             else:
                 self.treeWidget.currentItem().addChild(object)
+                self.obj_timeline_add(object)
         else:
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Critical)
@@ -544,64 +538,55 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 except: pass
 
     def convert_to_manim(self):
-        def clean(name):
-            return name.replace(")","").replace("(","").replace(" ","_")
-        def write_obj(i):
-            param_string = ""
-            objDict = eval(i.text(3))
-            if i.text(2) == "(None)":
-                pass
-            showList.append(i.text(0))
-            if i.text(2) == "Coordinate Plane":
-                f.write("        "+i.text(0)+"=NumberPlane(x_range=("+str(objDict["x_min"])+","+str(objDict["x_max"])+"),y_range=("+str(objDict["y_min"])+","+str(objDict["y_max"])+"),color='"+objDict["color"]+"')\n")
-            else:
-                showList.append(i.text(0))
-                for prop,val in objDict.items():
-                    if prop in ["x_shift", "y_shift", "duration"]:
-                        pass
-                    # elif prop == "show": #TODO show at start property
-                    #     if val == True:
-                    #         showList.append(i.text(0))
-                    else:
-                        try:
-                            float(val)
-                            param_string += prop + "=" + str(val) + ","
-                        except:
-                            # If number is not float or int (can't be converted to float)
-                            if prop == "color":
-                                param_string += prop + "='" + val + "'," #TODO fix color saving
-                            elif i.text(2) == "LaTeX":
-                                param_string += "r'" + val + "',"
-                            elif i.text(2) == "Polygon":
-                                param_string += val + ","
-                            elif i.text(2) == "Point Label":
-                                if prop == "text":
-                                    param_string += "text=r'" + val + "',"
-                                else:
-                                    param_string += prop + "=" + val + ","
-                            elif i.text(2) == "Text":
-                                param_string += prop + "=r'" + val + "',"
-                            elif i.text(2) == "Function Graph":
-                                param_string += lambdastr(symbols('x'), latex2sympy(val)) + ","
-                            else:
-                                param_string += prop + "=" + val + ","
-                fixed_name = clean(i.text(0))
-                objLine = "        " + fixed_name + "=" + self.objProp[i.text(2)][0] + "(" + param_string[:-1] + ")" #TODO ensure name has no spaces
-                try:
-                    objLine += ".shift(RIGHT*" + str(objDict["x_shift"]) + "+UP*" + str(objDict["y_shift"]) + ")"
-                except:
-                    pass
-                f.write(objLine + "\n")
         with open("manim.py", "w+") as f:
             f.write("import math\nfrom manim import *\nclass MyScene(Scene):\n    def construct(self):\n")
             showList = []
-        def recursive_load(obj):
-            for i in obj:
-                if i.text(2) == "Group":
-                    recursive_load([self.treeWidget.currentItem().child(i) for i in range(self.treeWidget.currentItem().childCount())])
+            children = [self.treeWidget.currentItem().child(i) for i in range(self.treeWidget.currentItem().childCount())]
+            for i in children:
+                param_string = ""
+                objDict = eval(i.text(3))
+                if i.text(2) == "(None)":
+                    pass
+                showList.append(i.text(0))
+                if i.text(2) == "Coordinate Plane":
+                    f.write("        "+i.text(0)+"=NumberPlane(x_range=("+str(objDict["x_min"])+","+str(objDict["x_max"])+"),y_range=("+str(objDict["y_min"])+","+str(objDict["y_max"])+"),color='"+objDict["color"]+"')\n")
                 else:
-                    write_obj(i)
-            recursive_load([self.treeWidget.currentItem().child(i) for i in range(self.treeWidget.currentItem().childCount())])
+                    showList.append(i.text(0))
+                    for prop,val in objDict.items():
+                        if prop in ["x_shift", "y_shift", "duration"]:
+                            pass
+                        # elif prop == "show": #TODO show at start property
+                        #     if val == True:
+                        #         showList.append(i.text(0))
+                        else:
+                            try:
+                                float(val)
+                                param_string += prop + "=" + str(val) + ","
+                            except:
+                                # If number is not float or int (can't be converted to float)
+                                if prop == "color":
+                                    param_string += prop + "='" + val + "'," #TODO fix color saving
+                                elif i.text(2) == "LaTeX":
+                                    param_string += "r'" + val + "',"
+                                elif i.text(2) == "Polygon":
+                                    param_string += val + ","
+                                elif i.text(2) == "Point Label":
+                                    if prop == "text":
+                                        param_string += "text=r'" + val + "',"
+                                    else:
+                                        param_string += prop + "=" + val + ","
+                                elif i.text(2) == "Text":
+                                    param_string += prop + "=r'" + val + "',"
+                                elif i.text(2) == "Function Graph":
+                                    param_string += lambdastr(symbols('x'), latex2sympy(val)) + ","
+                                else:
+                                    param_string += prop + "=" + val + ","
+                    objLine = "        " + i.text(0) + "=" + self.objProp[i.text(2)][0] + "(" + param_string[:-1] + ")" #TODO ensure name has no spaces
+                    try:
+                        objLine += ".shift(RIGHT*" + str(objDict["x_shift"]) + "+UP*" + str(objDict["y_shift"]) + ")"
+                    except:
+                        pass
+                    f.write(objLine + "\n")
             f.write("        self.add(" + ",".join([i for i in showList[::-1]]) + ")\n")
             # for i in self.animSave:
             #     param_string = ""
@@ -773,12 +758,109 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 }
                 self.thisSelection.setText(5, str(anim))
 
+    def obj_timeline_add(self, object):
+        if object in self.listWidget.findItems("", Qt.MatchContains):
+            effectWidget = QtWidgets.QWidget(self.timeLineWidget)
+            effectWidget.setObjectName(object.text())
+            horizontalLayout_74 = QtWidgets.QHBoxLayout(effectWidget)
+            horizontalLayout_74.setObjectName("horizontalLayout_74")
+            widget = QtWidgets.QWidget(effectWidget)
+            widget.setMaximumSize(QtCore.QSize(100, 16777215))
+            widget.setObjectName("widget")
+            horizontalLayout_77 = QtWidgets.QHBoxLayout(widget)
+            horizontalLayout_77.setObjectName("horizontalLayout_77")
+            effectNestLine = QtWidgets.QFrame(widget)
+            effectNestLine.setFrameShape(QtWidgets.QFrame.VLine)
+            effectNestLine.setFrameShadow(QtWidgets.QFrame.Sunken)
+            effectNestLine.setObjectName("effectNestLine")
+            horizontalLayout_77.addWidget(effectNestLine)
+            effectLabel = QtWidgets.QLabel(widget)
+            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(effectLabel.sizePolicy().hasHeightForWidth())
+            effectLabel.setSizePolicy(sizePolicy)
+            effectLabel.setMaximumSize(QtCore.QSize(45, 16777215))
+            effectLabel.setObjectName("effectLabel")
+            horizontalLayout_77.addWidget(effectLabel)
+            effectLine = QtWidgets.QFrame(widget)
+            effectLine.setFrameShape(QtWidgets.QFrame.VLine)
+            effectLine.setFrameShadow(QtWidgets.QFrame.Sunken)
+            effectLine.setObjectName("effectLine")
+            horizontalLayout_77.addWidget(effectLine)
+            horizontalLayout_74.addWidget(widget)
+            effectScrollBarWidget = QtWidgets.QScrollBar(effectWidget)
+            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(effectScrollBarWidget.sizePolicy().hasHeightForWidth())
+            effectScrollBarWidget.setSizePolicy(sizePolicy)
+            effectScrollBarWidget.setMaximum(100)
+            effectScrollBarWidget.setPageStep(1)
+            effectScrollBarWidget.setTracking(True)
+            effectScrollBarWidget.setOrientation(QtCore.Qt.Horizontal)
+            effectScrollBarWidget.setInvertedAppearance(False)
+            effectScrollBarWidget.setInvertedControls(True)
+            effectScrollBarWidget.setObjectName("effectScrollBarWidget")
+            horizontalLayout_74.addWidget(effectScrollBarWidget)
+            self.verticalLayout_17.addWidget(effectWidget)
+        else:
+            objWidget = QtWidgets.QWidget(self.timeLineWidget)
+            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(widget.sizePolicy().hasHeightForWidth())
+            widget.setSizePolicy(sizePolicy)
+            widget.setObjectName(object.text(0) + "mainObjWidget")
+            horizontalLayout_42 = QtWidgets.QHBoxLayout(widget)
+            horizontalLayout_42.setObjectName("horizontalLayout_42")
+            objTitleWidget = QtWidgets.QWidget(widget)
+            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(objWidget.sizePolicy().hasHeightForWidth())
+            objTitleWidget.setSizePolicy(sizePolicy)
+            objTitleWidget.setMaximumSize(QtCore.QSize(100, 16777215))
+            objTitleWidget.setObjectName(object.text(0) + "TitleWidget")
+            horizontalLayout_76 = QtWidgets.QHBoxLayout(objTitleWidget)
+            horizontalLayout_76.setObjectName("horizontalLayout_76")
+            mainObjLabel = QtWidgets.QLabel(objTitleWidget)
+            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(mainObjLabel.sizePolicy().hasHeightForWidth())
+            mainObjLabel.setSizePolicy(sizePolicy)
+            mainObjLabel.setObjectName(object.text(0))
+            horizontalLayout_76.addWidget(mainObjLabel)
+            mainObjLine = QtWidgets.QFrame(objTitleWidget)
+            mainObjLine.setFrameShape(QtWidgets.QFrame.VLine)
+            mainObjLine.setFrameShadow(QtWidgets.QFrame.Sunken)
+            mainObjLine.setObjectName(object.text(0) + "Line")
+            horizontalLayout_76.addWidget(mainObjLine)
+            horizontalLayout_42.addWidget(objTitleWidget)
+            mainObjScrollBar = QtWidgets.QScrollBar(widget)
+            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(mainObjScrollBar.sizePolicy().hasHeightForWidth())
+            mainObjScrollBar.setSizePolicy(sizePolicy)
+            mainObjScrollBar.setMaximum(100)
+            mainObjScrollBar.setPageStep(1)
+            mainObjScrollBar.setTracking(True)
+            mainObjScrollBar.setOrientation(QtCore.Qt.Horizontal)
+            mainObjScrollBar.setInvertedAppearance(False)
+            mainObjScrollBar.setInvertedControls(True)
+            mainObjScrollBar.setObjectName(object.text(0) + "ScrollBar")
+            horizontalLayout_42.addWidget(mainObjScrollBar)
+        self.verticalLayout_17.addWidget(widget)
+
     def add_effect(self):
         if (self.effectComboBox.currentText() == "(None)"):
             pass
         else:
             self.listWidget.addItem(self.effectComboBox.currentText())
             self.thisSelection.setText(5, str(eval(self.thisSelection.text(5)).append({})))
+            self.obj_timeline_add() # get the last added item here. not sure how with duplicate names
 
     def get_scroll_length(self):
         while self.thisSelection.parent():
@@ -790,3 +872,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             objList[i] = (objList[i] / sceneLength)*self.fullVideoPreviewSlider.frameGeometry().width() # get length of each object's scrollbar
         self.fullVideoPreviewSlider.setMaximum(4*sceneLength) # smoother movement
 
+
+
+    def get_start_times(self, scrollWidget):
+        startTime = scrollWidget.value() # time in seconds
