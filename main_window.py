@@ -54,13 +54,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.treeWidget.itemClicked.connect(lambda _: (self.updatePropPanel(), self.loadProp()))
         self.treeWidget.itemSelectionChanged.connect(self.saveLast)
         self.treeWidget.itemDoubleClicked.connect(self.edit)
-        self.effectAddButton.clicked.connect(self.addEffect())
+        # self.effectAddButton.clicked.connect(self.addEffect())
         try:
             self.treeWidget.currentItemChanged.connect(self.testDuplicateName(self.thisSelection[0].text(0), True))
         except:
             print("failed")
         self.animDict = {}
-        for i in self.animScrollAreaContents:
+        for i in self.animScrollAreaContents.findChildren(QtWidgets.QGroupBox):
             self.animDict = self.animDict | {i.title : i}
             i.hide()
         self.objTypeComboBox.currentTextChanged.connect(self.changeObjType)
