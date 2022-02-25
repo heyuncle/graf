@@ -401,7 +401,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.colorFrame.setStyleSheet("background-color: " + QtWidgets.QColorDialog.getColor().name())
 
     def setObjComboBoxes(self):
-        objList = [i*(i.text(1) == "Object" or i.text(1) == "Group") for i in self.treeWidget.findItems("", Qt.MatchContains | Qt.MatchRecursive, 0)]
+        objList = []
+        for i in self.treeWidget.findItems("", Qt.MatchContains | Qt.MatchRecursive, 0):
+            if i.text(1) == "Object" or i.text(1) == "Group":
+                objList.append(i)
         selectedObjList = self.treeWidget.selectedItems()
         objList = [objVal.text(0) for objVal in objList if objVal not in selectedObjList]
         boxes = [self.ulObjComboBox, self.surrObjComboBox, self.relAlignComboBox, self.circumShapeComboBox, self.braceObjSelectComboBox, self.transformTargetComboBox, self.movePathTargetComboBox]
@@ -467,14 +470,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def testDuplicateName(self, name, exists):
         allNames = [i.text(0) for i in self.treeWidget.findItems("", Qt.MatchContains | Qt.MatchRecursive, 0)]
+        tempName = name
         if (name in allNames and exists):
             allNames.remove(name) # search includes the object currently, remove 1 of it to test for duplicates
         if (name in allNames):
             i = 1
             while (tempName in allNames):
-                tempName = name + " (" + i + ")" # TODO this is super clean but it breaks past 10
+                tempName = name + " (" + str(i) + ")" # TODO this is super clean but it breaks past 10
                 i += 1
-            print(tempName)
             return tempName
         else:
             return name #TODO fix
@@ -498,19 +501,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.animList.addItem(i[0])
         self.objNames = [i[2] for i in self.objSave]
         self.file_path = file.replace("\\", "/")
-        self.setWindowTitle("manimator 2.0 - " + self.file_path.split("/")[-1])
-
-    def openPreferences(self):
-        def submitPreferences():
-            #apply_stylesheet()
-            pass
-        self.prefWindow = QtWidgets.QDialog()
-        self.preferences = Ui_Dialog()
-        self.preferences.setupUi(self.prefWindow)
-        self.prefWindow.setStyleSheet(self.styleSheet())
-        self.prefWindow.show()
-        if self.prefWindow.comboBox.currentText()=="Red":
-            self.apply_stylesheet(self, "dark_red.xml")
+        self.setWindowTitle("graf - " + self.file_path.split("/")[-1])
 
     def addObject(self, object):
         if self.treeWidget.currentItem().text(1) in ["Group","Scene"]: #aiden was here
@@ -626,7 +617,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.save_mmtr()
         except:
             return
-        self.setWindowTitle("manimator 2.0 - " + self.file_path.split("/")[-1])
+        self.setWindowTitle("graf - " + self.file_path.split("/")[-1])
 
     def save_mmtr(self):
         if self.file_path == '':
