@@ -516,7 +516,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if self.treeWidget.currentItem().text(1) in ["Group","Scene"]: #aiden was here
             self.objectID += 1
             if (object.text(1) == "Scene"):
-                self.treeWidget.addTopLevelitem(object)
+                self.treeWidget.addTopLevelItem(object)
             else:
                 self.treeWidget.currentItem().addChild(object)
         else:
@@ -556,7 +556,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 else:
                     showList.append(i.text(0))
                     for prop,val in objDict.items():
-                        if prop in ["x_shift", "y_shift"]:
+                        if prop in ["x_shift", "y_shift", "duration"]:
                             pass
                         # elif prop == "show": #TODO show at start property
                         #     if val == True:

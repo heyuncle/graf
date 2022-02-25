@@ -2,3 +2,4 @@
 __pycache__
 .vscode
 private_info.py
+.DS_Store
