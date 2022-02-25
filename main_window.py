@@ -48,22 +48,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.show()
         self.retranslateUi(MainWindow)
         
-        self.newObjButton.clicked.connect(lambda _: self.addObject(self.treeItem(self.testDuplicateName("MyObject", False),"Object","(None)")))
-        self.newGroupButton.clicked.connect(lambda _: self.addObject(self.treeItem(self.testDuplicateName("New Group", False), "Group")))
-        self.newSceneButton.clicked.connect(lambda _: self.addObject(self.treeItem(self.testDuplicateName("Scene " + str(1 + len(self.treeWidget.findItems("Scene", Qt.MatchContains, 0))), False), "Scene")))
+        self.newObjButton.clicked.connect(lambda _: self.addObject(self.treeItem("MyObject","Object","(None)")))
+        self.newGroupButton.clicked.connect(lambda _: self.addObject(self.treeItem(self.testDuplicateName("New Group"), "Group")))
+        self.newSceneButton.clicked.connect(lambda _: self.addObject(self.treeItem(self.testDuplicateName("Scene " + (1 + len(self.treeWidget.findItems("Scene", Qt.MatchFixedString | Qt.MatchRecursive, 1)))), "Scene")))
         self.treeWidget.itemClicked.connect(lambda _: (self.updatePropPanel(), self.loadProp()))
         self.treeWidget.itemSelectionChanged.connect(self.saveLast)
         self.treeWidget.itemDoubleClicked.connect(self.edit)
-        self.effectAddButton.clicked.connect(self.add_effect)
-        try:
-            self.treeWidget.currentItemChanged.connect(self.testDuplicateName(self.thisSelection[0].text(0), True))
-        except:
-            print("failed")
-        self.animDict = {"Indicate" : "", "Wiggle" : "", "Move" : "", "Move along path": "", "Transform" : "", "Wave" : "", "Flash" : "", "Focus" : "", "Circumscribe": ""}
-        for i in self.animScrollAreaContents.findChildren(QtWidgets.QGroupBox):
-            if (i.title() in self.animDict.keys()):
-                self.animDict[i.title()] = i
-                i.hide()
         self.objTypeComboBox.currentTextChanged.connect(self.changeObjType)
         self.colorPushButton.clicked.connect(self.changeColor)
         self.urlPushButton.clicked.connect(self.loadToLaTeX)
@@ -97,16 +87,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if not all(i in self.thisSelection for i in self.lastSelection):
             self.saveProp()
 
-    def treeItem(self, name, type, subtype="", properties=""):
+    def treeItem(self, name, type, subtype="", properties="{'duration':0.0}"):
         item = QTreeWidgetItem()
         item.setFlags(item.flags() | Qt.ItemIsEditable)
-        item.setText(0,name)
+        item.setText(0,self.testDuplicateName(name, False))
         item.setText(1,type)
         item.setText(2,subtype)
         item.setText(3,properties)
         if type == "Object":
             item.setText(4,str(self.objectID))
-        item.setIcon(0,QIcon("icons/camera-solid.ico" if type=="Scene" else "icons/equation.ico" if type=="Object" else "icons/object-group-solid.ico"))
+        item.setIcon(0,QIcon("icons/camera-solid-light.ico" if type=="Scene" else "icons/equation-light.ico" if type=="Object" else "icons/object-group-solid-light.ico"))
         return item
 
     def edit(self):
@@ -235,10 +225,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if i.isVisible():
                 if i.objectName() == "animInGroupBox":
                     self.animInComboBox.setCurrentText(prop["animIn"])
-                    if (self.animInComboBox.currentText() == "Grow"):
-                        self.growGroupBox.show()
-                    else:
-                        self.growGroupBox.hide()
                 elif i.objectName() == "animOutGroupBox":
                     self.animOutComboBox.setCurrentText(prop["animOut"])
                 elif i.objectName() == "growGroupBox":
@@ -385,10 +371,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         j.setText(3, str(eval(j.text(3)) | {
                             "animIn": self.animInComboBox.currentText()
                         }))
-                    if (self.animInComboBox.currentText() == "Grow"):
-                        self.growGroupBox.show()
-                    else:
-                        self.growGroupBox.hide()
                 elif i.objectName() == "animOutGroupBox":
                     for j in self.lastSelection:
                         j.setText(3, str(eval(j.text(3)) | {
@@ -444,10 +426,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return new_sel
 
 
-        for i in self.propScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
+        for i in self.propScrollAreaWidget.findChildren(QtWidgets.QGroupBox) + self.animScrollAreaContents.findChildren(QtWidgets.QGroupBox):
             i.hide()
-
-        self.durationGroupBox.show()
         
         if len(self.treeWidget.selectedItems()) == 1:
             if self.treeWidget.currentItem().text(1)=="Object":
@@ -461,13 +441,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             elif self.treeWidget.currentItem().text(1)=="Group":
                 combineObjProp(recursiveSelection(self.treeWidget.selectedItems()))
             else:
-                pass # TODO Single-select properties for scene, split for group
+                self.durationGroupBox.show()
         else:
             if len(list(set([i.text(1) for i in self.treeWidget.selectedItems()]))) == 1:
-                if self.treeWidget.currentItem().text(1)=="Object":
+                if self.treeWidget.currentItem().text(1) in ["Object","Group"]:
                     combineObjProp(recursiveSelection(self.treeWidget.selectedItems()))
                 else:
-                    pass # TODO Multi-select properties for scene, split for group
+                    self.durationGroupBox.show()
             else:
                 print("multiple object types selected")
 
@@ -521,10 +501,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def addObject(self, object):
         if self.treeWidget.currentItem().text(1) in ["Group","Scene"]: #aiden was here
             self.objectID += 1
-            if (object.text(1) != "Scene"):
-                self.treeWidget.currentItem().addChild(object)
-            else:
-                self.treeWidget.addTopLevelItem(object)
+            self.treeWidget.currentItem().addChild(object)
         else:
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Critical)
@@ -534,16 +511,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             msg.exec_()
 
     def delItem(self):
-        if (self.listWidget.selectedItems()) == 0:
-            for i in self.treeWidget.selectedItems():
-                try:
-                    i.parent().removeChild(i)
-                except: pass
-        else:
-            for i in self.listWidget.selectedItems():
-                try:
-                    self.listWidget.takeItem(self.listWidget.row(i))
-                except: pass
+        for i in self.treeWidget.selectedItems():
+            try:
+                i.parent().removeChild(i)
+            except: pass
+
 
     def convert_to_manim(self):
         with open("manim.py", "w+") as f:
@@ -646,20 +618,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         except:
             pass
 
-    def add_effect(self):
-        if (self.effectComboBox.currentText() == "(None)"):
-            pass
-        else:
-            self.listWidget.addItem(self.effectComboBox.currentText())
-            self.listWidget.item(self.listWidget.count() - 1).setFlags(self.listWidget.item(self.listWidget.count() - 1).flags() | Qt.ItemIsEditable)
-
-
     def get_scroll_length(self): # we may need to run this on self.MainWindow.resizeEvent()
-        while (self.thisSelection.parent()):
-            parent = self.thisSelection.parent()
-        sceneLength = eval(parent.text(3))["duration"] # get duration of scene
-        defaultEffectLength = 1.0 / sceneLength #DEFAULT_ANIMATION_RUN_TIME is 1.0s 
+        pass
+        # pseudocode
+        # sceneLength = # get duration of scene
+        # defaultEffectLength = 1.0 / sceneLength #DEFAULT_ANIMATION_RUN_TIME is 1.0s 
         objList = self.treeWidget.findItems("Object", Qt.MatchFixedString | Qt.MatchRecursive, 1)
-        for i in range(0, len(objList)): # get all objects, get their lengths
-            objList[i] = (objList[i] / sceneLength)*self.fullVideoPreviewSlider.frameGeometry().width() # get length of each object's scrollbar
-
+        # for i in range(0, len(objList)) # get all objects, get their lengths
+            # objList[i] = (objList[i] / sceneLength)*self.fullVideoPreviewSlider.frameGeometry().width() # get length of each object's scrollbar
