@@ -54,15 +54,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.treeWidget.itemClicked.connect(lambda _: (self.updatePropPanel(), self.loadProp()))
         self.treeWidget.itemSelectionChanged.connect(self.saveLast)
         self.treeWidget.itemDoubleClicked.connect(self.edit)
-        # self.effectAddButton.clicked.connect(self.addEffect())
+        self.effectAddButton.clicked.connect(self.add_effect)
         try:
             self.treeWidget.currentItemChanged.connect(self.testDuplicateName(self.thisSelection[0].text(0), True))
         except:
             print("failed")
-        self.animDict = {}
+        self.animDict = {"Indicate" : "", "Wiggle" : "", "Move" : "", "Move along path": "", "Transform" : "", "Wave" : "", "Flash" : "", "Focus" : "", "Circumscribe": ""}
         for i in self.animScrollAreaContents.findChildren(QtWidgets.QGroupBox):
-            self.animDict = self.animDict | {i.title : i}
-            i.hide()
+            if (i.title() in self.animDict.keys()):
+                self.animDict[i.title()] = i
+                i.hide()
         self.objTypeComboBox.currentTextChanged.connect(self.changeObjType)
         self.colorPushButton.clicked.connect(self.changeColor)
         self.urlPushButton.clicked.connect(self.loadToLaTeX)
@@ -533,11 +534,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             msg.exec_()
 
     def delItem(self):
-        for i in self.treeWidget.selectedItems():
-            try:
-                i.parent().removeChild(i)
-            except: pass
-
+        if (self.listWidget.selectedItems()) == 0:
+            for i in self.treeWidget.selectedItems():
+                try:
+                    i.parent().removeChild(i)
+                except: pass
+        else:
+            for i in self.listWidget.selectedItems():
+                try:
+                    self.listWidget.takeItem(self.listWidget.row(i))
+                except: pass
 
     def convert_to_manim(self):
         with open("manim.py", "w+") as f:
@@ -640,11 +646,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         except:
             pass
 
-    def addEffect(self):
+    def add_effect(self):
         if (self.effectComboBox.currentText() == "(None)"):
             pass
         else:
-            self.animScrollAreaContents.addWidget(self.animDict[self.effectComboBox.currentText()])
+            self.listWidget.addItem(self.effectComboBox.currentText())
+            self.listWidget.item(self.listWidget.count() - 1).setFlags(self.listWidget.item(self.listWidget.count() - 1).flags() | Qt.ItemIsEditable)
 
 
     def get_scroll_length(self): # we may need to run this on self.MainWindow.resizeEvent()
