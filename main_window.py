@@ -145,7 +145,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.yGridSpinBox.setValue(prop["grid_ystep"])
                 elif i.objectName() == "ulGroupBox":
                     try: # put in try loop incase object is deleted between saving and loading
-                        self.ulObjComboBox.setCurrentText(self.treeWidget.findItems(str(prop["object"]), Qt.MatchFixedString | Qt.MatchRecursive, 4)[0].text(0))
+                        self.ulObjComboBox.setCurrentText([i*(i.text(4) == str(prop["object"])) for i in (self.treeWidget.findItems("", Qt.MatchContains | Qt.MatchRecursive, 0)[0])][0].text(0))
                     except:
                         self.ulObjComboBox.setCurrentText("(None)")
                     self.ulBuffSpinBox.setValue(prop["buff"])
@@ -158,7 +158,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.arBuffSpinBox.setValue(prop["buff"])
                 elif i.objectName() == "braceGroupBox":
                     try:
-                        self.braceObjSelectComboBox.setCurrentText(self.treeWidget.findItems(str(prop["object"]), Qt.MatchFixedString | Qt.MatchRecursive, 4)[0].text(0))
+                        self.braceObjSelectComboBox.setCurrentText([i*(i.text(4) == str(prop["object"])) for i in (self.treeWidget.findItems("", Qt.MatchContains | Qt.MatchRecursive, 0)[0])][0].text(0))
                     except:
                         self.braceObjSelectComboBox.setCurrentText("(None)")
                     self.bracePlainTextEdit.setPlainText(prop["text"])
@@ -211,7 +211,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.regPolyVertSpinBox.setValue(prop["n"])
                 elif i.objectName() == "surRectGroupBox":
                     try:
-                        self.surrObjComboBox.setCurrentText(self.treeWidget.findItems(str(prop["object"]), Qt.MatchFixedString | Qt.MatchRecursive, 4)[0].text(0))
+                        self.surrObjComboBox.setCurrentText(i*(i.text(4) == str(prop["object"])) for i in (self.treeWidget.findItems("", Qt.MatchContains | Qt.MatchRecursive, 0)[0]).text(0))
                     except:
                         self.surrObjComboBox.setCurrentText("(None)")
                     self.surrBuffSpinBox.setValue(prop["buff"])
@@ -401,7 +401,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.colorFrame.setStyleSheet("background-color: " + QtWidgets.QColorDialog.getColor().name())
 
     def setObjComboBoxes(self):
-        objList = self.treeWidget.findItems("Object", Qt.MatchFixedString | Qt.MatchRecursive, 1)
+        objList = [i*(i.text(1) == "Object" or i.text(1) == "Group") for i in self.treeWidget.findItems("", Qt.MatchContains | Qt.MatchRecursive, 0)]
         selectedObjList = self.treeWidget.selectedItems()
         objList = [objVal.text(0) for objVal in objList if objVal not in selectedObjList]
         boxes = [self.ulObjComboBox, self.surrObjComboBox, self.relAlignComboBox, self.circumShapeComboBox, self.braceObjSelectComboBox, self.transformTargetComboBox, self.movePathTargetComboBox]
@@ -466,7 +466,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 print("multiple object types selected")
 
     def testDuplicateName(self, name, exists):
-        allNames = [i.text(0) for i in self.treeWidget.findItems("Object", Qt.MatchFixedString | Qt.MatchRecursive, 1)] + [i.text(0) for i in self.treeWidget.findItems("Group", Qt.MatchFixedString | Qt.MatchRecursive, 1)] + [i.text(0) for i in self.treeWidget.findItems("Scene", Qt.MatchFixedString | Qt.MatchRecursive, 1)]
+        allNames = [i.text(0) for i in self.treeWidget.findItems("", Qt.MatchContains | Qt.MatchRecursive, 0)]
         if (name in allNames and exists):
             allNames.remove(name) # search includes the object currently, remove 1 of it to test for duplicates
         if (name in allNames):
@@ -660,12 +660,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.moveVertSpinBox.setValue(anim["ver_shift"])
             elif (self.listWidget.selectedItems()[0].text() == "Move along path"):
                 try:
-                    self.movePathTargetComboBox.setCurrentText(self.treeWidget.findItems(str(anim["target"]), Qt.MatchFixedString | Qt.MatchRecursive, 4)[0].text(0))
+                    self.movePathTargetComboBox.setCurrentText([i*(i.text(4) == str(anim["target"])) for i in (self.treeWidget.findItems("", Qt.MatchContains | Qt.MatchRecursive, 0)[0])][0].text(0))
                 except:
                     self.movePathTargetComboBox.setCurrentText("(None)")
             elif (self.listWidget.selectedItems()[0].text() == "Transform"):
                 try:
-                    self.transformTargetComboBox.setCurrentText(self.treeWidget.findItems(str(anim["target"]), Qt.MatchFixedString | Qt.MatchRecursive, 4)[0].text(0))
+                    self.transformTargetComboBox.setCurrentText([i*(i.text(4) == str(anim["target"])) for i in (self.treeWidget.findItems("", Qt.MatchContains | Qt.MatchRecursive, 0)[0])][0].text(0))
                 except:
                     self.transformTargetComboBox.setCurrentText("(None)")
             elif (self.listWidget.selectedItems()[0].text() == "Wave"):
@@ -773,7 +773,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             scene = self.thisSelection.parent()
         sceneLength = eval(scene.text(3))["duration"] # get duration of scene
         defaultEffectLength = 1.0 / sceneLength #DEFAULT_ANIMATION_RUN_TIME is 1.0s 
-        objList = self.treeWidget.findItems("Object", Qt.MatchFixedString | Qt.MatchRecursive, 1)
+        objList = [(i*(i.text(1) == "Object")) for i in self.treeWidget.findItems("", Qt.MatchContains | Qt.MatchRecursive, 0)]
         for i in range(0, len(objList)): # get all objects, get their lengths
             objList[i] = (objList[i] / sceneLength)*self.fullVideoPreviewSlider.frameGeometry().width() # get length of each object's scrollbar
         self.fullVideoPreviewSlider.setMaximum(4*sceneLength) # smoother movement
