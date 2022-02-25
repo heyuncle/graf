@@ -29,7 +29,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string notr="true">manimator (release 2.0)</string>
+   <string notr="true">gräf</string>
   </property>
   <property name="tabShape">
    <enum>QTabWidget::Rounded</enum>
@@ -415,9 +415,9 @@
                    <property name="geometry">
                     <rect>
                      <x>0</x>
-                     <y>-2930</y>
-                     <width>435</width>
-                     <height>3320</height>
+                     <y>0</y>
+                     <width>444</width>
+                     <height>3826</height>
                     </rect>
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_24">
@@ -2063,8 +2063,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>435</width>
-                  <height>1868</height>
+                  <width>444</width>
+                  <height>2159</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_54">
@@ -3357,8 +3357,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1175</width>
-             <height>174</height>
+             <width>1163</width>
+             <height>172</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_17">
@@ -3548,7 +3548,7 @@
      <x>0</x>
      <y>0</y>
      <width>1213</width>
-     <height>26</height>
+     <height>37</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -3559,13 +3559,7 @@
      <property name="title">
       <string>Export as...</string>
      </property>
-     <addaction name="actionPreview"/>
-     <addaction name="actionGIF"/>
-     <addaction name="separator"/>
      <addaction name="actionMP"/>
-     <addaction name="actionMOV"/>
-     <addaction name="separator"/>
-     <addaction name="actionwebm"/>
     </widget>
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
@@ -3574,6 +3568,7 @@
     <addaction name="actionClose_project"/>
     <addaction name="separator"/>
     <addaction name="menuExport"/>
+    <addaction name="actionGenerate_Preview"/>
     <addaction name="separator"/>
     <addaction name="actionProject_Settings"/>
     <addaction name="actionPreferences"/>
@@ -3700,6 +3695,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Y</string>
+   </property>
+  </action>
+  <action name="actionGenerate_Preview">
+   <property name="text">
+    <string>Reload Preview</string>
    </property>
   </action>
  </widget>
