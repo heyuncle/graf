@@ -415,9 +415,9 @@
                    <property name="geometry">
                     <rect>
                      <x>0</x>
-                     <y>-2930</y>
-                     <width>435</width>
-                     <height>3320</height>
+                     <y>-2740</y>
+                     <width>439</width>
+                     <height>3154</height>
                     </rect>
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_24">
@@ -2021,6 +2021,38 @@
                      </widget>
                     </item>
                     <item>
+                     <widget class="QGroupBox" name="groupBox">
+                      <property name="title">
+                       <string>Start Time</string>
+                      </property>
+                      <layout class="QVBoxLayout" name="verticalLayout_18">
+                       <item>
+                        <widget class="QWidget" name="widget_3" native="true">
+                         <layout class="QHBoxLayout" name="horizontalLayout_80">
+                          <item>
+                           <widget class="QLabel" name="label">
+                            <property name="text">
+                             <string>Start time (seconds):</string>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QSpinBox" name="spinBox">
+                            <property name="accelerated">
+                             <bool>true</bool>
+                            </property>
+                            <property name="maximum">
+                             <number>100</number>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
                      <spacer name="verticalSpacer">
                       <property name="orientation">
                        <enum>Qt::Vertical</enum>
@@ -2063,8 +2095,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>435</width>
-                  <height>1868</height>
+                  <width>241</width>
+                  <height>1738</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_54">
@@ -3358,7 +3390,7 @@
              <x>0</x>
              <y>0</y>
              <width>1175</width>
-             <height>174</height>
+             <height>191</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_17">
@@ -3548,7 +3580,7 @@
      <x>0</x>
      <y>0</y>
      <width>1213</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
