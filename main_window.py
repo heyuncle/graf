@@ -27,6 +27,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for i in sys.argv[1:]:
             self.open_mmtr(i)
 
+        self.preview_file = "/Users/heyuncle/Desktop/test.mp4"
+
         with open("objectProperties.csv","r") as f:
             self.objPropCsv = csv.reader(f)
             self.objProp = {i[0]:(i[1],i[4],i[5],i[6]) for i in self.objPropCsv} # manim name, shared, groupbox
@@ -46,15 +48,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.thisSelection = self.treeWidget.selectedItems()
 
         #video player
-        self.vertical_box_layout = QVBoxLayout()
-        self.central_widget = QWidget(self)
-        self.video_frame = QVideoWidget()
-
-        self.playlist = QMediaPlaylist()
+        self.video_frame = QVideoWidget(self.prevWidget)
         self.video_player = QMediaPlayer(flags=QMediaPlayer.VideoSurface)
+        self.verticalLayout_3.addWidget(self.video_frame)
+        self.video_player.setVideoOutput(self.video_frame)
 
-        self.create_user_interface()
-        self.video_player_setup()
+        media_file = QFile(os.path.abspath(self.preview_file))
+        media_file.open(QIODevice.ReadOnly)
+
+        byte_array = media_file.readAll()
+        buffer = QBuffer(byte_array)
+        buffer.setData(byte_array)
+        buffer.open(QIODevice.ReadOnly)
+
+        self.video_player.setMedia(QMediaContent(), buffer)
+        self.video_player.play()
+
 
         self.show()
         self.retranslateUi(MainWindow)
@@ -544,63 +553,67 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 except: pass
 
     def convert_to_manim(self):
-        def clean(name):
-            return name.replace(")","").replace("(","").replace(" ","_")
-        def write_obj(i):
-            param_string = ""
-            objDict = eval(i.text(3))
-            if i.text(2) == "(None)":
-                pass
-            showList.append(i.text(0))
-            if i.text(2) == "Coordinate Plane":
-                f.write("        "+i.text(0)+"=NumberPlane(x_range=("+str(objDict["x_min"])+","+str(objDict["x_max"])+"),y_range=("+str(objDict["y_min"])+","+str(objDict["y_max"])+"),color='"+objDict["color"]+"')\n")
-            else:
-                showList.append(i.text(0))
-                for prop,val in objDict.items():
-                    if prop in ["x_shift", "y_shift", "duration"]:
-                        pass
-                    # elif prop == "show": #TODO show at start property
-                    #     if val == True:
-                    #         showList.append(i.text(0))
-                    else:
-                        try:
-                            float(val)
-                            param_string += prop + "=" + str(val) + ","
-                        except:
-                            # If number is not float or int (can't be converted to float)
-                            if prop == "color":
-                                param_string += prop + "='" + val + "'," #TODO fix color saving
-                            elif i.text(2) == "LaTeX":
-                                param_string += "r'" + val + "',"
-                            elif i.text(2) == "Polygon":
-                                param_string += val + ","
-                            elif i.text(2) == "Point Label":
-                                if prop == "text":
-                                    param_string += "text=r'" + val + "',"
-                                else:
-                                    param_string += prop + "=" + val + ","
-                            elif i.text(2) == "Text":
-                                param_string += prop + "=r'" + val + "',"
-                            elif i.text(2) == "Function Graph":
-                                param_string += lambdastr(symbols('x'), latex2sympy(val)) + ","
-                            else:
-                                param_string += prop + "=" + val + ","
-                fixed_name = clean(i.text(0))
-                objLine = "        " + fixed_name + "=" + self.objProp[i.text(2)][0] + "(" + param_string[:-1] + ")" #TODO ensure name has no spaces
-                try:
-                    objLine += ".shift(RIGHT*" + str(objDict["x_shift"]) + "+UP*" + str(objDict["y_shift"]) + ")"
-                except:
-                    pass
-                f.write(objLine + "\n")
         with open("manim.py", "w+") as f:
             f.write("import math\nfrom manim import *\nclass MyScene(Scene):\n    def construct(self):\n")
             showList = []
-        def recursive_load(obj):
-            for i in obj:
-                if i.text(2) == "Group":
-                    recursive_load([self.treeWidget.currentItem().child(i) for i in range(self.treeWidget.currentItem().childCount())])
+            def clean(name):
+                return name.replace(")","").replace("(","").replace(" ","_")
+            def write_obj(i):
+                param_string = ""
+                objDict = eval(i.text(3))
+                if i.text(2) == "(None)":
+                    pass
+                showList.append(i.text(0))
+                if i.text(2) == "Coordinate Plane":
+                    f.write("        "+clean(i.text(0))+"=NumberPlane(x_range=("+str(objDict["x_min"])+","+str(objDict["x_max"])+"),y_range=("+str(objDict["y_min"])+","+str(objDict["y_max"])+"),color='"+objDict["color"]+"')\n")
                 else:
-                    write_obj(i)
+                    showList.append(i.text(0))
+                    for prop,val in objDict.items():
+                        if prop in ["x_shift", "y_shift", "duration", "animIn", "animOut", "growConfig"]:
+                            pass
+                        # elif prop == "show": #TODO show at start property
+                        #     if val == True:
+                        #         showList.append(i.text(0))
+                        else:
+                            try:
+                                float(val)
+                                param_string += prop + "=" + str(val) + ","
+                            except:
+                                # If number is not float or int (can't be converted to float)
+                                if prop == "color":
+                                    param_string += prop + "='" + val + "'," #TODO fix color saving
+                                elif i.text(2) == "LaTeX":
+                                    param_string += "r'" + val + "',"
+                                elif i.text(2) == "Polygon":
+                                    param_string += val + ","
+                                elif i.text(2) == "Point Label":
+                                    if prop == "text":
+                                        param_string += "text=r'" + val + "',"
+                                    else:
+                                        param_string += prop + "=" + val + ","
+                                elif i.text(2) == "Text":
+                                    param_string += prop + "=r'" + val + "',"
+                                elif i.text(2) == "Function Graph":
+                                    param_string += lambdastr(symbols('x'), latex2sympy(val)) + ","
+                                else:
+                                    param_string += prop + "=" + val + ","
+                    objLine = "        " + clean(i.text(0)) + "=" + self.objProp[i.text(2)][0] + "(" + param_string[:-1] + ")" #TODO ensure name has no spaces
+                    try:
+                        objLine += ".shift(RIGHT*" + str(objDict["x_shift"]) + "+UP*" + str(objDict["y_shift"]) + ")"
+                    except:
+                        pass
+                    f.write(objLine + "\n")
+            def recursive_load(obj):
+                for i in obj:
+                    if i.text(1) == "Group":
+                        recur = recursive_load([self.treeWidget.currentItem().child(i) for i in range(self.treeWidget.currentItem().childCount())])
+                        objLine = "        " + clean(i.text(0)) + "=Group(" + ",".join(clean(j) for j in recur) + ")"
+                        try:
+                            objLine += ".shift(RIGHT*" + str(eval(i.text(3))["x_shift"]) + "+UP*" + str(eval(i.text(3))["y_shift"]) + ")"
+                        except:
+                            pass
+                    else:
+                        write_obj(i)
             recursive_load([self.treeWidget.currentItem().child(i) for i in range(self.treeWidget.currentItem().childCount())])
             f.write("        self.add(" + ",".join([i for i in showList[::-1]]) + ")\n")
             # for i in self.animSave:
@@ -615,7 +628,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             #             param_string += j[0] + "=" + str(j[1]) + ","
             #         f.write("        self.play(" + i[0] + "(" + param_string[:-1] + "))\n")
             f.write("        self.wait()")
-            f.close()
 
     def renderScene(self):
         # if not self.save_mmtr():
