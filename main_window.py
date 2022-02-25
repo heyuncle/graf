@@ -515,7 +515,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def addObject(self, object):
         if self.treeWidget.currentItem().text(1) in ["Group","Scene"]: #aiden was here
             self.objectID += 1
-            self.treeWidget.currentItem().addChild(object)
+            if (object.text(1) == "Scene"):
+                self.treeWidget.addTopLevelitem(object)
+            else:
+                self.treeWidget.currentItem().addChild(object)
         else:
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Critical)
