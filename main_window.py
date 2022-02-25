@@ -50,7 +50,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         
         self.newObjButton.clicked.connect(lambda _: self.addObject(self.treeItem(self.testDuplicateName("MyObject", True),"Object","(None)")))
         self.newGroupButton.clicked.connect(lambda _: self.addObject(self.treeItem(self.testDuplicateName("New Group", False), "Group")))
-        self.newSceneButton.clicked.connect(lambda _: self.addObject(self.treeItem(self.testDuplicateName("Scene " + (1 + len(self.treeWidget.findItems("Scene", Qt.MatchContains, 0))), False), "Scene")))
+        self.newSceneButton.clicked.connect(lambda _: self.addObject(self.treeItem(self.testDuplicateName("Scene " + str(1 + len(self.treeWidget.findItems("Scene", Qt.MatchContains, 0))), False), "Scene")))
         self.treeWidget.itemClicked.connect(lambda _: (self.updatePropPanel(), self.loadProp()))
         self.treeWidget.itemSelectionChanged.connect(self.saveLast)
         self.treeWidget.itemDoubleClicked.connect(self.edit)
