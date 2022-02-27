@@ -19,15 +19,12 @@ import qdarkstyle
 # from error import Ui_Dialog as errorDialog # TODO - what was this for
 
 class MainWindow(QMainWindow, Ui_MainWindow):
-    file_path = ''
 
     def __init__(self, *args, **kwargs):
         self.objectID = 0
         super(MainWindow, self).__init__(*args, **kwargs)
         for i in sys.argv[1:]:
             self.open_mmtr(i)
-
-        self.preview_file = "/Users/heyuncle/Desktop/test.mp4"
 
         with open("objectProperties.csv","r") as f:
             self.objPropCsv = csv.reader(f)
@@ -46,25 +43,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         
         self.lastSelection = []
         self.thisSelection = self.treeWidget.selectedItems()
+        self.file_path = os.getcwd()
 
-        #video player
-        self.video_frame = QVideoWidget(self.prevWidget)
-        self.video_player = QMediaPlayer(flags=QMediaPlayer.VideoSurface)
-        self.verticalLayout_3.addWidget(self.video_frame)
-        self.video_player.setVideoOutput(self.video_frame)
-
-        media_file = QFile(os.path.abspath(self.preview_file))
-        media_file.open(QIODevice.ReadOnly)
-
-        byte_array = media_file.readAll()
-        buffer = QBuffer(byte_array)
-        buffer.setData(byte_array)
-        buffer.open(QIODevice.ReadOnly)
-
-        self.video_player.setMedia(QMediaContent(), buffer)
-        self.video_player.play()
-
-
+        self.loadVideoPlayer()
         self.show()
         self.retranslateUi(MainWindow)
         
@@ -84,17 +65,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.objTypeComboBox.currentTextChanged.connect(self.changeObjType)
         self.colorPushButton.clicked.connect(self.changeColor)
         self.urlPushButton.clicked.connect(self.loadToLaTeX)
+        self.playPushButton.clicked.connect(self.playVideo)
+        self.video_player.stateChanged.connect(self.changeMediaIcon)
         #self.updateObjPropButton.clicked.connect(self.saveProp)
         # self.addRowButton.clicked.connect(self.matrixTableWidget.insertRow(self.matrixTableWidget.rowCount()))
         # self.removeRowButton.clicked.connect(self.matrixTableWidget.removeRow(self.matrixTableWidget.rowCount()))
         # self.addColButton.clicked.connect(self.matrixTableWidget.insertColumn(self.matrixTableWidget.columnCount()))
         # self.remColButton.clicked.connect(self.matrixTableWidget.removeColumn(self.matrixTableWidget.columnCount()))
-
         self.actionOpen.triggered.connect(self.open_from_dir)
         self.actionSave.triggered.connect(self.save_mmtr)
         self.actionSave_as.triggered.connect(self.save_mmtr_as)
         self.actionDelete.triggered.connect(self.delItem)
-        self.actionMP.triggered.connect(self.renderScene) #TODO add other file types
+        self.actionMP.triggered.connect(lambda _: self.renderScene(False)) #TODO add other file types
+        self.actionGenerate_Preview.triggered.connect(lambda _: self.renderScene(True))
 
         # Test project
         newScene = self.treeItem("Scene 1","Scene")
@@ -102,6 +85,26 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.treeWidget.setCurrentItem(newScene)
 
         self.updatePropPanel()
+
+    def loadVideoPlayer(self):
+        self.video_frame = QVideoWidget(self.prevWidget)
+        self.video_frame.setContentsMargins(10,10,10,10)
+        self.verticalLayout_3.addWidget(self.video_frame)
+        self.video_player = QMediaPlayer(flags=QMediaPlayer.VideoSurface)
+        self.video_player.setVideoOutput(self.video_frame)
+        self.video_player.setMedia(QMediaContent(QUrl.fromLocalFile("/Users/heyuncle/Desktop/test.mp4")))
+
+    def playVideo(self):
+        if self.video_player.state() == QMediaPlayer.PlayingState:
+            self.video_player.pause()
+        else:
+            self.video_player.play()
+
+    def changeMediaIcon(self):
+        if self.video_player.state() == QMediaPlayer.PlayingState:
+            self.playPushButton.setIcon(QIcon("icons/pause-button-light.png"))
+        else:
+            self.playPushButton.setIcon(QIcon("icons/play-button-light.png"))
 
     def loadToLaTeX(self):
         self.latexTextEdit.setPlainText(tex_from_url(self.urlLineEdit.text())[3:-3])
@@ -629,20 +632,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             #         f.write("        self.play(" + i[0] + "(" + param_string[:-1] + "))\n")
             f.write("        self.wait()")
 
-    def renderScene(self):
+    def renderScene(self, preview):
         # if not self.save_mmtr():
         #    return None
-        self.file_path = QtWidgets.QFileDialog.getSaveFileName(filter="Video (*.mp4)")[0]
-        if self.file_path == "": return
-        os.chdir("/".join(self.file_path.split("/")[:-1]))
+        file_path = QtWidgets.QFileDialog.getSaveFileName(filter="Video (*.mp4)")[0]
+        if file_path == "": return
+        os.chdir("/".join(file_path.split("/")[:-1]))
         self.convert_to_manim()
-        subprocess.run("manim manim.py MyScene", shell=True)
+        subprocess.run("manim manim.py MyScene" + " -ql" if preview else "", shell=True)
         try:
-            os.replace("./media/videos/manim/1080p60/MyScene.mp4", "./"+self.file_path.split("/")[-1])
+            os.replace("./media/videos/manim/"+ ("480p15" if preview else "1080p60") +"/MyScene.mp4", "./"+file_path.split("/")[-1])
             shutil.rmtree('media')
             shutil.rmtree('__pycache__')
         except:
            pass
+        if preview:
+            self.video_player.setMedia(QMediaContent(QUrl.fromLocalFile(file_path)))
+        os.chdir(self.file_path)
 
     def save_mmtr_as(self):
         try:
