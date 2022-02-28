@@ -324,7 +324,7 @@
             </size>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>1</number>
            </property>
            <property name="documentMode">
             <bool>false</bool>
@@ -396,8 +396,8 @@
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>444</width>
-                     <height>3923</height>
+                     <width>439</width>
+                     <height>3154</height>
                     </rect>
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_24">
@@ -2075,15 +2075,15 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>330</width>
-                  <height>2159</height>
+                  <width>439</width>
+                  <height>1738</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_54">
                  <item>
                   <widget class="QGroupBox" name="animInGroupBox">
                    <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                      <horstretch>0</horstretch>
                      <verstretch>0</verstretch>
                     </sizepolicy>
@@ -3369,8 +3369,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1163</width>
-             <height>172</height>
+             <width>1175</width>
+             <height>191</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_17">
@@ -3560,7 +3560,7 @@
      <x>0</x>
      <y>0</y>
      <width>1213</width>
-     <height>37</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

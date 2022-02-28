@@ -2,7 +2,7 @@ import subprocess, sys, os, shutil, csv, ast
 import xml.etree.ElementTree as et
 
 from window import Ui_MainWindow
-from preferences import Ui_Dialog
+# from preferences import Ui_Dialog
 from tex_from_url import tex_from_url
 
 from PyQt5 import QtWidgets
@@ -52,11 +52,37 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.newObjButton.clicked.connect(lambda _: self.addObject(self.treeItem(self.testDuplicateName("MyObject", True),"Object","(None)")))
         self.newGroupButton.clicked.connect(lambda _: self.addObject(self.treeItem(self.testDuplicateName("New Group", False), "Group")))
         self.newSceneButton.clicked.connect(lambda _: self.addObject(self.treeItem(self.testDuplicateName("Scene " + str(1 + len(self.treeWidget.findItems("Scene", Qt.MatchContains, 0))), False), "Scene")))
-        self.treeWidget.itemClicked.connect(lambda _: (self.updatePropPanel(), self.loadProp()))
+        self.treeWidget.itemClicked.connect(lambda _: (self.updatePropPanel(), self.loadProp(), self.load_effect_panel))
         self.treeWidget.itemSelectionChanged.connect(self.saveLast)
         self.treeWidget.itemDoubleClicked.connect(self.edit)
         self.effectAddButton.clicked.connect(self.add_effect)
         self.animInComboBox.currentTextChanged.connect(self.toggle_grow)
+        self.listWidget.itemClicked.connect(self.load_effect)
+        self.tabWidget.currentChanged.connect(self.load_effect_panel)
+        self.circumColorPushButton.clicked.connect(self.save_effect)
+        self.circumDistSpinBox.valueChanged.connect(self.save_effect)
+        self.circumFadeInCheckBox.stateChanged.connect(self.save_effect)
+        self.circumFadeOutCheckBox.stateChanged.connect(self.save_effect)
+        self.circumShapeComboBox.currentTextChanged.connect(self.save_effect)
+        self.wiggleAngleSpinBox.valueChanged.connect(self.save_effect)
+        self.wiggleNumSpinBox.valueChanged.connect(self.save_effect)
+        self.wiggleScaleSpinBox.valueChanged.connect(self.save_effect)
+        self.waveAmpSpinBox.valueChanged.connect(self.save_effect)
+        self.waveRipSpinBox.valueChanged.connect(self.save_effect)
+        self.waveDirComboBox.currentTextChanged.connect(self.save_effect)
+        self.transformTargetComboBox.currentTextChanged.connect(self.save_effect)
+        self.moveHorizSpinBox.valueChanged.connect(self.save_effect)
+        self.moveVertSpinBox.valueChanged.connect(self.save_effect)
+        self.movePathTargetComboBox.currentTextChanged.connect(self.save_effect)
+        self.indColorPushButton.clicked.connect(self.save_effect)
+        self.indScaleSpinBox.valueChanged.connect(self.save_effect)
+        self.focusColorPushButton.clicked.connect(self.save_effect)
+        self.focusOpacitySpinBox.valueChanged.connect(self.save_effect)
+        self.flashColorPushButton.clicked.connect(self.save_effect)
+        self.flashLenSpinBox.valueChanged.connect(self.save_effect)
+        self.flashNumLinesSpinBox.valueChanged.connect(self.save_effect)
+        self.flashRadiusSpinBox.valueChanged.connect(self.save_effect)
+        self.flashStrokeSpinBox.valueChanged.connect(self.save_effect)
         try:
             self.treeWidget.currentItemChanged.connect(self.testDuplicateName(self.thisSelection[0].text(0), True))
         except:
@@ -122,7 +148,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if not all(i in self.thisSelection for i in self.lastSelection):
             self.saveProp()
 
-    def treeItem(self, name, type, subtype="", properties="{'duration':0.0}", animations="[]"):
+    def treeItem(self, name, type, subtype="", properties="{'duration':0.0, 'animIn':'(None)', 'animOut':'(None)'}", animations="[]"):
         item = QTreeWidgetItem()
         item.setFlags(item.flags() | Qt.ItemIsEditable)
         item.setText(0,self.testDuplicateName(name, False))
@@ -132,6 +158,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         item.setText(5,animations)
         if type == "Object":
             item.setText(4,str(self.objectID))
+        self.objectID += 1
         item.setIcon(0,QIcon("icons/camera-solid-light.ico" if type=="Scene" else "icons/equation-light.ico" if type=="Object" else "icons/object-group-solid-light.ico"))
         return item
 
@@ -142,7 +169,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def changeObjType(self):
         newType = self.objTypeComboBox.currentText()
-        default = self.objProp[newType][3] if newType != "(None)" else "{}"
+        default = self.objProp[newType][3] if newType != "(None)" else "{'duration':0.0, 'animIn':'(None)', 'animOut':'(None)'}"
         for i in self.treeWidget.selectedItems():
             i.setText(2,newType)
             i.setText(3,default)
@@ -151,7 +178,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def getObjID(self, name):
         if (name != "(None)"):
-            return int(self.treeWidget.findItems(name, Qt.MatchFixedString | Qt.MatchRecursive, 0)[0].text(4))
+            ind = self.treeWidget.findItems(name, Qt.MatchFixedString | Qt.MatchRecursive, 0)[0].text(4)
+            return int(ind)
         else:
             return None
 
@@ -173,7 +201,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.yGridSpinBox.setValue(prop["grid_ystep"])
                 elif i.objectName() == "ulGroupBox":
                     try: # put in try loop incase object is deleted between saving and loading
-                        self.ulObjComboBox.setCurrentText([i*(i.text(4) == str(prop["object"])) for i in (self.treeWidget.findItems("", Qt.MatchContains | Qt.MatchRecursive, 0)[0])][0].text(0))
+                        x = [i.text(4) for i in (self.treeWidget.findItems("", Qt.MatchContains | Qt.MatchRecursive, 0))]
+                        index = x.index(str(prop["object"]))
+                        self.ulObjComboBox.setCurrentText(((self.treeWidget.findItems("", Qt.MatchContains | Qt.MatchRecursive, 0))[index]).text(0))
                     except:
                         self.ulObjComboBox.setCurrentText("(None)")
                     self.ulBuffSpinBox.setValue(prop["buff"])
@@ -186,7 +216,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.arBuffSpinBox.setValue(prop["buff"])
                 elif i.objectName() == "braceGroupBox":
                     try:
-                        self.braceObjSelectComboBox.setCurrentText([i*(i.text(4) == str(prop["object"])) for i in (self.treeWidget.findItems("", Qt.MatchContains | Qt.MatchRecursive, 0)[0])][0].text(0))
+                        x = [i.text(4) for i in (self.treeWidget.findItems("", Qt.MatchContains | Qt.MatchRecursive, 0))]
+                        index = x.index(str(prop["object"]))
+                        self.braceObjSelectComboBox.setCurrentText(((self.treeWidget.findItems("", Qt.MatchContains | Qt.MatchRecursive, 0))[index]).text(0))
                     except:
                         self.braceObjSelectComboBox.setCurrentText("(None)")
                     self.bracePlainTextEdit.setPlainText(prop["text"])
@@ -239,7 +271,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.regPolyVertSpinBox.setValue(prop["n"])
                 elif i.objectName() == "surRectGroupBox":
                     try:
-                        self.surrObjComboBox.setCurrentText(i*(i.text(4) == str(prop["object"])) for i in (self.treeWidget.findItems("", Qt.MatchContains | Qt.MatchRecursive, 0)[0]).text(0))
+                        x = [i.text(4) for i in (self.treeWidget.findItems("", Qt.MatchContains | Qt.MatchRecursive, 0))]
+                        index = x.index(str(prop["object"]))
+                        self.surrObjComboBox.setCurrentText(((self.treeWidget.findItems("", Qt.MatchContains | Qt.MatchRecursive, 0))[index]).text(0))
                     except:
                         self.surrObjComboBox.setCurrentText("(None)")
                     self.surrBuffSpinBox.setValue(prop["buff"])
@@ -263,12 +297,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.animInComboBox.setCurrentText(prop["animIn"])
                 elif i.objectName() == "animOutGroupBox":
                     self.animOutComboBox.setCurrentText(prop["animOut"])
+                    if (prop["animOut"] != "Grow"):
+                        self.growGroupBox.hide()
+                    else:
+                        self.growGroupBox.show()
                 elif i.objectName() == "growGroupBox":
                     self.growOriginComboBox.currentText(prop["growConfig"])
         self.tabWidget.setCurrentIndex(currentTab) # switch to last tab
 
     def toggle_grow(self):
-        if (self.animInComboBox.currentValue() == "Grow"):
+        if (self.animInComboBox.currentText() == "Grow"):
             self.growGroupBox.show()
         else:
             self.growGroupBox.hide()
@@ -470,9 +508,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     new_sel += recursiveSelection([i.child(j) for j in range(i.childCount())])
             return new_sel
 
-
+        animKeepVisible = ["addEffect", "animInGroupBox", "animOutGroupBox", "effectDividerLine", "effectListLabel", "listWidget"]
         for i in self.propScrollAreaWidget.findChildren(QtWidgets.QGroupBox) + self.animScrollAreaContents.findChildren(QtWidgets.QGroupBox):
-            i.hide()
+            if (i.objectName() not in animKeepVisible):
+                i.hide()
         
         if len(self.treeWidget.selectedItems()) == 1:
             if self.treeWidget.currentItem().text(1)=="Object":
@@ -533,12 +572,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def addObject(self, object):
         if self.treeWidget.currentItem().text(1) in ["Group","Scene"]: #aiden was here
-            self.objectID += 1
             if (object.text(1) == "Scene"):
                 self.treeWidget.addTopLevelItem(object)
             else:
                 self.treeWidget.currentItem().addChild(object)
-                self.obj_timeline_add(object)
+                # self.obj_timeline_add(object)
         else:
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Critical)
@@ -677,56 +715,126 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             pass
 
     def load_effect(self):
+        animKeepVisible = ["addEffect", "animInGroupBox", "animOutGroupBox", "effectDividerLine", "effectListLabel", "listWidget"]
+        for i in self.animScrollAreaContents.findChildren(QtWidgets.QGroupBox):
+            if (i.objectName() not in animKeepVisible):
+                i.hide()
         if len(self.listWidget.selectedItems()) == 1:
-            anim = eval(self.thisSelection.text(5))[(self.listWidget.row(self.listWidget.selectedItems()[0]) - 1)]
-            if (self.listWidget.selectedItems()[0].text() == "Indicate"):
-                self.indScaleSpinBox.setValue(anim["scale_factor"])
+            anim = eval(self.thisSelection[0].text(5))[(self.listWidget.row(self.listWidget.selectedItems()[0]))]
+            if (anim["name"] == "Indicate"):
+                self.indGroupBox.show()
+                try:
+                    self.indScaleSpinBox.setValue(anim["scale_factor"])
+                except:
+                    self.indScaleSpinBox.setValue(0)
                 try:
                     self.indColorFrame.setStyleSheet("background-color: "+anim["color"])
                 except KeyError:
                     self.indColorFrame.setStyleSheet("background-color: #ffffff")
-                self.thisSelection.setText(5, str(anim))
-            elif (self.listWidget.selectedItems()[0].text() == "Wiggle"):
-                self.wiggleScaleSpinBox.setValue(anim["scale_factor"])
-                self.wiggleAngleSpinBox.setValue(anim["angle"])
-                self.wiggleNumSpinBox.setValue(anim["n"])
-            elif (self.listWidget.selectedItems()[0].text() == "Move"):
-                self.moveHorizSpinBox.setValue(anim["hor_shift"])
-                self.moveVertSpinBox.setValue(anim["ver_shift"])
-            elif (self.listWidget.selectedItems()[0].text() == "Move along path"):
+            elif (anim["name"] == "Wiggle"):
+                self.wiggleGroupBox.show()
                 try:
-                    self.movePathTargetComboBox.setCurrentText([i*(i.text(4) == str(anim["target"])) for i in (self.treeWidget.findItems("", Qt.MatchContains | Qt.MatchRecursive, 0)[0])][0].text(0))
+                    self.wiggleScaleSpinBox.setValue(anim["scale_factor"])
+                except:
+                    self.wiggleAngleSpinBox.setValue(0)
+                try:
+                    self.wiggleAngleSpinBox.setValue(anim["angle"])
+                except:
+                    self.wiggleAngleSpinBox.setValue(0)
+                try:
+                    self.wiggleNumSpinBox.setValue(anim["n"])
+                except:
+                    self.wiggleNumSpinBox.setValue(0)
+            elif (anim["name"] == "Move"):
+                self.moveGroupBox.show()
+                try:
+                    self.moveHorizSpinBox.setValue(anim["hor_shift"])
+                except:
+                    self.moveHorizSpinBox.setValue(0)
+                try:
+                    self.moveVertSpinBox.setValue(anim["ver_shift"])
+                except:
+                    self.moveVertSpinBox.setValue(0)
+            elif (anim["name"] == "Move along path"):
+                self.movePathGroupBox.show()
+                try:
+                    x = [i.text(4) for i in (self.treeWidget.findItems("", Qt.MatchContains | Qt.MatchRecursive, 0))]
+                    index = x.index(str(anim["target"]))
+                    self.movePathTargetComboBox.setCurrentText(((self.treeWidget.findItems("", Qt.MatchContains | Qt.MatchRecursive, 0))[index]).text(0))
                 except:
                     self.movePathTargetComboBox.setCurrentText("(None)")
-            elif (self.listWidget.selectedItems()[0].text() == "Transform"):
+            elif (anim["name"] == "Transform"):
+                self.transformGroupBox.show()
                 try:
-                    self.transformTargetComboBox.setCurrentText([i*(i.text(4) == str(anim["target"])) for i in (self.treeWidget.findItems("", Qt.MatchContains | Qt.MatchRecursive, 0)[0])][0].text(0))
+                    x = [i.text(4) for i in (self.treeWidget.findItems("", Qt.MatchContains | Qt.MatchRecursive, 0))]
+                    index = x.index(str(anim["target"]))
+                    self.transformTargetComboBox.setCurrentText(((self.treeWidget.findItems("", Qt.MatchContains | Qt.MatchRecursive, 0))[index]).text(0))
                 except:
                     self.transformTargetComboBox.setCurrentText("(None)")
-            elif (self.listWidget.selectedItems()[0].text() == "Wave"):
-                self.waveDirComboBox.setCurrentText(anim["direction"])
-                self.waveAmpSpinBox.setValue(anim["amplitude"])
-                self.waveRipSpinBox.setValue(anim["ripples"])
-            elif (self.listWidget.selectedItems()[0].text() == "Flash"):
-                self.flashLenSpinBox.setValue(anim["line_length"])
-                self.flashNumLinesSpinBox.setValue(anim["n"])
-                self.flashRadiusSpinBox.setValue(anim["radius"])
-                self.flashStrokeSpinBox.setValue(anim["stroke_width"])
+            elif (anim["name"] == "Wave"):
+                self.waveGroupBox.show()
+                try:
+                    self.waveDirComboBox.setCurrentText(anim["direction"])
+                except:
+                    self.waveDirComboBox.setCurrentText("(None)")
+                try:
+                    self.waveAmpSpinBox.setValue(anim["amplitude"])
+                except:
+                    self.waveAmpSpinBox.setValue(0)
+                try:
+                    self.waveRipSpinBox.setValue(anim["ripples"])
+                except:
+                    self.waveAmpSpinBox.setValue(0)
+            elif (anim["name"] == "Flash"):
+                self.flashGroupBox.show()
+                try:
+                    self.flashLenSpinBox.setValue(anim["line_length"])
+                except:
+                    self.flashLenSpinBox.setValue(0)
+                try:
+                    self.flashNumLinesSpinBox.setValue(anim["n"])
+                except:
+                    self.flashNumLinesSpinBox.setValue(0)
+                try:
+                    self.flashRadiusSpinBox.setValue(anim["radius"])
+                except:
+                    self.flashRadiusSpinBox.setValue(0)
+                try:
+                    self.flashStrokeSpinBox.setValue(anim["stroke_width"])
+                except:
+                    self.flashStrokeSpinBox.setValue(0)
                 try:
                     self.flashColorFrame.setStyleSheet("background-color: "+anim["color"])
                 except KeyError:
                     self.flashColorFrame.setStyleSheet("background-color: #ffffff")
-            elif (self.listWidget.selectedItems()[0].text() == "Focus"):
-                self.focusOpacitySpinBox.setValue(anim["opacity"])
+            elif (anim["name"] == "Focus"):
+                self.focusGroupBox.show()
+                try:
+                    self.focusOpacitySpinBox.setValue(anim["opacity"])
+                except:
+                    self.focusOpacitySpinBox.setValue(100)
                 try:
                     self.focusColorFrame.setStyleSheet("background-color: "+anim["color"])
                 except KeyError:
                     self.focusColorFrame.setStyleSheet("background-color: #ffffff")
-            elif (self.listWidget.selectedItems()[0].text() == "Circumscribe"):
-                self.circumShapeComboBox.setCurrentText(anim["shape"])
-                self.circumDistSpinBox.setValue(anim["distance"])
-                self.circumFadeInCheckBox.setChecked(anim["fade_in"])
-                self.circumFadeOutCheckBox.setChecked(anim["fade_out"])
+            elif (anim["name"] == "Circumscribe"):
+                self.circumGroupBox.show()
+                try:
+                    self.circumShapeComboBox.setCurrentText(anim["shape"])
+                except:
+                    self.circumShapeComboBox.setCurrentText("(None)")
+                try:
+                    self.circumDistSpinBox.setValue(anim["distance"])
+                except:
+                    self.circumDistSpinBox.setValue(0)
+                try:
+                    self.circumFadeInCheckBox.setChecked(anim["fade_in"])
+                except:
+                    self.circumFadeInCheckBox.setChecked(False)
+                try:
+                    self.circumFadeOutCheckBox.setChecked(anim["fade_out"])
+                except:
+                    self.circumFadeOutCheckBox.setChecked(False)
                 try:
                     self.circumColorFrame.setStyleSheet("background-color: "+anim["color"])
                 except KeyError:
@@ -734,67 +842,87 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def save_effect(self): # "Indicate" "Wiggle" "Move" "Move along path" "Transform" "Wave" "Flash" "Focus" "Circumscribe"
         if len(self.listWidget.selectedItems()) == 1:
-            anim = eval(self.thisSelection.text(5))
+            anim = eval(self.thisSelection[0].text(5))
             if (self.listWidget.selectedItems()[0].text() == "Indicate"):
-                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]) - 1)] = {
+                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]))] = {
+                    "name" : self.listWidget.selectedItems()[0].text(),
                     "scale_factor" : self.indScaleSpinBox.value(),
                     "color" : self.indColorFrame.styleSheet().split()[-1]
                 }
-                self.thisSelection.setText(5, str(anim))
+                print(anim)
+                self.thisSelection[0].setText(5, str(anim))
             elif (self.listWidget.selectedItems()[0].text() == "Wiggle"):
-                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]) - 1)] = {
+                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]))] = {
+                    "name" : self.listWidget.selectedItems()[0].text(),
                     "scale_factor" : self.wiggleScaleSpinBox.value(),
                     "angle" : self.wiggleAngleSpinBox.value(),
                     "n" : self.wiggleNumSpinBox.value()
                 }
-                self.thisSelection.setText(5, str(anim))
+                self.thisSelection[0].setText(5, str(anim))
             elif (self.listWidget.selectedItems()[0].text() == "Move"):
-                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]) - 1)] = {
+                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]))] = {
+                    "name" : self.listWidget.selectedItems()[0].text(),
                     "hor_shift" : self.moveHorizSpinBox.value(),
                     "ver_shift" : self.moveVertSpinBox.value()
                 }
-                self.thisSelection.setText(5, str(anim))
+                self.thisSelection[0].setText(5, str(anim))
             elif (self.listWidget.selectedItems()[0].text() == "Move along path"):
-                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]) - 1)] = {
+                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]))] = {
+                    "name" : self.listWidget.selectedItems()[0].text(),
                     "target" : self.getObjID(self.movePathTargetComboBox.currentText())
                 }
-                self.thisSelection.setText(5, str(anim))
+                self.thisSelection[0].setText(5, str(anim))
             elif (self.listWidget.selectedItems()[0].text() == "Transform"):
-                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]) - 1)] = {
+                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]))] = {
+                    "name" : self.listWidget.selectedItems()[0].text(),
                     "target" : self.getObjID(self.transformTargetComboBox.currentText())
                 }
-                self.thisSelection.setText(5, str(anim))
+                self.thisSelection[0].setText(5, str(anim))
             elif (self.listWidget.selectedItems()[0].text() == "Wave"):
-                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]) - 1)] = {
+                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]))] = {
+                    "name" : self.listWidget.selectedItems()[0].text(),
                     "direction" : self.waveDirComboBox.currentText(),
                     "amplitude" : self.waveAmpSpinBox.value(),
                     "ripples" : self.waveRipSpinBox.value()
                 }
-                self.thisSelection.setText(5, str(anim))
+                self.thisSelection[0].setText(5, str(anim))
             elif (self.listWidget.selectedItems()[0].text() == "Flash"):
-                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]) - 1)] = {
+                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]))] = {
+                    "name" : self.listWidget.selectedItems()[0].text(),
                     "line_length" : self.flashLenSpinBox.value(),
                     "n" : self.flashNumLinesSpinBox.value(),
                     "radius" : self.flashRadiusSpinBox.value(),
                     "stroke_width" : self.flashStrokeSpinBox.value(),
                     "color" : self.flashColorFrame.styleSheet().split()[-1]
                 }
-                self.thisSelection.setText(5, str(anim))
+                self.thisSelection[0].setText(5, str(anim))
             elif (self.listWidget.selectedItems()[0].text() == "Focus"):
-                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]) - 1)] = {
+                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]))] = {
+                    "name" : self.listWidget.selectedItems()[0].text(),
                     "opacity" : self.focusOpacitySpinBox.value(),
                     "color" : self.focusColorFrame.styleSheet().split()[-1]
                 }
-                self.thisSelection.setText(5, str(anim))
+                self.thisSelection[0].setText(5, str(anim))
             elif (self.listWidget.selectedItems()[0].text() == "Circumscribe"):
-                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]) - 1)] = {
+                anim[(self.listWidget.row(self.listWidget.selectedItems()[0]))] = {
+                    "name" : self.listWidget.selectedItems()[0].text(),
                     "shape" : self.circumShapeComboBox.currentText(),
                     "distance" : self.circumDistSpinBox.value(),
                     "color" : self.circumColorFrame.styleSheet().split()[-1],
                     "fade_in" : self.circumFadeInCheckBox.isChecked(),
                     "fade_out" : self.circumFadeOutCheckBox.isChecked()
                 }
-                self.thisSelection.setText(5, str(anim))
+                self.thisSelection[0].setText(5, str(anim))
+
+    def load_effect_panel(self):
+        self.listWidget.clear()
+        if self.tabWidget.currentIndex() == 1 and len(self.thisSelection) == 1:
+            if self.thisSelection[0].text(1) == "Object":
+                self.animInGroupBox.show()
+                self.animOutGroupBox.show()
+                anim = eval(self.thisSelection[0].text(5))
+                for i in anim:
+                    self.listWidget.addItem(i["name"])
 
     def obj_timeline_add(self, object):
         if object in self.listWidget.findItems("", Qt.MatchContains):
@@ -847,12 +975,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
             sizePolicy.setHorizontalStretch(0)
             sizePolicy.setVerticalStretch(0)
-            sizePolicy.setHeightForWidth(widget.sizePolicy().hasHeightForWidth())
-            widget.setSizePolicy(sizePolicy)
-            widget.setObjectName(object.text(0) + "mainObjWidget")
-            horizontalLayout_42 = QtWidgets.QHBoxLayout(widget)
+            sizePolicy.setHeightForWidth(objWidget.sizePolicy().hasHeightForWidth())
+            objWidget.setSizePolicy(sizePolicy)
+            objWidget.setObjectName(object.text(0) + "mainObjWidget")
+            horizontalLayout_42 = QtWidgets.QHBoxLayout(objWidget)
             horizontalLayout_42.setObjectName("horizontalLayout_42")
-            objTitleWidget = QtWidgets.QWidget(widget)
+            objTitleWidget = QtWidgets.QWidget(objWidget)
             sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
             sizePolicy.setHorizontalStretch(0)
             sizePolicy.setVerticalStretch(0)
@@ -897,8 +1025,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             pass
         else:
             self.listWidget.addItem(self.effectComboBox.currentText())
-            self.thisSelection.setText(5, str(eval(self.thisSelection.text(5)).append({})))
-            self.obj_timeline_add() # get the last added item here. not sure how with duplicate names
+            for i in self.thisSelection:
+                if (len(eval(i.text(5))) == 0):
+                    i.setText(5, str(i.text(5)[0:-1] + str({"name" : self.effectComboBox.currentText()}) + "]"))
+                else:
+                    i.setText(5, str(i.text(5)[0:-1] + ", " + str({"name" : self.effectComboBox.currentText()}) + "]"))
+            # self.obj_timeline_add() # get the last added item here. not sure how with duplicate names
 
     def get_scroll_length(self):
         while self.thisSelection.parent():
