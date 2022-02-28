@@ -2,13 +2,14 @@ import subprocess, sys, os, shutil, csv, ast
 import xml.etree.ElementTree as et
 
 from window import Ui_MainWindow
-from preferences import Ui_Dialog
 from tex_from_url import tex_from_url
 
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+from PyQt5.QtMultimedia import *
+from PyQt5.QtMultimediaWidgets import *
 from latex2sympy2 import latex2sympy
 from sympy.utilities.lambdify import lambdastr
 from sympy import symbols
@@ -75,7 +76,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionOpen.triggered.connect(self.open_from_dir)
         self.actionSave.triggered.connect(self.save_mmtr)
         self.actionSave_as.triggered.connect(self.save_mmtr_as)
-        self.actionPreferences.triggered.connect(self.openPreferences)
+        #self.actionPreferences.triggered.connect(self.openPreferences)
         self.actionDelete.triggered.connect(self.delItem)
         self.actionMP.triggered.connect(lambda _: self.renderScene(False)) #TODO add other file types
         self.actionGenerate_Preview.triggered.connect(lambda _: self.renderScene(True))
