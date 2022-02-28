@@ -60,7 +60,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.animInComboBox.currentTextChanged.connect(self.toggle_grow)
         self.listWidget.itemClicked.connect(self.load_effect)
         self.tabWidget.currentChanged.connect(self.load_effect_panel)
-        self.circumColorPushButton.clicked.connect(self.save_effect)
         self.circumDistSpinBox.valueChanged.connect(self.save_effect)
         self.circumFadeInCheckBox.stateChanged.connect(self.save_effect)
         self.circumFadeOutCheckBox.stateChanged.connect(self.save_effect)
@@ -75,11 +74,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.moveHorizSpinBox.valueChanged.connect(self.save_effect)
         self.moveVertSpinBox.valueChanged.connect(self.save_effect)
         self.movePathTargetComboBox.currentTextChanged.connect(self.save_effect)
-        self.indColorPushButton.clicked.connect(self.save_effect)
         self.indScaleSpinBox.valueChanged.connect(self.save_effect)
         self.focusColorPushButton.clicked.connect(self.save_effect)
         self.focusOpacitySpinBox.valueChanged.connect(self.save_effect)
-        self.flashColorPushButton.clicked.connect(self.save_effect)
         self.flashLenSpinBox.valueChanged.connect(self.save_effect)
         self.flashNumLinesSpinBox.valueChanged.connect(self.save_effect)
         self.flashRadiusSpinBox.valueChanged.connect(self.save_effect)
@@ -90,7 +87,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             print("failed")
         self.animList = ["Indicate", "Wiggle", "Move", "Move along path", "Transform", "Wave", "Flash", "Focus", "Circumscribe"]
         self.objTypeComboBox.currentTextChanged.connect(self.changeObjType)
-        self.colorPushButton.clicked.connect(self.changeColor)
+        self.colorPushButton.clicked.connect(lambda _: self.changeColor("colorFrame"))
+        self.indColorPushButton.clicked.connect(lambda _: self.changeColor("indColorFrame"))
+        self.flashColorPushButton.clicked.connect(lambda _: self.changeColor("flashColorFrame"))
+        self.circumColorPushButton.clicked.connect(lambda _: self.changeColor("circumColorFrame"))
+        self.focusColorPushButton.clicked.connect(lambda _: self.changeColor("focusColorFrame"))
         self.urlPushButton.clicked.connect(self.loadToLaTeX)
         self.playPushButton.clicked.connect(self.playVideo)
         self.video_player.stateChanged.connect(self.changeMediaIcon)
@@ -355,7 +356,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 elif i.objectName() == "colorGroupBox":
                     for j in self.lastSelection:
                         j.setText(3,str(eval(j.text(3)) | {
-                            "color": self.colorFrame.styleSheet().split()[-1]
+                            "color": self.colorFrame.styleSheet().split(":")[-1]
                         }))
                 elif i.objectName() == "directionGroupBox":
                     for j in self.lastSelection:
@@ -464,8 +465,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         }))
         self.tabWidget.setCurrentIndex(currentTab) # switch back to last tab
 
-    def changeColor(self):
-        self.colorFrame.setStyleSheet("background-color: " + QtWidgets.QColorDialog.getColor().name())
+    def changeColor(self, objName):
+        exec('self.' + objName + '.setStyleSheet("background-color:"  + QtWidgets.QColorDialog.getColor().name())')
+        if (objName != "colorFrame"):
+            self.save_effect()
 
     def setObjComboBoxes(self):
         objList = []
@@ -848,7 +851,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 anim[(self.listWidget.row(self.listWidget.selectedItems()[0]))] = {
                     "name" : self.listWidget.selectedItems()[0].text(),
                     "scale_factor" : self.indScaleSpinBox.value(),
-                    "color" : self.indColorFrame.styleSheet().split()[-1]
+                    "color" : self.indColorFrame.styleSheet().split(":")[-1]
                 }
                 print(anim)
                 self.thisSelection[0].setText(5, str(anim))
@@ -894,14 +897,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     "n" : self.flashNumLinesSpinBox.value(),
                     "radius" : self.flashRadiusSpinBox.value(),
                     "stroke_width" : self.flashStrokeSpinBox.value(),
-                    "color" : self.flashColorFrame.styleSheet().split()[-1]
+                    "color" : self.flashColorFrame.styleSheet().split(":")[-1]
                 }
                 self.thisSelection[0].setText(5, str(anim))
             elif (self.listWidget.selectedItems()[0].text() == "Focus"):
                 anim[(self.listWidget.row(self.listWidget.selectedItems()[0]))] = {
                     "name" : self.listWidget.selectedItems()[0].text(),
                     "opacity" : self.focusOpacitySpinBox.value(),
-                    "color" : self.focusColorFrame.styleSheet().split()[-1]
+                    "color" : self.focusColorFrame.styleSheet().split(":")[-1]
                 }
                 self.thisSelection[0].setText(5, str(anim))
             elif (self.listWidget.selectedItems()[0].text() == "Circumscribe"):
@@ -909,7 +912,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     "name" : self.listWidget.selectedItems()[0].text(),
                     "shape" : self.circumShapeComboBox.currentText(),
                     "distance" : self.circumDistSpinBox.value(),
-                    "color" : self.circumColorFrame.styleSheet().split()[-1],
+                    "color" : self.circumColorFrame.styleSheet().split(":")[-1],
                     "fade_in" : self.circumFadeInCheckBox.isChecked(),
                     "fade_out" : self.circumFadeOutCheckBox.isChecked()
                 }
