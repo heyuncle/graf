@@ -1,7 +1,7 @@
 Function Graph,FunctionGraph,1,1,3,functionGroupBox,"{'x_shift':0.0,'y_shift':0.0,'function':'x^2','color':'#ffffff','animIn':'(None)','animOut':'(None)','duration':0.0}"
 Parametric Function,ParametricFunction,1,1,3,paramFuncGroupBox functionGroupBox,"{'x_shift':0.0,'y_shift':0.0,'t_start':-1.0,'t_end':1.0,'function':'x^2','color':'#ffffff','animIn':'(None)','animOut':'(None)','duration':0.0}"
 Rectangle,Rectangle,1,1,3,rectGroupBox,"{'x_shift':0.0,'y_shift':0.0,'height':1.0,'width':1.0,'grid_xstep':1.0,'grid_ystep':1.0,'color':'#ffffff','animIn':'(None)','animOut':'(None)','duration':0.0}"
-Underline,Underline,0,1,1,ulGroupBox,"{'object':'(None)','buff':0.1,'color':'#ffffff'}"
+Underline,Underline,0,1,1,ulGroupBox,"{'object':'(None)','buff':0.1,'color':'#ffffff','animIn':'(None)','animOut':'(None)','duration':0.0}"
 Text,Text,1,1,3,textGroupBox,"{'x_shift':0.0,'y_shift':0.0,'text':'Text','font_size':48,'fill_opacity':1.0,'slant':'NORMAL','weight':'NORMAL','stroke_width':0,'color':'#ffffff','animIn':'(None)','animOut':'(None)','duration':0.0}"
 LaTeX,MathTex,1,1,3,latexGroupBox functionGroupBox,"{'x_shift':0.0,'y_shift':0.0,'function':'x^2','font_size':48,'color':'#ffffff','animIn':'(None)','animOut':'(None)','duration':0.0}"
 Coordinate Plane,NumberPlane,0,1,1,numPlaneGroupBox,"{'x_min':-10,'x_max':10,'y_min':-10,'y_max':10,'x_length':10,'y_length':10,'color':'#ffffff','animIn':'(None)','animOut':'(None)','duration':0.0}"
