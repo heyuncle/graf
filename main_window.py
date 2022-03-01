@@ -226,9 +226,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.bracePlainTextEdit.setPlainText(prop["text"])
                 elif i.objectName() == "colorGroupBox":
                     try:
-                        self.colorFrame.setStyleSheet("background-color: "+prop["color"])
+                        self.colorFrame.setStyleSheet("background-color:"+prop["color"])
                     except KeyError:
-                        self.colorFrame.setStyleSheet("background-color: #ffffff")
+                        self.colorFrame.setStyleSheet("background-color:#ffffff")
                 elif i.objectName() == "directionGroupBox":
                     try:
                         self.dirStartComboBox.setCurrentText(prop["start"])
@@ -686,15 +686,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if file_path == "": return
         os.chdir("/".join(file_path.split("/")[:-1]))
         self.convert_to_manim()
-        subprocess.run("manim manim.py MyScene" + " -ql" if preview else "", shell=True)
+        subprocess.run("manim manim.py MyScene" + (" -ql" if preview else ""), shell=True)
         try:
             os.replace("./media/videos/manim/"+ ("480p15" if preview else "1080p60") +"/MyScene.mp4", "./"+file_path.split("/")[-1])
             shutil.rmtree('media')
             shutil.rmtree('__pycache__')
         except:
            pass
-        if preview:
-            self.video_player.setMedia(QMediaContent(QUrl.fromLocalFile(file_path)))
+        self.video_player.setMedia(QMediaContent(QUrl.fromLocalFile(file_path)))
         os.chdir(self.file_path)
 
     def save_mmtr_as(self):
@@ -732,9 +731,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 except:
                     self.indScaleSpinBox.setValue(0)
                 try:
-                    self.indColorFrame.setStyleSheet("background-color: "+anim["color"])
+                    self.indColorFrame.setStyleSheet("background-color:"+anim["color"])
                 except KeyError:
-                    self.indColorFrame.setStyleSheet("background-color: #ffffff")
+                    self.indColorFrame.setStyleSheet("background-color:#ffffff")
             elif (anim["name"] == "Wiggle"):
                 self.wiggleGroupBox.show()
                 try:
@@ -808,9 +807,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 except:
                     self.flashStrokeSpinBox.setValue(0)
                 try:
-                    self.flashColorFrame.setStyleSheet("background-color: "+anim["color"])
+                    self.flashColorFrame.setStyleSheet("background-color:"+anim["color"])
                 except KeyError:
-                    self.flashColorFrame.setStyleSheet("background-color: #ffffff")
+                    self.flashColorFrame.setStyleSheet("background-color:#ffffff")
             elif (anim["name"] == "Focus"):
                 self.focusGroupBox.show()
                 try:
@@ -818,9 +817,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 except:
                     self.focusOpacitySpinBox.setValue(100)
                 try:
-                    self.focusColorFrame.setStyleSheet("background-color: "+anim["color"])
+                    self.focusColorFrame.setStyleSheet("background-color:"+anim["color"])
                 except KeyError:
-                    self.focusColorFrame.setStyleSheet("background-color: #ffffff")
+                    self.focusColorFrame.setStyleSheet("background-color:#ffffff")
             elif (anim["name"] == "Circumscribe"):
                 self.circumGroupBox.show()
                 try:
@@ -840,9 +839,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 except:
                     self.circumFadeOutCheckBox.setChecked(False)
                 try:
-                    self.circumColorFrame.setStyleSheet("background-color: "+anim["color"])
+                    self.circumColorFrame.setStyleSheet("background-color:"+anim["color"])
                 except KeyError:
-                    self.circumColorFrame.setStyleSheet("background-color: #ffffff")
+                    self.circumColorFrame.setStyleSheet("background-color:#ffffff")
 
     def save_effect(self): # "Indicate" "Wiggle" "Move" "Move along path" "Transform" "Wave" "Flash" "Focus" "Circumscribe"
         if len(self.listWidget.selectedItems()) == 1:
