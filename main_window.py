@@ -148,7 +148,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.thisSelection = self.treeWidget.selectedItems()
         print("last: " + str(self.lastSelection))
         if not all(i in self.thisSelection for i in self.lastSelection):
-            self.saveProp()
+            self.saveProp(self.lastSelection)
 
     def treeItem(self, name, type, subtype="", properties="{'duration':0.0, 'animIn':'(None)', 'animOut':'(None)'}", animations="[]"):
         item = QTreeWidgetItem()
@@ -166,6 +166,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def edit(self):
         item = self.treeWidget.currentItem()
+        self.saveProp(self.thisSelection)
         self.treeWidget.editItem(item)
         item.setText(0,self.testDuplicateName(item.text(0), True)) # TODO somehow wait until editing finished before doing this
 
@@ -313,15 +314,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             self.growGroupBox.hide()
 
-    def saveProp(self):
+    def saveProp(self, obj):
         currentTab = self.tabWidget.currentIndex()
-        if ("Scene" or "Group") in [i.text(1) for i in self.lastSelection]:
+        if ("Scene" or "Group") in [i.text(1) for i in obj]:
             return
         self.tabWidget.setCurrentIndex(0) # switch to properties tab
         for i in self.propScrollAreaWidget.findChildren(QtWidgets.QGroupBox):
             if i.isVisible():
                 if i.objectName() == "rectGroupBox":
-                    for j in self.lastSelection:
+                    for j in obj:
                         j.setText(3,str(eval(j.text(3)) | {
                             "height": self.rectHeightSpinBox.value(),
                             "width": self.rectWidthSpinBox.value(),
@@ -329,72 +330,72 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                             "grid_ystep": self.yGridSpinBox.value()
                         }))
                 elif i.objectName() == "ulGroupBox":
-                    for j in self.lastSelection:
+                    for j in obj:
                         j.setText(3,str(eval(j.text(3)) | {
                             "object": self.getObjID(self.ulObjComboBox.currentText()),
                             "buff": self.ulBuffSpinBox.value()
                         }))
                 elif i.objectName() == "arcGroupBox":
-                    for j in self.lastSelection:
+                    for j in obj:
                         j.setText(3,str(eval(j.text(3)) | {
                             "radius": self.radiusSpinBox.value(),
                             "start_angle": self.stAngleSpinBox.value(),
                             "angle": self.angleSpinBox.value()
                         }))
                 elif i.objectName() == "arrowGroupBox":
-                    for j in self.lastSelection:
+                    for j in obj:
                         j.setText(3,str(eval(j.text(3)) | {
                             "stroke_width": self.arStrokeSpinBox.value(),
                             "buff": self.arBuffSpinBox.value()
                         }))
                 elif i.objectName() == "braceGroupBox":
-                    for j in self.lastSelection:
+                    for j in obj:
                         j.setText(3,str(eval(j.text(3)) | {
                             "object": self.getObjID(self.braceObjSelectComboBox.currentText()),
                             "text": self.bracePlainTextEdit.toPlainText()
                         }))
                 elif i.objectName() == "colorGroupBox":
-                    for j in self.lastSelection:
+                    for j in obj:
                         j.setText(3,str(eval(j.text(3)) | {
                             "color": self.colorFrame.styleSheet().split(":")[-1]
                         }))
                 elif i.objectName() == "directionGroupBox":
-                    for j in self.lastSelection:
+                    for j in obj:
                         j.setText(3,str(eval(j.text(3)) | {
                             "start": (self.dirStartComboBox.currentText() if self.dirStartComboBox.currentText() != "(None)" else None),
                             "end": (self.dirEndComboBox.currentText() if self.dirEndComboBox.currentText() != "(None)" else None)
                         }))
                 elif i.objectName() == "dotGroupBox":
-                    for j in self.lastSelection:
+                    for j in obj:
                         j.setText(3,str(eval(j.text(3)) | {
                             "point": self.coordLineEdit.text(),
                             "stroke_width": self.widthSpinBox.value(),
                             "fill_opacity": self.opacitySpinBox.value()/100
                         }))
                 elif i.objectName() == "functionGroupBox":
-                    for j in self.lastSelection:
+                    for j in obj:
                         j.setText(3,str(eval(j.text(3)) | {
                             "function": self.latexTextEdit.toPlainText()
                         }))
                 elif i.objectName() == "latexGroupBox":
-                    for j in self.lastSelection:
+                    for j in obj:
                         j.setText(3,str(eval(j.text(3)) | {
                             "font_size": self.latexSizeSpinBox.value()
                         }))
                 elif i.objectName() == "lineGroupBox":
-                    for j in self.lastSelection:
+                    for j in obj:
                         j.setText(3,str(eval(j.text(3)) | {
                             "start": self.startCorLineEdit.text(),
                             "end": self.endCorLineEdit.text(),
                             "buff": self.lineThickSpinBox.value()
                         }))
                 elif i.objectName() == "matrixGroupBox":
-                    for j in self.lastSelection:
+                    for j in obj:
                         j.setText(3,str(eval(j.text(3)) | {
                             "matrix": self.matrixTableWidget.items()
                         }))
                 elif i.objectName() == "numPlaneGroupBox":
-                    for j in self.lastSelection:
+                    for j in obj:
                         j.setText(3,str(eval(j.text(3)) | {
                             "x_min": self.numXMinSpinBox.value(),
                             "x_max": self.numXMaxSpinBox.value(),
@@ -402,31 +403,31 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                             "y_max": self.numYMaxSpinBox.value()
                         }))
                 elif i.objectName() == "positionGroupBox":
-                    for j in self.lastSelection:
+                    for j in obj:
                         j.setText(3,str(eval(j.text(3)) | {
                             "x_shift": self.xSpinBox.value(),
                             "y_shift": self.ySpinBox.value()
                         }))
                 elif i.objectName() == "paramFuncGroupBox":
-                    for j in self.lastSelection:
+                    for j in obj:
                         j.setText(3,str(eval(j.text(3)) | {
                             "t_start": self.minTSpinBox.value(),
                             "t_end": self.maxTSpinBox.value()
                         }))
                 elif i.objectName() == "regPolyGroupBox":
-                    for j in self.lastSelection:
+                    for j in obj:
                         j.setText(3,str(eval(j.text(3)) | {
                             "n": self.regPolyVertSpinBox.value()
                         }))
                 elif i.objectName() == "surRectGroupBox":
-                    for j in self.lastSelection:
+                    for j in obj:
                         j.setText(3,str(eval(j.text(3)) | {
                             "object": self.getObjID(self.surrObjComboBox.currentText()),
                             "buff": self.surrBuffSpinBox.value(),
                             "corner_radius": self.surrRadiusSpinBox.value()
                         }))
                 elif i.objectName() == "textGroupBox":
-                    for j in self.lastSelection:
+                    for j in obj:
                         j.setText(3,str(eval(j.text(3)) | {
                             "text": self.textPlainTextEdit.toPlainText(),
                             "font_size": self.textSizeSpinBox.value(),
@@ -436,12 +437,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                             "stroke_width": self.textStrokeSpinBox.value()
                         }))
                 elif i.objectName() == "polyGroupBox":
-                    for j in self.lastSelection:
+                    for j in obj:
                         j.setText(3,str(eval(j.text(3)) | {
                             "vertices": self.polyVertListWidget.items()
                         }))
                 elif i.objectName() == "durationGroupBox":
-                    for j in self.lastSelection:
+                    for j in obj:
                         j.setText(3, str(eval(j.text(3)) | {
                             "duration": self.durationSpinBox.value()
                         }))
@@ -449,17 +450,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for i in self.animScrollAreaContents.findChildren(QtWidgets.QGroupBox):
             if i.isVisible():
                 if i.objectName() == "animInGroupBox":
-                    for j in self.lastSelection:
+                    for j in obj:
                         j.setText(3, str(eval(j.text(3)) | {
                             "animIn": self.animInComboBox.currentText()
                         }))
                 elif i.objectName() == "animOutGroupBox":
-                    for j in self.lastSelection:
+                    for j in obj:
                         j.setText(3, str(eval(j.text(3)) | {
                             "animOut": self.animOutComboBox.currentText()
                         }))
                 elif i.objectName() == "growGroupBox":
-                    for j in self.lastSelection:
+                    for j in obj:
                         j.setText(3, str(eval(j.text(3)) | {
                             "growConfig": self.growOriginComboBox.currentText()
                         }))
