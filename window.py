@@ -188,7 +188,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.propScrollAreaWidget = QtWidgets.QWidget()
-        self.propScrollAreaWidget.setGeometry(QtCore.QRect(0, 0, 439, 3154))
+        self.propScrollAreaWidget.setGeometry(QtCore.QRect(0, -2768, 439, 3154))
         self.propScrollAreaWidget.setObjectName("propScrollAreaWidget")
         self.verticalLayout_24 = QtWidgets.QVBoxLayout(self.propScrollAreaWidget)
         self.verticalLayout_24.setObjectName("verticalLayout_24")
@@ -1033,9 +1033,7 @@ class Ui_MainWindow(object):
         self.durationLabel = QtWidgets.QLabel(self.durationWidget)
         self.durationLabel.setObjectName("durationLabel")
         self.horizontalLayout_73.addWidget(self.durationLabel)
-        self.durationSpinBox = QtWidgets.QSpinBox(self.durationWidget)
-        self.durationSpinBox.setAccelerated(True)
-        self.durationSpinBox.setMaximum(100)
+        self.durationSpinBox = QtWidgets.QDoubleSpinBox(self.durationWidget)
         self.durationSpinBox.setObjectName("durationSpinBox")
         self.horizontalLayout_73.addWidget(self.durationSpinBox)
         self.verticalLayout_53.addWidget(self.durationWidget)
@@ -1916,7 +1914,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuView.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
