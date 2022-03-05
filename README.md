@@ -15,7 +15,7 @@ GUI tool for making animations and graphics using the [manim](https://github.com
 - [Download](https://github.com/heyuncle/graf/archive/refs/heads/main.zip) the ZIP file and extract to target location.
 - Run `pip install -r requirements.txt` in commandline or powershell.
 ## Usage
-- Execute the manim.pyw file.
+- Execute the `manim.pyw` file.
 - *Don't Crash, Difficulty: Impossible*
 ## Demo
 
