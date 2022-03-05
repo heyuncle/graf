@@ -698,11 +698,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         os.chdir(self.file_path)
 
     def save_mmtr_as(self):
-        try:
-            self.file_path = QtWidgets.QFileDialog.getSaveFileName(filter="Manimator (*.mmtr)")[0]
-            self.save_mmtr()
-        except:
+        if self.file_path == '':
+            self.file_path = "graf.mmtr"
             return
+        else:
+            try:
+                self.file_path = QtWidgets.QFileDialog.getSaveFileName(filter="Manimator (*.mmtr)")[0]
+                self.save_mmtr()
+            except:
+                return
         self.setWindowTitle("graf - " + self.file_path.split("/")[-1])
 
     def save_mmtr(self):
