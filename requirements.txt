@@ -1,0 +1,5 @@
+latex2sympy2==1.6.8
+PyQt5==5.15.6
+QDarkStyle==3.0.3
+requests==2.27.1
+sympy==1.9
