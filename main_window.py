@@ -81,10 +81,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.flashNumLinesSpinBox.valueChanged.connect(self.save_effect)
         self.flashRadiusSpinBox.valueChanged.connect(self.save_effect)
         self.flashStrokeSpinBox.valueChanged.connect(self.save_effect)
-        try:
-            self.treeWidget.currentItemChanged.connect(self.testDuplicateName(self.thisSelection[0].text(0), True))
-        except:
-            print("failed")
+        # try:
+        #    self.treeWidget.currentItemChanged.connect(self.testDuplicateName(self.thisSelection[0].text(0), True)) ## I don't know what or why this is here??
+        # except:
+        #    print("failed")
         self.animList = ["Indicate", "Wiggle", "Move", "Move along path", "Transform", "Wave", "Flash", "Focus", "Circumscribe"]
         self.objTypeComboBox.currentTextChanged.connect(self.changeObjType)
         self.colorPushButton.clicked.connect(lambda _: self.changeColor("colorFrame"))
