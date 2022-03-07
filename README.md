@@ -1,6 +1,8 @@
-# Manimator
+<p align="center">
+  <img src="https://raw.githubusercontent.com/heyuncle/graf/main/logo/logo_rounded.gif" alt="graf"/>
+</p>
 
-## Description
+# gräf
 GUI tool for making animations and graphics using the [manim](https://github.com/ManimCommunity/manim) animation engine. Used for easy use of the manim library and for a user-friendly interface for making math animations.
 
 ## Requirements
@@ -32,5 +34,6 @@ sudo apt install libcairo2-dev libpango1.0-dev ffmpeg`
 - Execute the `manim.pyw` file.
 - *Don't Crash, Difficulty: Impossible*
 ## Demo
-
-## Contribution Stuff
+![gräf window](etc/demo.png)
+## Contributing
+## License
