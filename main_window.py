@@ -30,7 +30,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.objPropCsv = csv.reader(f)
             self.objProp = {i[0]:(i[1],i[4],i[5],i[6]) for i in self.objPropCsv} # manim name, shared, groupbox
 
-        self.setWindowIcon(QIcon('icons/logo.ico'))
         self.setupUi(self)
 
         #self.setAttribute(Qt.WA_TranslucentBackground)
