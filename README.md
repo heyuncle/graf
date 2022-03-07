@@ -18,7 +18,7 @@ GUI tool for making animations and graphics using the [manim](https://github.com
 - Run `pip install -r requirements.txt` in commandline or powershell.
 
 ## Installation | Ubuntu
-- [Download] (https://github.com/heyuncle/graf/archive/refs/heads/main.zip) the ZIP file and extract to target location.
+- [Download](https://github.com/heyuncle/graf/archive/refs/heads/main.zip) the ZIP file and extract to target location.
 - Run `sudo apt-get install python3 python3-pip PyQt5`
 - Install the pip packages with  `pip install latex2sympy2 PyQt5 QDarkStyle requests sympy`
 - Install Manim
