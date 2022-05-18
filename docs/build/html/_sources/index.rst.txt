@@ -6,6 +6,11 @@
 Welcome to graf's documentation!
 ================================
 
+**gräf** (/graf/) is a GUI tool for making animations and graphics using the manim animation engine. Used for easy use of the manim library and for a user-friendly interface for making math animations.
+
+.. note::
+   This is still under development, so issues may arise.
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
