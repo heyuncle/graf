@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Welcome to gräf's documentation!
-=============================
+================================
 
 **gräf** (/graf/) is a GUI tool for making animations and graphics using the manim animation engine. Used for easy use of the manim library and for a user-friendly interface for making math animations.
 
