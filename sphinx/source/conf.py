@@ -17,12 +17,12 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'a'
-copyright = '2022, a'
-author = 'a'
+project = 'gräf'
+copyright = '2022, studiodb'
+author = 'studiodb'
 
 # The full version, including alpha/beta/rc tags
-release = 'a'
+release = '1.0'
 
 
 # -- General configuration ---------------------------------------------------
