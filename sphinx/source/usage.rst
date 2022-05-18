@@ -7,6 +7,11 @@ Installation
 
 gräf is available on Windows, MacOS, and Ubuntu.
 
+.. hint:: 
+
+   If any issues arise while setting up gräf, feel free to open an issue `here <https://github.com/heyuncle/graf/issues>`_.
+
+
 Windows
 -------
 
