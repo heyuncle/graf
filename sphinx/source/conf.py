@@ -60,6 +60,9 @@ html_theme_options = {
     'sidebar_hide_name': True,
 }
 
+html_favicon = '_static/graf.ico'
+
+
 html_sidebars = {
     "**": [
         "sidebar/brand.html",
@@ -74,3 +77,5 @@ html_sidebars = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+# sphinx-build -b html sphinx/source/ docs/
+# cd C:\Users\owner\Downloads\cmder\graf
