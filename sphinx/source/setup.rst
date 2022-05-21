@@ -20,6 +20,13 @@ gräf is available on Windows, MacOS, and Ubuntu.
 Windows
 -------
 
+A requirement for gräf to run correctly is manim. 
+Our recommended method of installing manim is through |chocolatey|.
+
+.. |chocolatey| raw:: html
+
+    <a href="https://chocolatey.org/install#individual" target="_blank">chocolatey</a>
+
 To use gräf with windows, you need to first download the zip found `here <https://github.com/heyuncle/graf/archive/refs/heads/main.zip>`_.
 
 Then, you need to install the required programs using pip:
@@ -65,4 +72,4 @@ To use gräf with ubuntu, follow these steps:
 Running the program
 ===================
 
-Execute the ``manim.pyw`` file.
+Execute the ``main.pyw`` file.

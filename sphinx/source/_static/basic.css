@@ -679,11 +679,11 @@ dl > dd:last-child > :last-child {
 }
 
 dt:target, span.highlighted {
-    background-color: #fbe54e;
+    background-color: #fbe44e;
 }
 
 rect.highlighted {
-    fill: #fbe54e;
+    fill: #fbe44e;
 }
 
 dl.glossary dt {

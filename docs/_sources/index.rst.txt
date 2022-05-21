@@ -20,9 +20,10 @@ Contents
 
 .. toctree::
    
-   usage
-
-
+   setup
+   start
+   settings
+   troubleshooting
 
 Indices and tables
 ------------------

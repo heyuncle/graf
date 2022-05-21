@@ -1,6 +1,6 @@
-#####
-Usage
-#####
+######################
+Setting Up the Program
+######################
 
 Installation
 ============
@@ -9,11 +9,23 @@ gräf is available on Windows, MacOS, and Ubuntu.
 
 .. hint:: 
 
-   If any issues arise while setting up gräf, feel free to open an issue `here <https://github.com/heyuncle/graf/issues>`_.
+   If any issues arise while setting up gräf, feel free to open an issue |issues_page|.
+   
+.. |issues_page| raw:: html
+
+    <a href="https://github.com/heyuncle/graf/issues" target="_blank">here</a>
+
 
 
 Windows
 -------
+
+A requirement for gräf to run correctly is manim. 
+Our recommended method of installing manim is through |chocolatey|.
+
+.. |chocolatey| raw:: html
+
+    <a href="https://chocolatey.org/install#individual" target="_blank">chocolatey</a>
 
 To use gräf with windows, you need to first download the zip found `here <https://github.com/heyuncle/graf/archive/refs/heads/main.zip>`_.
 
@@ -60,4 +72,4 @@ To use gräf with ubuntu, follow these steps:
 Running the program
 ===================
 
-Execute the ``manim.pyw`` file.
+Execute the ``main.pyw`` file.
