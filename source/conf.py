@@ -23,7 +23,7 @@ author = 'studiodb'
 
 # The full version, including alpha/beta/rc tags
 version = '1.0'
-release = '1.0.1'
+release = '1.0.5'
 
 
 # -- General configuration ---------------------------------------------------
@@ -80,3 +80,4 @@ html_static_path = ['_static']
 
 # sphinx-build -b html sphinx/source/ docs/
 # cd C:\Users\owner\Downloads\cmder\graf
+# /Users/aidenbeauchesne/Documents/github/graf/docs/index.html

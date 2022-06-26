@@ -4,7 +4,7 @@ Troubleshooting
 
 .. attention::
 
-    Everything in this section is **mostly** complete bulls***
+    This page is a work in progress. More additions will be made as more problems come up.
 
 Problems with Installation
 =================================
