@@ -2,9 +2,6 @@
 Getting started
 ###############
 
-.. attention::
-
-    Everything in this section is complete bulls***
 
 Start
 =====
