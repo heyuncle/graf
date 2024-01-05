@@ -26,14 +26,9 @@ GUI tool for making animations and graphics using the [manim](https://github.com
 sudo apt install libcairo2-dev libpango1.0-dev ffmpeg`
 `pip3 install manim`
 - Install the GStreamer plugins with `sudo apt install ubuntu-restricted-extras`
-- Pray to God it works! (It won't) 🙏
-
-
 
 ## Usage
 - Execute the `manim.pyw` file.
-- *Don't Crash, Difficulty: Impossible*
+
 ## Demo
 ![gräf window](etc/demo.png)
-## Contributing
-## License
